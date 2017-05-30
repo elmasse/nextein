@@ -1,0 +1,43 @@
+{
+  "name": "nextein",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "fly"
+  },
+  "bin": {
+    "nextein": "./bin/nextein"
+  },
+  "files": [
+    "bin"
+  ],
+  "dependencies": {
+    "frontmatter": "0.0.3",
+    "glob": "^7.1.2",
+    "object.assign": "^4.0.4",
+    "remark": "^7.0.1",
+    "remark-react": "^4.0.0",
+    "unist-util-select": "^1.5.0"
+  },
+  "peerDependencies": {
+    "next": "^3.0.0-beta3",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.23.0",
+    "fly": "2.0.6",
+    "fly-babel": "2.1.1",
+    "fly-clear": "1.0.1",
+    "fly-esnext": "2.0.1",
+    "fly-watch": "1.1.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
