@@ -1,22 +1,61 @@
 #!/usr/bin/env node
 
-const { join, resolve } = require('path')
-const { spawn } = require('cross-spawn')
-const { watch } = require('fs')
+import { join, resolve } from 'path'
+import { spawn } from 'cross-spawn'
+import { watchFile } from 'fs'
+import pkg from '../../package.json'
+// import getConfig from '../server/config'
 
-const pkg = require('../package.json')
+if (pkg.peerDependencies) {
+  Object.keys(pkg.peerDependencies).forEach(dependency => {
+    try {
+      // When 'npm link' is used it checks the clone location. Not the project.
+      require.resolve(dependency)
+    } catch (err) {
+      console.warn(`${dependency} not found. Please install ${dependency} using 'npm install ${dependency}'`)
+    }
+  })
+}
 
+const defaultCommand = 'dev'
+const commands = new Set([
+  // 'init',
+  // 'build',
+  // 'start',
+  // 'export',
+  defaultCommand
+])
 
-const cmd = process.argv[2] || ''
+let cmd = process.argv[2]
+let args
 
 if (new Set(['--version', '-v']).has(cmd)) {
   console.log(`${pkg.name} v${pkg.version}`)
   process.exit(0)
 }
 
-const bin = 'next'//join(__dirname, `next ${cmd}`)
+if (new Set(['--help', '-h']).has(cmd)) {
+  console.log(`
+    Usage
+      $ nextein <command>
 
-const args = process.argv.slice(2)
+    Available commands
+      ${Array.from(commands).join(', ')}
+
+    For more information run a command with the --help flag
+      $ nextein dev --help
+  `)
+  process.exit(0)
+}
+
+if (commands.has(cmd)) {
+  args = process.argv.slice(3)
+} else {
+  cmd = defaultCommand
+  args = process.argv.slice(2)
+}
+
+const bin = join(__dirname, 'nextein-' + cmd)
 
 const startProcess = () => {
   const proc = spawn(bin, args, { stdio: 'inherit', customFds: [0, 1, 2] })
@@ -40,4 +79,19 @@ const startProcess = () => {
   return proc
 }
 
+const restartProcess = (cur, prev) => {
+  if (cur.size > 0 || prev.size > 0) {
+    console.log('\n> Found a change in next.config.js, restarting the server...')
+    // Don't listen to 'close' now since otherwise parent gets killed by listener
+    proc.removeAllListeners('close')
+    proc.kill()
+    proc = startProcess()
+  }
+}
+
 let proc = startProcess()
+const { pagesDirectory = resolve(process.cwd(), 'pages') } = getConfig(process.cwd())
+
+if (cmd === 'dev') {
+  watchFile(`${resolve(pagesDirectory, '..')}/next.config.js`, restartProcess)
+}

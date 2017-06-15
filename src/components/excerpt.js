@@ -1,12 +1,15 @@
 
 import React from 'react'
+import Link from 'next/link'
 
 export default ({ data, content }) => {
+  const { title, page = 'post', url, _entry } = data
   return (
     <div>
-      <h1>{data.title}</h1>
+      <h1>{title}</h1>
       {content}
-      <a>Read More</a>
+     {/*<Link prefetch href={{ page, query: { _entry }}} as={url}><a>Read More</a></Link>*/}
+     <a href={url}>Read More</a>
     </div>
   )
 }

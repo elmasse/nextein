@@ -1,15 +1,11 @@
+
 import React, { Component } from 'react'
 import remark from 'remark'
 import reactRenderer from 'remark-react'
 import select from 'unist-util-select'
 
+import loadEntries from '../load-entries'
 import Excerpt from './excerpt'
-
-const isServer = typeof window === 'undefined'
-const loadPosts = isServer ?
-  require('../load-entries') :
-  require('../load-entries-client')
-
 
 const excerpt = (selector = 'paragraph:first-child') => (tree) => {
   tree.children = select(tree, selector)
@@ -27,47 +23,62 @@ const toReact = ({ data, content }, idx) => {
 }
 
 const inCategory = (category) => (m) => {
-  return category && m.data.category == category
+  return category ? (m.data.category == category) : true
 }
 
-const load = ({ category }) => {
-  return loadPosts()
+const load = ({ entries, category }) => {
+  return entries
     .filter(inCategory(category))
     .map(toReact)
 }
 
+export const Entries = ({ category, entries }) => {
+  const posts = load({ category, entries })
+
+  return (
+    <div>
+      <div style={{ padding: 5, fontSize: 12, fontWeight: 100 }}>
+        {posts.length} {posts.length == 1 ? 'entry' : 'entries'} found in category: <strong>{category}</strong>
+        {
+          posts.map((post, index) => <Excerpt key={`post-${index}`} {...post} />)
+        }
+      </div>
+    </div>
+  )
+}
 
 
-export default class Posts extends Component {
+export default ({ path = 'posts/', category } = {}) =>
+  (WrappedComponent) => {
 
-  constructor(props) {
-    super(props);
-    const { category } = props
+  return class extends Component {
+    static async getInitialProps(...args) {
+      
+      const wrappedInitial = WrappedComponent.getInitialProps 
+      const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
+      const entries = await loadEntries(path)
 
-    this.state = {
-      posts: []
+      return {
+        ...wrapped,
+        entries
+      }
+    }
+
+    // constructor() {
+    //   super()
+    //   this.state = {}
+    // }
+
+    // componentDidMount() {
+    //   const { entries } = loadEntries(path)
+    //   this.setState({
+    //     entries
+    //   })
+    // }
+
+    render() {
+      // const { entries } = this.state
+      return <WrappedComponent {...this.props} />;
     }
   }
-
-  componentWillMount() {
-    const { category } = this.props
-    this.setState({ posts: load({ category }) })
-  }
-
-  render() {
-    const { category } = this.props
-    const { posts } = this.state
-
-    return (
-      <div>
-        <div style={{ padding: 5, fontSize: 12, fontWeight: 100 }}>
-          {posts.length} {posts.length == 1 ? 'entry' : 'entries'} found in category: <strong>{category}</strong>
-          {
-            posts.map((post, index) => <Excerpt key={`post-${index}`} {...post} />)
-          }
-        </div>
-      </div>
-    )
-  }
-
 }
