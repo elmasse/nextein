@@ -25,10 +25,10 @@ export default (WrappedComponent) => {
     static async getInitialProps({ query }) {
       //TODO check WrappedComponent getInitialProps
       const { _entry } = query
-      const entry = await byFileName(_entry)
+      const post = await byFileName(_entry)
 
       return {
-        entry
+        post
       }
     }
 

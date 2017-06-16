@@ -48,33 +48,20 @@ export const Entries = ({ category, entries }) => {
 }
 
 
-export default ({ path = 'posts/', category } = {}) =>
-  (WrappedComponent) => {
+export default (WrappedComponent) => {
 
   return class extends Component {
     static async getInitialProps(...args) {
       
       const wrappedInitial = WrappedComponent.getInitialProps 
       const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-      const entries = await loadEntries(path)
+      const posts = await loadEntries()
 
       return {
         ...wrapped,
-        entries
+        posts
       }
     }
-
-    // constructor() {
-    //   super()
-    //   this.state = {}
-    // }
-
-    // componentDidMount() {
-    //   const { entries } = loadEntries(path)
-    //   this.setState({
-    //     entries
-    //   })
-    // }
 
     render() {
       // const { entries } = this.state

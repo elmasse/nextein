@@ -7,7 +7,7 @@ import { resolve, basename, extname } from 'path'
 import fm from 'frontmatter'
 
 
-export default async (path) => {
+export default async (path = 'posts/') => {
   return await ( isServer ? fromServer(path) : fromClient(path) )
 }  
 

@@ -11,8 +11,8 @@
     "nextein": "./dist/bin/nextein"
   },
   "files": [
-    "entries.js",
-    "entry.js"
+    "posts.js",
+    "post.js"
   ],
   "dependencies": {
     "cross-spawn": "^5.1.0",
