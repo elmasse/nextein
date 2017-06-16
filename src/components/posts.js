@@ -64,7 +64,6 @@ export default (WrappedComponent) => {
     }
 
     render() {
-      // const { entries } = this.state
       return <WrappedComponent {...this.props} />;
     }
   }
