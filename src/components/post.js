@@ -1,20 +1,27 @@
 import React, { Component } from 'react'
+
 import remark from 'remark'
 import reactRenderer from 'remark-react'
+import select from 'unist-util-select'
 
 import { byFileName } from '../load-entries'
 
-const toReact = ({ data, content }) => {
-
-  return  remark()
-     .use(reactRenderer, {prefix: `entry-`})
-     .processSync(content).contents  
+const extractExcerpt = (selector = 'paragraph:first-child') => (tree) => {
+  tree.children = select(tree, selector)
+  return tree
 }
 
-export const Content = ({ data, content }) => {
+const toReact = ({ data, content, excerpt }) => (
+  remark()
+    .use(excerpt && extractExcerpt)
+    .use(reactRenderer, {prefix: `entry-`})
+    .processSync(content).contents  
+)
+
+export const Content = ({ data, content, excerpt }) => {
   return (
     <div>
-      { toReact({ data, content }) }
+      { toReact({ data, content, excerpt }) }
     </div>
   )
 }
