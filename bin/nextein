@@ -4,7 +4,6 @@ import { join, resolve } from 'path'
 import { spawn } from 'cross-spawn'
 import { watchFile } from 'fs'
 import pkg from '../../package.json'
-// import getConfig from '../server/config'
 
 if (pkg.peerDependencies) {
   Object.keys(pkg.peerDependencies).forEach(dependency => {
@@ -21,7 +20,6 @@ const defaultCommand = 'dev'
 const commands = new Set([
   // 'init',
   // 'build',
-  // 'start',
   // 'export',
   defaultCommand
 ])
@@ -55,7 +53,13 @@ if (commands.has(cmd)) {
   args = process.argv.slice(2)
 }
 
-const bin = join(__dirname, 'nextein-' + cmd)
+let bin
+if (cmd === defaultCommand)
+  bin = join(__dirname, 'nextein-' + cmd)
+else {
+  bin = join(__dirname, 'next')
+  args.shift(cmd)
+}
 
 const startProcess = () => {
   const proc = spawn(bin, args, { stdio: 'inherit', customFds: [0, 1, 2] })

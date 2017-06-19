@@ -1,15 +1,55 @@
 
 import loadEntries from './load-entries'
+import BabiliPlugin from 'babili-webpack-plugin'
 
-export default () => {
-  // TODO
+
+export default (original) => {
+  const { webpack:oWebpack, exportPathMap:oExportPathMap } = original 
+  
+  return {
+    webpack: function (...args) {
+      const our = webpack(...args)
+      let their
+
+      if (oWebpack) {
+        their = oWebpack(...args)
+      }
+
+      return {
+        ...our,
+        ...their
+      }
+    },
+    exportPathMap: async function () {
+      const our = await exportPathMap()
+      let their
+      if (oExportPathMap) {
+        their = await oExportPathMap()
+      }
+
+      return {
+        ...our,
+        ...their
+      }  
+    },
+    ...original
+  }
 
 }
 
-export const webpack = (config) => {
+export const webpack = (config, { dev }) => {
   config.node = {
     fs: 'empty'
   }
+
+  config.plugins = config.plugins.filter(plugin => {
+    return plugin.constructor.name !== 'UglifyJsPlugin'
+  })
+
+  if (!dev) {
+    config.plugins.push(new BabiliPlugin())
+  }
+
   return config;
 }
 
