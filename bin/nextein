@@ -19,8 +19,8 @@ if (pkg.peerDependencies) {
 const defaultCommand = 'dev'
 const commands = new Set([
   // 'init',
-  // 'build',
-  // 'export',
+  'build',
+  'export',
   defaultCommand
 ])
 
@@ -57,8 +57,8 @@ let bin
 if (cmd === defaultCommand)
   bin = join(__dirname, 'nextein-' + cmd)
 else {
-  bin = join(__dirname, 'next')
-  args.shift(cmd)
+  bin = 'next'
+  args.unshift(cmd)
 }
 
 const startProcess = () => {
