@@ -1,6 +1,6 @@
 {
   "name": "nextein",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,10 +13,13 @@
     "nextein": "./dist/bin/nextein"
   },
   "files": [
+    "dist",
+    "config.js",
     "posts.js",
     "post.js"
   ],
   "dependencies": {
+    "babili-webpack-plugin": "^0.1.1",
     "cross-spawn": "^5.1.0",
     "enhanced-require": "^0.5.0-beta6",
     "frontmatter": "0.0.3",
@@ -41,7 +44,6 @@
     "babel-plugin-transform-object-rest-spread": "6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "babili-webpack-plugin": "^0.1.1",
     "fly": "2.0.6",
     "fly-babel": "2.1.1",
     "fly-clear": "1.0.1",
