@@ -16,3 +16,7 @@ export default async function (fly) {
   await fly.watch('src/**/*.js', 'compile')
   await fly.watch('bin/**/*', 'bin')
 }
+
+export async function release (fly) {
+  await fly.clear('dist').start('build')
+}
