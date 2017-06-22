@@ -75,4 +75,71 @@ WIP - see [nextein-example](https://github.com/elmasse/nextein-example) for a wo
 
 ## Documentation
 
-// TODO
+### `withPosts`
+
+HOC for `/pages` components that renders a list of posts. It makes the post list available thru the `posts` property.
+
+```js
+import withPosts from 'nextein/posts'
+
+export defatult withPosts( ({ posts }) => { /* render your posts here */ } )
+
+```
+
+### `inCategory(category)`
+
+Filter function to be applied to posts to retrieve posts in given category
+
+```js
+import withPosts, {inCategory} from 'nextein/posts'
+
+export defatult withPosts( ({ posts }) => { 
+    const homePosts = posts.filter(inCategory('home'))
+    /* render your homePosts here */ 
+} )
+
+```
+
+### `withPost`
+
+HOC for `/pages` components that renders a single post. It makes the post available thru the `post` property.
+
+```js
+import withPost from 'nextein/post'
+
+export default withPost( ({ post }) => { /* render your post here */ } )
+
+```
+
+### `Content`
+
+Component to render a `post` object. Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
+
+```js
+import withPost, { Content } from 'nextein/post'
+
+export default withPost( ({ post }) => { return (<Content {...post} />) } )
+
+```
+
+### `post`
+
+- `data` is the frontmatter object containig the post meta information (title, page, category, etc)
+    - `data.url` is the generated url for the post
+    - `data.category` is the post's category 
+- `content` is markdown content of the post
+
+```js
+
+{ data, content } = post
+
+```
+
+### frontmatter
+
+There are only a few defined properties in the frontmatter metadata that is used by `nextein`
+
+`page` is the component under `/page` that will be used to render the post (default to `post`)
+
+`category` the category name (optional)
+
