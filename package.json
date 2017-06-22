@@ -21,7 +21,6 @@
   "dependencies": {
     "babili-webpack-plugin": "^0.1.1",
     "cross-spawn": "^5.1.0",
-    "enhanced-require": "^0.5.0-beta6",
     "frontmatter": "0.0.3",
     "glob": "^7.1.2",
     "minimist": "^1.2.0",
