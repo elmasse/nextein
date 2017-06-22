@@ -5,6 +5,7 @@ import glob from 'glob'
 import { readFileSync } from 'fs'
 import { resolve, basename, extname } from 'path'
 import fm from 'frontmatter'
+import fetch from 'unfetch'
 
 
 export default async (path = 'posts/') => {

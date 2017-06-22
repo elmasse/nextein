@@ -11,38 +11,6 @@ export default class Server {
 
   constructor({ dir = '.',  dev = true }) {
     this.app = next({ dev })
-
-    this.wrapAppConfig()
-    // this.readEntries()
-    // this.defineRoutes()
-  }
-
-  wrapAppConfig () {
-    const { webpack } = this.app.config
-
-    this.app.config.webpack = (...args) => {
-      const original = webpack ? webpack(...args) : null
-      const [ config ] = args
-      const { node } = config 
-
-      return {
-        node: {
-          fs: 'empty',
-          ...node
-        },
-        ...original,
-        ...config
-      } 
-    }
-    
-  }
-
-  defineRoutes() {
-    const { entriesMap } = this
-
-    for (const [k, entry] of entriesMap) {
-    }
-
   }
 
   async readEntries () {
