@@ -143,3 +143,18 @@ There are only a few defined properties in the frontmatter metadata that is used
 
 `category` the category name (optional)
 
+### `nexteinConfig`
+
+A wrapper configuration function to be applied into the `next.config.js`. It provides a way to add your own `next.js` config along with `nextein` internal next.js config.
+
+> next.config.js
+
+```js
+
+const nexteinConfig = require('nextein/config').default
+
+module.exports = nexteinConfig({
+    // Your own next.js config here
+})
+
+```
