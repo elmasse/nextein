@@ -23,7 +23,7 @@ There are a few steps you have to follow to get your site up and running with `n
         })
 
     ```
-- Create an `pages/index.js`
+- Create `pages/index.js`
 
     ```js
 
@@ -66,12 +66,22 @@ There are a few steps you have to follow to get your site up and running with `n
         }
     }
     ```
-- Finally run the development server
+- Run the development server
     - `npm run dev`
     - open http://localhost:3000
+- Add another npm script to your `package.json` to export the site
 
+    ```json
+    {
+        "scripts": {
+            "dev": "nextein",
+            "export": "nextein build && nextein export"
+        }
+    }
+    ```
 
-WIP - see [nextein-example](https://github.com/elmasse/nextein-example) for a working example
+### Example
+see [nextein-example](https://github.com/elmasse/nextein-example) for a working example
 
 ## Documentation
 
@@ -82,7 +92,7 @@ HOC for `/pages` components that renders a list of posts. It makes the post list
 ```js
 import withPosts from 'nextein/posts'
 
-export defatult withPosts( ({ posts }) => { /* render your posts here */ } )
+export default withPosts( ({ posts }) => { /* render your posts here */ } )
 
 ```
 
@@ -93,7 +103,7 @@ Filter function to be applied to posts to retrieve posts in given category
 ```js
 import withPosts, {inCategory} from 'nextein/posts'
 
-export defatult withPosts( ({ posts }) => { 
+export default withPosts( ({ posts }) => { 
     const homePosts = posts.filter(inCategory('home'))
     /* render your homePosts here */ 
 } )
@@ -113,12 +123,31 @@ export default withPost( ({ post }) => { /* render your post here */ } )
 
 ### `Content`
 
-Component to render a `post` object. Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
+Component to render a `post` object. This component receive the `content` from the post as a property.
+Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
 
 ```js
 import withPost, { Content } from 'nextein/post'
 
 export default withPost( ({ post }) => { return (<Content {...post} />) } )
+
+```
+
+Using the `excerpt` property
+
+```js
+import withPosts, {inCategory} from 'nextein/posts'
+
+export default withPosts( ({ posts }) => { 
+    const homePosts = posts.filter(inCategory('home'))
+    return (
+        <section>
+        {
+            homePosts.map( (post, idx) => <Content key={idx} {...post} excerpt/> )
+        }
+        </section>
+    )
+} )
 
 ```
 
