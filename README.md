@@ -169,7 +169,7 @@ export default withPosts( ({ posts }) => {
 
 - `data` is the frontmatter object containig the post meta information (title, page, category, etc)
     - `data.url` is the generated url for the post
-    - `data.category` is the post's category 
+    - `data.category` is the post's category
 - `content` is markdown content of the post
 
 ```js
@@ -182,9 +182,24 @@ export default withPosts( ({ posts }) => {
 
 There are only a few defined properties in the frontmatter metadata that is used by `nextein`
 
-`page` is the component under `/page` that will be used to render the post (default to `post`)
+```md
+---
+page: my-awesome-post
+category: categoryOne
+slug: /posts/my-first-post
+date: 2017-06-23
 
-`category` the category name (optional)
+---
+
+Post Content...
+
+```
+
+- `page`: the component under `/pages` that will be used to render the post (default to `post` which reads `/pages/post` component)
+- `category`: the category name (optional)
+- `slug`: the post url (optional)
+- `date`: date string in YYYY-MM-DD format. Used to sort posts list. (optional)
+
 
 ### `nexteinConfig`
 
