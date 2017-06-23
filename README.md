@@ -52,7 +52,7 @@ There are a few steps you have to follow to get your site up and running with `n
     category: post
     ---
 
-    This is the first paragraph and it will be used as an excerpt when loaded in an `<Content excerpt />` tag.
+    This is the first paragraph and it will be used as an excerpt when loaded in a `<Content excerpt />` tag.
 
     This paragraph should *not* appear in that list.
 
@@ -101,11 +101,25 @@ export default withPosts( ({ posts }) => { /* render your posts here */ } )
 Filter function to be applied to posts to retrieve posts in given category
 
 ```js
-import withPosts, {inCategory} from 'nextein/posts'
+import withPosts, { inCategory } from 'nextein/posts'
 
 export default withPosts( ({ posts }) => { 
     const homePosts = posts.filter(inCategory('home'))
     /* render your homePosts here */ 
+} )
+
+```
+
+### `sortByDate`
+
+Sort function to be applied to posts to sort by date (newest on top). This requires the post contains a `date` in `frontmatter` or in the file name (ala jekyll)
+
+```js
+import withPosts, { sortByDate } from 'nextein/posts'
+
+export default withPosts( ({ posts }) => { 
+    posts.sort(sortByDate)
+    /* render your posts here */ 
 } )
 
 ```
