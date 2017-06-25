@@ -62,9 +62,8 @@ const createEntryURL = ({ slug, category, path }) => {
 
 const createEntryDate = ({ path, date }) => {
   const name = extractName(path)
-  const DATE_IN_FILE_REGEX = /^(\d{4})-(\d{2})-(\d{2})-(.+)\.(.+)$/
+  const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
   const match = name.match(DATE_IN_FILE_REGEX)
-  
-  return date ? new Date(date) : (match) ? new Date(match[1], match[2] - 1, match[3], 12) : new Date()
 
+  return date ? new Date(date) : (match) ? new Date(match[1]) : new Date()
 }
