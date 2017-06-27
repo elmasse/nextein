@@ -11,7 +11,7 @@ const extractExcerpt = (selector = 'paragraph:first-child') => (tree) => {
   return tree
 }
 
-const toReact = ({ data, content, excerpt, renderers }) => (
+const toReact = ({ content, excerpt, renderers }) => (
   remark()
     .use(excerpt && extractExcerpt)
     .use(reactRenderer, {
@@ -21,10 +21,10 @@ const toReact = ({ data, content, excerpt, renderers }) => (
     .processSync(content).contents
 )
 
-export const Content = ({ data, content, excerpt, renderers }) => {
+export const Content = ({ content, excerpt, renderers }) => {
   return (
     <div>
-      { toReact({ data, content, excerpt, renderers }) }
+      { toReact({ content, excerpt, renderers }) }
     </div>
   )
 }
