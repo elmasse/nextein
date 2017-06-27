@@ -5,8 +5,9 @@ import BabiliPlugin from 'babili-webpack-plugin'
 
 export default (original) => {
   const { webpack:oWebpack, exportPathMap:oExportPathMap } = original 
-  
+
   return {
+    ...original,
     webpack: function (...args) {
       const our = webpack(...args)
       let their
@@ -31,8 +32,7 @@ export default (original) => {
         ...our,
         ...their
       }  
-    },
-    ...original
+    }
   }
 
 }
