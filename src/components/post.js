@@ -11,17 +11,20 @@ const extractExcerpt = (selector = 'paragraph:first-child') => (tree) => {
   return tree
 }
 
-const toReact = ({ data, content, excerpt }) => (
+const toReact = ({ data, content, excerpt, renderers }) => (
   remark()
     .use(excerpt && extractExcerpt)
-    .use(reactRenderer, {prefix: `entry-`})
-    .processSync(content).contents  
+    .use(reactRenderer, {
+      prefix: `entry-`,
+      remarkReactComponents: renderers
+    })
+    .processSync(content).contents
 )
 
-export const Content = ({ data, content, excerpt }) => {
+export const Content = ({ data, content, excerpt, renderers }) => {
   return (
     <div>
-      { toReact({ data, content, excerpt }) }
+      { toReact({ data, content, excerpt, renderers }) }
     </div>
   )
 }
