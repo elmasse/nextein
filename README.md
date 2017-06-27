@@ -140,6 +140,11 @@ export default withPost( ({ post }) => { /* render your post here */ } )
 Component to render a `post` object. This component receive the `content` from the post as a property.
 Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
 
+- `content`: `{String}` Markdown content to be render. This is provided by `post.content`
+- `excerpt`: `{Boolean}` true to only render the first paragraph. Optional
+- `renderers`: `{Object}` A set of custom renderers for Markdown elements.
+
+
 ```js
 import withPost, { Content } from 'nextein/post'
 
@@ -164,6 +169,25 @@ export default withPosts( ({ posts }) => {
 } )
 
 ```
+
+Using `renderers` to change/style the `<p>` tag
+
+```js
+export default withPost( ({ post }) => { 
+    return (
+        <Content {...post} 
+            renderers={{
+                p: Paragraph 
+            }}
+        />
+    ) 
+} )
+
+const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'}}> { children } </p> )
+
+
+```
+
 
 ### `post`
 
