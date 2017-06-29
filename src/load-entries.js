@@ -2,7 +2,7 @@
 const isServer = typeof window === 'undefined'
 
 import glob from 'glob'
-import { readFileSync } from 'fs'
+import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname } from 'path'
 import fm from 'frontmatter'
 import fetch from 'unfetch'
@@ -13,21 +13,23 @@ export default async (path = 'posts/') => {
 
 const fromServer = async (path) => {
    const paths = glob.sync(`${path}**/*.md`, { root: process.cwd()})
-   return  paths
-    .map((p) => (readFileSync(p, 'utf-8') ))
+   return paths
+    .map(path => readFileSync(path, 'utf-8'))
     .map(fm)
     .map((value, idx) => {
       const { data } = value
+      const path = paths[idx] 
       return {
         ...value,
         data: {
           ...data,
-          _entry: paths[idx],
-          url: createEntryURL({ path: paths[idx], ...data }),
-          date: createEntryDate({ path: paths[idx], ...data }).toJSON()
+          _entry: path,
+          url: createEntryURL({ path, ...data }),
+          date: createEntryDate({ path, ...data }).toJSON()
         }
       }
     })
+    .filter(({data}) => data.published !== false )
 }
 
 export const byFileName = async (path) => {
@@ -65,5 +67,10 @@ const createEntryDate = ({ path, date }) => {
   const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
   const match = name.match(DATE_IN_FILE_REGEX)
 
-  return date ? new Date(date) : (match) ? new Date(match[1]) : new Date()
+  return date ? new Date(date) : (match) ? new Date(match[1]) : fileCreationDate(path)
+}
+
+const fileCreationDate = (path) => {
+  const { birthtime } = statSync(path)
+  return birthtime
 }

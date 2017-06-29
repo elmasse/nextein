@@ -194,6 +194,7 @@ const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'
 - `data` is the frontmatter object containig the post meta information (title, page, category, etc)
     - `data.url` is the generated url for the post
     - `data.category` is the post's category
+    - `data.date`: JSON date from frontmatter's date or date in file name or file creation date
 - `content` is markdown content of the post
 
 ```js
@@ -223,6 +224,7 @@ Post Content...
 - `category`: the category name (optional)
 - `slug`: the post url (optional)
 - `date`: date string in YYYY-MM-DD format. Used to sort posts list. (optional)
+- `published`: Set to `false` to remove this post from entries. 
 
 
 ### `nexteinConfig`
