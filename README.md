@@ -219,7 +219,7 @@ Post Content...
 
 ```
 
-- `page`: the component under `/pages` that will be used to render the post (default to `post` which reads `/pages/post` component)
+- `page`: the component under `/pages` that will be used to render the post (default to `post` which reads `/pages/post` component) **Note:** If you have an entry that should not be rendered by its own page (such as a part of an index file only) use `page: false` to avoid generating the url and exporting entry.
 - `category`: the category name (optional)
 - `slug`: the post url (optional)
 - `date`: date string in YYYY-MM-DD format. Used to sort posts list. (optional)
