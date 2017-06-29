@@ -58,13 +58,13 @@ export const exportPathMap = async () => {
   const entries = await loadEntries()
 
   const map = entries
-    .reduce((prev, { data }) => { 
+    .reduce((prev, { data }) => {
       const { url, page = 'post', _entry } = data
       const query = { _entry }
-      return {
+      return page ? {
         ...prev,
         [url]: { page: `/${page}`, query }
-      }
+      } : prev
     }, {})
 
     return {

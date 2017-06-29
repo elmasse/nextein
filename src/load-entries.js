@@ -50,14 +50,14 @@ const byFileNameFromClient = async(path) => {
 
 const extractName = (path) =>  basename(path, extname(path))
 
-const createEntryURL = ({ slug, category, path }) => {
+const createEntryURL = ({ slug, category, path, page = 'post' }) => {
   let url = slug
   if (!slug) {
     const name = extractName(path)
-    url = `/${category}/${name}`
+    url = `/${category ? `${category}/` : '' }${name}`
   }
 
-  return url
+  return page ? url : undefined
 }
 
 const createEntryDate = ({ path, date }) => {
