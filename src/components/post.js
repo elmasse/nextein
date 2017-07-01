@@ -21,12 +21,10 @@ const toReact = ({ content, excerpt, renderers }) => (
     .processSync(content).contents
 )
 
-export const Content = ({ content, excerpt, renderers }) => {
-  return (
-    <div>
-      { toReact({ content, excerpt, renderers }) }
-    </div>
-  )
+export const Content = ({ content, excerpt, renderers, style }) => {
+  const cmp = toReact({ content, excerpt, renderers })
+  const { props } = cmp
+  return { ...cmp, props: {...props, style} }
 }
 
 export default (WrappedComponent) => {
