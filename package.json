@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "fly",
-    "release": "fly release",
+    "build": "taskr",
+    "release": "taskr release",
     "prepublish": "npm run release"
   },
   "bin": {
@@ -43,11 +43,11 @@
     "babel-plugin-transform-object-rest-spread": "6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "fly": "2.0.6",
-    "fly-babel": "2.1.1",
-    "fly-clear": "1.0.1",
-    "fly-esnext": "2.0.1",
-    "fly-watch": "1.1.1"
+    "taskr": "1.0.6",
+    "@taskr/babel": "1.0.6",
+    "@taskr/clear": "1.0.6",
+    "@taskr/esnext": "1.0.6",
+    "@taskr/watch": "1.0.6"
   },
   "keywords": [],
   "author": "",
