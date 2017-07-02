@@ -46,7 +46,7 @@
     "taskr": "1.0.6",
     "@taskr/babel": "1.0.6",
     "@taskr/clear": "1.0.6",
-    "@taskr/esnext": "1.0.6",
+    "@taskr/esnext": "1.0.0",
     "@taskr/watch": "1.0.6"
   },
   "keywords": [],
