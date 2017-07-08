@@ -22,9 +22,10 @@ const toReact = ({ content, excerpt, renderers }) => (
 )
 
 export const Content = (props) => {
-  const { content, excerpt, renderers, ...componentProps } = props
+  const { content, excerpt, renderers, data, ...componentProps } = props
   const cmp = toReact({ content, excerpt, renderers })
   const { props:cmpProps } = cmp
+
   return {
     ...cmp,
     props: {
