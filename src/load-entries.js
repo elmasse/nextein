@@ -41,11 +41,25 @@ export const byFileNameFromServer = (path) => {
 }
 
 const fromClient = async ( path ) => {
+  // in safari the popstate event is fired when user press back and
+  // causes the getInitialProps to be called in the SSR version
+  // This will pickup the current props and return it as a workaround
+  // https://github.com/zeit/next.js/issues/2360
+  if (__NEXT_DATA__.nextExport) {
+    return __NEXT_DATA__.props.posts
+  }
   const resp = await fetch('./_load_entries')
   return await resp.json()
 }
 
 const byFileNameFromClient = async(path) => {
+  // in safari the popstate event is fired when user press back and
+  // causes the getInitialProps to be called in the SSR version
+  // This will pickup the current props and return it as a workaround
+  // https://github.com/zeit/next.js/issues/2360
+  if (__NEXT_DATA__.nextExport) {
+    return __NEXT_DATA__.props.post
+  }
   const resp = await fetch(`./_load_entry/${path}`)
   return await resp.json()
 }
