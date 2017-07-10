@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import 'source-map-support/register'
-import { resolve, join } from 'path'
+import { resolve } from 'path'
 import parseArgs from 'minimist'
-import { existsSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import Server from '../server'
 import pkgUp from 'pkg-up'
 

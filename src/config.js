@@ -2,9 +2,11 @@
 import loadEntries from './load-entries'
 import BabiliPlugin from 'babili-webpack-plugin'
 
-
 export default (original) => {
-  const { webpack:oWebpack, exportPathMap:oExportPathMap } = original 
+  const {
+    webpack: oWebpack,
+    exportPathMap: oExportPathMap
+  } = original
 
   return {
     ...original,
@@ -31,10 +33,9 @@ export default (original) => {
       return {
         ...our,
         ...their
-      }  
+      }
     }
   }
-
 }
 
 export const webpack = (config, { dev }) => {
@@ -50,9 +51,8 @@ export const webpack = (config, { dev }) => {
     config.plugins.push(new BabiliPlugin())
   }
 
-  return config;
+  return config
 }
-
 
 export const exportPathMap = async () => {
   const entries = await loadEntries()
@@ -67,9 +67,8 @@ export const exportPathMap = async () => {
       } : prev
     }, {})
 
-    return {
-      '/': { page: '/'},
-      ...map
-    }
-
+  return {
+    '/': { page: '/' },
+    ...map
+  }
 }

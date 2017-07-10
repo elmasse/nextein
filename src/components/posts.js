@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import loadEntries from '../load-entries'
 
 export const inCategory = (category) => (m) => {
-  return category ? (m.data.category == category) : true
+  return category ? (m.data.category === category) : true
 }
 
 export const sortByDate = (a, b) => {
@@ -14,11 +14,9 @@ export const sortByDate = (a, b) => {
 }
 
 export default (WrappedComponent) => {
-
   return class extends Component {
-    static async getInitialProps(...args) {
-
-      const wrappedInitial = WrappedComponent.getInitialProps 
+    static async getInitialProps (...args) {
+      const wrappedInitial = WrappedComponent.getInitialProps
       const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
       const posts = await loadEntries()
 
@@ -28,8 +26,8 @@ export default (WrappedComponent) => {
       }
     }
 
-    render() {
-      return <WrappedComponent {...this.props} />;
+    render () {
+      return <WrappedComponent {...this.props} />
     }
   }
 }

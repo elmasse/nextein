@@ -24,7 +24,7 @@ const toReact = ({ content, excerpt, renderers }) => (
 export const Content = (props) => {
   const { content, excerpt, renderers, data, ...componentProps } = props
   const cmp = toReact({ content, excerpt, renderers })
-  const { props:cmpProps } = cmp
+  const { props: cmpProps } = cmp
 
   return {
     ...cmp,
@@ -36,10 +36,9 @@ export const Content = (props) => {
 }
 
 export default (WrappedComponent) => {
-
   return class extends Component {
-    static async getInitialProps({ query }) {
-      //TODO check WrappedComponent getInitialProps
+    static async getInitialProps ({ query }) {
+      // TODO check WrappedComponent getInitialProps
       const { _entry } = query
       const post = await byFileName(_entry)
 
@@ -48,10 +47,10 @@ export default (WrappedComponent) => {
       }
     }
 
-    render() {
+    render () {
       const { props } = this
 
-      return <WrappedComponent {...props} />;
+      return <WrappedComponent {...props} />
     }
   }
 }

@@ -54,9 +54,9 @@ if (commands.has(cmd)) {
 }
 
 let bin
-if (cmd === defaultCommand)
+if (cmd === defaultCommand) {
   bin = join(__dirname, 'nextein-' + cmd)
-else {
+} else {
   bin = 'next'
   args.unshift(cmd)
 }
@@ -95,7 +95,7 @@ const restartProcess = (cur, prev) => {
 
 let proc = startProcess()
 // const { pagesDirectory = resolve(process.cwd(), 'pages') } = getConfig(process.cwd())
-const pagesDirectory = resolve(process.cwd(), 'pages');
+const pagesDirectory = resolve(process.cwd(), 'pages')
 
 if (cmd === 'dev') {
   watchFile(`${resolve(pagesDirectory, '..')}/next.config.js`, restartProcess)

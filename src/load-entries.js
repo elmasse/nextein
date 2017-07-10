@@ -1,24 +1,24 @@
-
-const isServer = typeof window === 'undefined'
-
+/* global __NEXT_DATA__ */
 import glob from 'glob'
 import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname } from 'path'
 import fm from 'frontmatter'
 import fetch from 'unfetch'
 
+const isServer = typeof window === 'undefined'
+
 export default async (path = 'posts/') => {
-  return await ( isServer ? fromServer(path) : fromClient(path) )
+  return (isServer ? fromServer(path) : fromClient(path))
 }
 
 const fromServer = async (path) => {
-   const paths = glob.sync(`${path}**/*.md`, { root: process.cwd()})
-   return paths
+  const paths = glob.sync(`${path}**/*.md`, { root: process.cwd() })
+  return paths
     .map(path => readFileSync(path, 'utf-8'))
     .map(fm)
     .map((value, idx) => {
       const { data } = value
-      const path = paths[idx] 
+      const path = paths[idx]
       return {
         ...value,
         data: {
@@ -29,7 +29,7 @@ const fromServer = async (path) => {
         }
       }
     })
-    .filter(({data}) => data.published !== false )
+    .filter(({data}) => data.published !== false)
 }
 
 export const byFileName = async (path) => {
@@ -40,7 +40,7 @@ export const byFileNameFromServer = (path) => {
   return fm(readFileSync(resolve(process.cwd(), path), 'utf-8'))
 }
 
-const fromClient = async ( path ) => {
+const fromClient = async (path) => {
   // in safari the popstate event is fired when user press back and
   // causes the getInitialProps to be called in the SSR version
   // This will pickup the current props and return it as a workaround
@@ -49,7 +49,7 @@ const fromClient = async ( path ) => {
     return __NEXT_DATA__.props.posts
   }
   const resp = await fetch('./_load_entries')
-  return await resp.json()
+  return resp.json()
 }
 
 const byFileNameFromClient = async(path) => {
@@ -61,16 +61,16 @@ const byFileNameFromClient = async(path) => {
     return __NEXT_DATA__.props.post
   }
   const resp = await fetch(`./_load_entry/${path}`)
-  return await resp.json()
+  return resp.json()
 }
 
-const extractName = (path) =>  basename(path, extname(path))
+const extractName = (path) => basename(path, extname(path))
 
 const createEntryURL = ({ slug, category, path, page = 'post' }) => {
   let url = slug
   if (!slug) {
     const name = extractName(path)
-    url = `/${category ? `${category}/` : '' }${name}`
+    url = `/${category ? `${category}/` : ''}${name}`
   }
 
   return page ? url : undefined
