@@ -37,12 +37,15 @@ export const Content = (props) => {
 
 export default (WrappedComponent) => {
   return class extends Component {
-    static async getInitialProps ({ query }) {
-      // TODO check WrappedComponent getInitialProps
+    static async getInitialProps (...args) {
+      const wrappedInitial = WrappedComponent.getInitialProps
+      const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
+      const [ { query } ] = args
       const { _entry } = query
       const post = await byFileName(_entry)
 
       return {
+        ...wrapped,
         post
       }
     }
