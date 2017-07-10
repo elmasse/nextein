@@ -53,7 +53,8 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "standard": "10.0.2",
-    "taskr": "1.0.6"
+    "taskr": "1.0.6",
+    "taskr-standard": "1.0.0"
   },
   "standard": {
     "parser": "babel-eslint",

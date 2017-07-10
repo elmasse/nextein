@@ -8,13 +8,17 @@ export async function bin(task, opts) {
 }
 
 export async function build(task) {
-  await task.serial(['bin', 'compile'])
+  await task.serial(['lint', 'bin', 'compile'])
+}
+
+export async function lint(task) {
+  await task.source('src/**/*.js').standard();
 }
 
 export default async function (task) {
   await task.start('build')
-  await task.watch('src/**/*.js', 'compile')
-  await task.watch('bin/**/*', 'bin')
+  await task.watch('src/**/*.js', ['lint','compile'])
+  await task.watch('bin/**/*', ['lint','bin'])
 }
 
 export async function release (task) {
