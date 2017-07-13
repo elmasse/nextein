@@ -60,7 +60,7 @@ export const exportPathMap = async () => {
   const map = entries
     .reduce((prev, { data }) => {
       const { url, page = 'post', _entry } = data
-      const query = { _entry }
+      const query = _entry ? { _entry } : undefined
       return page ? {
         ...prev,
         [url]: { page: `/${page}`, query }
