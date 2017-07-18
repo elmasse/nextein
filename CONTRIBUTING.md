@@ -8,6 +8,6 @@
 2. Install the dependencies: `npm install`
 3. Run `npm link` to link the local repo to NPM
 4. Run `npm run build` to build and watch for code changes
-5. Then npm link this repo inside any example app with `npm link next`
+5. Then npm link this repo inside any example app with `npm link nextein`
 
 
