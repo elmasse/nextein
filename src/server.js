@@ -25,7 +25,7 @@ export default class Server {
 
   entriesAsJSON () {
     const { entriesMap } = this
-    return JSON.stringify(entriesMap.entries())
+    return JSON.stringify(Array.from(entriesMap.values()))
   }
 
   handleRequest = (req, res) => {
