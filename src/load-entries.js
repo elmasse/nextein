@@ -41,7 +41,7 @@ export const byFileName = async (path, root = 'posts') => {
 }
 
 const byFileNameFromServer = (path, entriesPath) => {
-  const paths = [resolve(process.cwd(), path)]
+  const paths = [path]
 
   return paths
     .map(path => readFileSync(path, 'utf-8'))
