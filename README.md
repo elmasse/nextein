@@ -193,7 +193,7 @@ const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'
 
 - `data` is the frontmatter object containig the post meta information (title, page, category, etc)
     - `data.url` is the generated url for the post
-    - `data.category` is the post's category
+    - `data.category` is the post's category. When not specified, if the post is inside a folder, the directory structure under `posts` will be used. 
     - `data.date`: JSON date from frontmatter's date or date in file name or file creation date
 - `content` is markdown content of the post
 
