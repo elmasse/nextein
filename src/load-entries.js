@@ -36,15 +36,24 @@ const fromClient = async (path) => {
   return resp.json()
 }
 
-export const byFileName = async (path) => {
-  return isServer ? byFileNameFromServer(path) : byFileNameFromClient(path)
+export const byFileName = async (path, root = 'posts') => {
+  return isServer ? byFileNameFromServer(path, root) : byFileNameFromClient(path)
 }
 
-const byFileNameFromServer = (path) => {
-  return fm(readFileSync(resolve(process.cwd(), path), 'utf-8'))
+const byFileNameFromServer = (path, entriesPath) => {
+  const paths = [resolve(process.cwd(), path)]
+
+  return paths
+    .map(path => readFileSync(path, 'utf-8'))
+    .map(fm)
+    .map(addEntry(paths))
+    .map(addCategory(entriesPath))
+    .map(addUrl)
+    .map(addDate)
+    .pop()
 }
 
-const byFileNameFromClient = async(path) => {
+const byFileNameFromClient = async (path) => {
   // in safari the popstate event is fired when user press back and
   // causes the getInitialProps to be called in the SSR version
   // This will pickup the current props and return it as a workaround
@@ -61,17 +70,17 @@ const addEntry = (paths) => (value, idx) => {
   return { ...value, data: { ...data, _entry: paths[idx] } }
 }
 
-const addCategory = (entriesPath) => (value, idx) => {
+const addCategory = (entriesPath) => (value) => {
   const { data } = value
   return { ...value, data: { ...data, category: createEntryCategory({ entriesPath, ...data }) } }
 }
 
-const addUrl = (value, idx) => {
+const addUrl = (value) => {
   const { data } = value
   return { ...value, data: { ...data, url: createEntryURL({ ...data }) } }
 }
 
-const addDate = (value, idx) => {
+const addDate = (value) => {
   const { data } = value
   return { ...value, data: { ...data, date: createEntryDate({ ...data }) } }
 }
