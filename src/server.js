@@ -12,14 +12,13 @@ export default class Server {
   }
 
   async readEntries () {
-    const entries = await loadEntries('/posts')
-
+    const entries = await loadEntries()
     const kv = entries
-    .map((entry) => {
-      const { data } = entry
-      const { url } = data
-      return [url, entry]
-    })
+      .map((entry) => {
+        const { data } = entry
+        const { url } = data
+        return [url, entry]
+      })
 
     this.entriesMap = new Map(kv)
   }
