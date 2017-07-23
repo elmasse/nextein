@@ -3,8 +3,12 @@ import React, { Component } from 'react'
 
 import loadEntries from '../load-entries'
 
-export const inCategory = (category) => (m) => {
-  return category ? (m.data.category === category) : true
+export const inCategory = (category, { includeSubCategories = false }) => (post) => {
+  const { data } = post
+  const { category: postCategory = '' } = data
+  const result = !includeSubCategories ? postCategory === category : postCategory.startsWith(category)
+
+  return category ? result : true
 }
 
 export const sortByDate = (a, b) => {
