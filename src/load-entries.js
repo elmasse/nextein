@@ -14,13 +14,7 @@ export default async (path = 'posts') => {
 const fromServer = async (entriesPath) => {
   const paths = glob.sync(`${entriesPath}/**/*.md`, { root: process.cwd() })
 
-  return paths
-    .map(path => readFileSync(path, 'utf-8'))
-    .map(fm)
-    .map(addEntry(paths))
-    .map(addCategory(entriesPath))
-    .map(addUrl)
-    .map(addDate)
+  return processEntries(paths, entriesPath)
     .filter(({data}) => data.published !== false)
 }
 
@@ -41,16 +35,7 @@ export const byFileName = async (path, root = 'posts') => {
 }
 
 const byFileNameFromServer = (path, entriesPath) => {
-  const paths = [path]
-
-  return paths
-    .map(path => readFileSync(path, 'utf-8'))
-    .map(fm)
-    .map(addEntry(paths))
-    .map(addCategory(entriesPath))
-    .map(addUrl)
-    .map(addDate)
-    .pop()
+  return processEntries([path], entriesPath).pop()
 }
 
 const byFileNameFromClient = async (path) => {
@@ -63,6 +48,16 @@ const byFileNameFromClient = async (path) => {
   }
   const resp = await fetch(`/_load_entry/${path}`)
   return resp.json()
+}
+
+const processEntries = (paths, entriesPath) => {
+  return paths
+    .map(path => readFileSync(path, 'utf-8'))
+    .map(fm)
+    .map(addEntry(paths))
+    .map(addCategory(entriesPath))
+    .map(addUrl)
+    .map(addDate)
 }
 
 const addEntry = (paths) => (value, idx) => {
