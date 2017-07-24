@@ -101,7 +101,7 @@ export default withPosts( ({ posts }) => { /* render your posts here */ } )
 Filter function to be applied to posts to retrieve posts in a given category.
 
 - `category`: `{String}` The category to filter results.
-- `options` : `{Object}.` Optional
+- `options` : `{Object}` Optional
     - `includeSubCategories:` `Boolean` true to include posts in sub categories. Default: `false`
 
 Categories are resolved by the folder structure by default. This means that a post located at `posts/categoryA/subOne` will have a category `categoryA/subOne` unless you specify the category name in frontmatter. 
