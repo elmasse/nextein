@@ -4,7 +4,7 @@ import next from 'next'
 import { parse } from 'url'
 import route from 'path-match'
 
-import loadEntries, { byFileNameFromServer } from './load-entries'
+import loadEntries from './load-entries'
 
 export default class Server {
   constructor ({ dir = '.', dev = true }) {
@@ -33,7 +33,7 @@ export default class Server {
     const parsedUrl = parse(req.url, true)
     const { pathname } = parsedUrl
 
-    const matchEntry = route()('/_load_entry/:path')
+    const matchEntry = route()('/_load_entry/:path+')
     const entryParam = matchEntry(pathname)
 
     if (pathname === '/_load_entries') {
@@ -42,10 +42,10 @@ export default class Server {
     }
 
     if (entryParam) {
-      const path = entryParam.path
+      const path = `/${entryParam.path.join('/')}`
 
       if (path) {
-        const e = byFileNameFromServer(path)
+        const e = this.entriesMap.get(path)
 
         res.writeHead(200, {'Content-Type': 'application/json'})
         return res.end(JSON.stringify(e))
