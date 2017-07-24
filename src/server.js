@@ -3,8 +3,9 @@ import http from 'http'
 import next from 'next'
 import { parse } from 'url'
 import route from 'path-match'
+import { sep } from 'path'
 
-import loadEntries, { byFileNameFromServer } from './load-entries'
+import loadEntries, { byFileName } from './load-entries'
 
 export default class Server {
   constructor ({ dir = '.', dev = true }) {
@@ -28,12 +29,12 @@ export default class Server {
     return JSON.stringify(Array.from(entriesMap.values()))
   }
 
-  handleRequest = (req, res) => {
+  handleRequest = async (req, res) => {
     const { entriesMap, app } = this
     const parsedUrl = parse(req.url, true)
     const { pathname } = parsedUrl
 
-    const matchEntry = route()('/_load_entry/:path')
+    const matchEntry = route()('/_load_entry/:path+')
     const entryParam = matchEntry(pathname)
 
     if (pathname === '/_load_entries') {
@@ -42,10 +43,10 @@ export default class Server {
     }
 
     if (entryParam) {
-      const path = entryParam.path
+      const path = entryParam.path.join(sep)
 
       if (path) {
-        const e = byFileNameFromServer(path)
+        const e = await byFileName(path)
 
         res.writeHead(200, {'Content-Type': 'application/json'})
         return res.end(JSON.stringify(e))

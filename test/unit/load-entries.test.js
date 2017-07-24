@@ -18,7 +18,7 @@ describe('loadEntries called from Server', () => {
   test('retrieves an array of posts', async () => {
     const expectedPage = 'post'
     const expectedCategory = 'category'
-    const expectedEntry = './posts/test.md'
+    const expectedEntry = 'posts/test.md'
     const expectedContent = 'text'
     const expectedUrl = `/${expectedCategory}/test`
     const expectedDate = new Date()
@@ -31,7 +31,7 @@ describe('loadEntries called from Server', () => {
         `
 
     glob.sync.mockReturnValueOnce([
-      './posts/test.md'
+      'posts/test.md'
     ])
 
     readFileSync.mockReturnValueOnce(expectedFileContent)
@@ -72,7 +72,7 @@ describe('byFileName', () => {
   test('retrieves a single post', async () => {
     const expectedPage = 'post'
     const expectedCategory = 'category'
-    const expectedEntry = './posts/test.md'
+    const expectedEntry = 'posts/test.md'
     const expectedContent = 'text'
     const expectedUrl = `/${expectedCategory}/test`
     const expectedDate = new Date()

@@ -46,7 +46,7 @@ const byFileNameFromClient = async (path) => {
   if (__NEXT_DATA__.nextExport) {
     return __NEXT_DATA__.props.post
   }
-  const resp = await fetch(`/_load_entry/${path}`)
+  const resp = await fetch(`/_load_entry/${path.replace(sep, '/')}`)
   return resp.json()
 }
 
