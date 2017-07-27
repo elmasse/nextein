@@ -17,12 +17,13 @@ export const sortByDate = (a, b) => {
   return bTime - aTime
 }
 
-export default (WrappedComponent) => {
+export const withPostsFilterBy = (filter) => (WrappedComponent) => {
   return class extends Component {
     static async getInitialProps (...args) {
       const wrappedInitial = WrappedComponent.getInitialProps
       const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-      const posts = await loadEntries()
+      const all = await loadEntries()
+      const posts = filter ? all.filter(filter) : all
 
       return {
         ...wrapped,
@@ -35,3 +36,7 @@ export default (WrappedComponent) => {
     }
   }
 }
+
+const withPosts = withPostsFilterBy()
+
+export default withPosts
