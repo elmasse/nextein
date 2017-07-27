@@ -124,8 +124,23 @@ import withPosts, { inCategory } from 'nextein/posts'
 export default withPosts( ({ posts }) => { 
     const categoryAPosts = posts
         .filter(inCategory('categoryA', { includeSubCategories: true }))
-    /* render your hocategoryAPostsmePosts here */ 
+    /* render your categoryAPostsmePosts here */ 
 } )
+
+```
+
+### `withPostsFilterBy(filter)`
+
+Returns an HOC that gets all posts filtered out by the given filter function. This can be used in conjunction with `inCategory` to get only the desired posts in a certain category.
+
+ ```js
+import { withPostsFilterBy, inCategory } from 'nextein/posts'
+
+const withCategoryAPosts = withPostsFilterBy(inCategory('categoryA'))
+
+export default withCategoryAPosts(({ posts }) => { 
+    /* render your posts here */ 
+})
 
 ```
 
