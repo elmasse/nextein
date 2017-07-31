@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Content Content component should render post content 1`] = `
+<p>
+  lorem ipsum
+</p>
+`;

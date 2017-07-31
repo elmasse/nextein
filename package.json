@@ -54,6 +54,7 @@
     "next": "3.0.1-beta.18",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-test-renderer": "15.6.1",
     "standard": "10.0.2",
     "taskr": "1.0.6",
     "taskr-standard": "1.0.1"
