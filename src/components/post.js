@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
-import remark from 'remark'
+import unified from 'unified'
+import remarkParse from 'remark-parse'
 import reactRenderer from 'remark-react'
 import select from 'unist-util-select'
 
@@ -12,7 +13,8 @@ const extractExcerpt = (selector = 'paragraph:first-child') => (tree) => {
 }
 
 const toReact = ({ content, excerpt, renderers }) => (
-  remark()
+  unified()
+    .use(remarkParse)
     .use(excerpt && extractExcerpt)
     .use(reactRenderer, {
       prefix: `entry-`,

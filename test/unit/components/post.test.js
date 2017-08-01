@@ -1,20 +1,20 @@
 jest.mock('../../../src/load-entries')
-jest.mock('remark', () => {
-  function mockedRemark() { return new impl() }
-  mockedRemark.processSync = jest.fn()
-  mockedRemark.use = jest.fn(function() { return this })
+jest.mock('unified', () => {
+  function mockedUnified() { return new impl() }
+  mockedUnified.processSync = jest.fn()
+  mockedUnified.use = jest.fn(function() { return this })
   class impl {
-    use = mockedRemark.use
-    processSync = mockedRemark.processSync
+    use = mockedUnified.use
+    processSync = mockedUnified.processSync
   }
   
-  return mockedRemark
+  return mockedUnified
 })
 
 import React from 'react'
 import renderer from 'react-test-renderer'
 
-import remark from 'remark'
+import unified from 'unified'
 import { byFileName } from '../../../src/load-entries'
 import withPost, { Content } from '../../../src/components/post'
 
@@ -46,11 +46,11 @@ describe('Content', () => {
   test('Content component should render post content', () => {
     const expectedContent = `lorem ipsum`
     
-    remark.processSync.mockReturnValueOnce({contents: (<p>{expectedContent}</p>) })
+    unified.processSync.mockReturnValueOnce({contents: (<p>{expectedContent}</p>) })
 
     const comp = renderer.create(<Content content={expectedContent} />)
 
-    expect(remark.processSync).toHaveBeenCalledWith(expectedContent)
+    expect(unified.processSync).toHaveBeenCalledWith(expectedContent)
     expect(comp.toJSON()).toMatchSnapshot()
 
   })

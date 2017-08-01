@@ -28,9 +28,10 @@
     "object.assign": "^4.0.4",
     "path-match": "^1.2.4",
     "pkg-up": "^2.0.0",
-    "remark": "^7.0.1",
+    "remark-parse": "4.0.0",
     "remark-react": "^4.0.0",
     "unfetch": "^2.1.2",
+    "unified": "6.1.5",
     "unist-util-select": "^1.5.0"
   },
   "peerDependencies": {
