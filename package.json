@@ -1,7 +1,10 @@
 {
   "name": "nextein",
   "version": "1.0.0-beta16",
-  "description": "",
+  "description": "A static site and blog generator based on Next.js",
+  "repository": "https://github.com/elmasse/nextein",
+  "bugs": "https://github.com/elmasse/nextein/issues",
+  "homepage": "https://nextein.now.sh",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -73,7 +76,16 @@
     ],
     "testRegex": "(/^test/.*|\\.(test|spec))\\.(js)$"
   },
-  "keywords": [],
+  "keywords": [
+    "blog",
+    "blog-engine",
+    "static",
+    "website",
+    "next.js",
+    "react",
+    "markdown",
+    "ssr"
+  ],
   "author": {
     "name": "Maximiliano Fierro",
     "email": "elmasse@gmail.com"
