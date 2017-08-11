@@ -12,20 +12,21 @@ const extractExcerpt = (selector = 'paragraph:first-child') => (tree) => {
   return tree
 }
 
-const toReact = ({ content, excerpt, renderers }) => (
+const toReact = ({ content, excerpt, renderers, sanitize = true, prefix = `entry-` }) => (
   unified()
     .use(remarkParse)
     .use(excerpt && extractExcerpt)
     .use(reactRenderer, {
-      prefix: `entry-`,
-      remarkReactComponents: renderers
+      prefix,
+      remarkReactComponents: renderers,
+      sanitize
     })
     .processSync(content).contents
 )
 
 export const Content = (props) => {
-  const { content, excerpt, renderers, data, ...componentProps } = props
-  const cmp = toReact({ content, excerpt, renderers })
+  const { content, excerpt, renderers, data, sanitize, prefix, ...componentProps } = props
+  const cmp = toReact({ content, excerpt, renderers, sanitize, prefix })
   const { props: cmpProps } = cmp
 
   return {

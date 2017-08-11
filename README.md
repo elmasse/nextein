@@ -175,8 +175,10 @@ Component to render a `post` object. This component receive the `content` from t
 Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
 
 - `content`: `{String}` Markdown content to be render. This is provided by `post.content`
-- `excerpt`: `{Boolean}` true to only render the first paragraph. Optional
-- `renderers`: `{Object}` A set of custom renderers for Markdown elements.
+- `excerpt`: `{Boolean}` true to only render the first paragraph. Optional. Default: `false`
+- `renderers`: `{Object}` A set of custom renderers for Markdown elements with the form of `[tagName]: render`.
+- `prefix`: `{String}` Prefix to use for the generated React elements. Optional. Default: `'entry-'`
+- `sanitize`: `{Boolean|Object}`. A sanitize schema for reactRenderer or `true`. Optional. Default: `true`
 
 
 ```js
