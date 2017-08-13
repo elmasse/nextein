@@ -44,10 +44,16 @@ const byFileNameFromClient = async (path) => {
   // This will pickup the current props and return it as a workaround
   // https://github.com/zeit/next.js/issues/2360
   if (__NEXT_DATA__.nextExport) {
-    return __NEXT_DATA__.props.post
+    return findPostFromNextCache(path)
   }
   const resp = await fetch(`/_load_entry/${path.replace(sep, '/')}`)
   return resp.json()
+}
+
+const findPostFromNextCache = (path) => {
+  const { post, posts } = __NEXT_DATA__.props
+
+  return post || posts.filter((p) => p.data._entry === path).reduce(v => v)
 }
 
 const processEntries = (paths, entriesPath) => {
