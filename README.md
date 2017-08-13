@@ -229,6 +229,9 @@ const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'
 
 `next/link` will work out of the box. You can use `nextein/link` instead with the exact same parameters. This component wraps the `next/link` one to simplify creating a _Link_ for a given post object.
 
+- `data`: `{Object}` Post frontmatter object. This is provided by `post.data`
+
+
 ```js
 import withPosts from 'nextein/posts'
 import Link from 'nextein/link'
