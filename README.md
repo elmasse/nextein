@@ -225,6 +225,36 @@ const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'
 ```
 
 
+### `Link`
+
+`next/link` will work out of the box. You can use `nextein/link` instead with the exact same parameters. This component wraps the `next/link` one to simplify creating a _Link_ for a given post object.
+
+```js
+import withPosts from 'nextein/posts'
+import Link from 'nextein/link'
+
+
+export default withPosts( ({ posts }) => { 
+    return (
+        <section>
+        {
+            posts.map( (post, idx) => {
+                return (
+                    <div>
+                        <h1>{post.data.title}</h1>
+                        <Content key={idx} {...post} excerpt/>
+                        <Link {...post}><a>Read More...</a></Link>
+                    </div>
+                    )
+            })    
+        }
+        </section>
+    )
+} )
+
+
+```
+
 ### `post`
 
 - `data` is the frontmatter object containig the post meta information (title, page, category, etc)

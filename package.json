@@ -19,6 +19,7 @@
   "files": [
     "dist",
     "config.js",
+    "link.js",
     "posts.js",
     "post.js"
   ],
