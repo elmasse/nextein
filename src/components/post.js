@@ -7,7 +7,7 @@ import select from 'unist-util-select'
 
 import { byFileName } from '../load-entries'
 
-const extractExcerpt = (selector = 'paragraph:first-child') => (tree) => {
+const extractExcerpt = (selector = ':root > paragraph:first-child') => (tree) => {
   tree.children = select(tree, selector)
   return tree
 }
