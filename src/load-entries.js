@@ -39,10 +39,7 @@ const byFileNameFromServer = (path, entriesPath) => {
 }
 
 const byFileNameFromClient = async (path) => {
-  // in safari the popstate event is fired when user press back and
-  // causes the getInitialProps to be called in the SSR version
-  // This will pickup the current props and return it as a workaround
-  // https://github.com/zeit/next.js/issues/2360
+  // this is used to make next.js Link to work on exported sites.
   if (__NEXT_DATA__.nextExport) {
     return findPostFromNextCache(path)
   }
