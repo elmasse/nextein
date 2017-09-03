@@ -18,9 +18,10 @@ describe('loadEntries called from Server', () => {
   test('retrieves an array of posts', async () => {
     const expectedPage = 'post'
     const expectedCategory = 'category'
-    const expectedEntry = 'posts/test.md'
+    const expectedName = 'test'
+    const expectedEntry = `posts/${expectedName}.md`
     const expectedContent = 'text'
-    const expectedUrl = `/${expectedCategory}/test`
+    const expectedUrl = `/${expectedCategory}/${expectedName}`
     const expectedDate = new Date()
     const expectedFileContent = `
         ---
@@ -57,6 +58,7 @@ describe('loadEntries called from Server', () => {
           page: expectedPage,
           category: expectedCategory,
           date: expectedDate.toJSON(),
+          name: expectedName,
           url: expectedUrl,
           _entry: expectedEntry
         },
@@ -72,9 +74,10 @@ describe('byFileName', () => {
   test('retrieves a single post', async () => {
     const expectedPage = 'post'
     const expectedCategory = 'category'
-    const expectedEntry = 'posts/test.md'
+    const expectedName = 'test'
+    const expectedEntry = `posts/${expectedName}.md`
     const expectedContent = 'text'
-    const expectedUrl = `/${expectedCategory}/test`
+    const expectedUrl = `/${expectedCategory}/${expectedName}`
     const expectedDate = new Date()
     const expectedFileContent = `
         ---
@@ -104,6 +107,7 @@ describe('byFileName', () => {
         data: {
           page: expectedPage,
           category: expectedCategory,
+          name: expectedName,          
           date: expectedDate.toJSON(),
           url: expectedUrl,
           _entry: expectedEntry
@@ -112,5 +116,48 @@ describe('byFileName', () => {
       }
     ))
   })
-})
 
+  test('retrieves a post with date in filename', async () => {
+    const expectedPage = 'post'
+    const expectedCategory = 'category'
+    const expectedName = 'test'
+    const dateStr = '2017-08-23'
+    const expectedDate = new Date(dateStr)
+    const expectedEntry = `posts/${dateStr}-${expectedName}.md`
+    const expectedContent = 'text'
+    const expectedUrl = `/${expectedCategory}/${expectedName}`
+    
+    const expectedFileContent = `
+        ---
+        page: ${expectedPage}
+        category: ${expectedCategory}
+        ---
+        ${expectedContent}
+        `
+
+    readFileSync.mockReturnValueOnce(expectedFileContent)
+
+    fm.mockReturnValueOnce({
+      data: {
+        page: expectedPage,
+        category: expectedCategory
+      },
+      content: expectedContent
+    })
+
+    const actual = await byFileName(expectedEntry)
+
+    expect(actual).toEqual(expect.objectContaining({
+        data: {
+          page: expectedPage,
+          category: expectedCategory,
+          name: expectedName,          
+          date: expectedDate.toJSON(),
+          url: expectedUrl,
+          _entry: expectedEntry
+        },
+        content: expectedContent
+      }
+    ))
+  })  
+})

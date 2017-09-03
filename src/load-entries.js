@@ -58,6 +58,7 @@ const processEntries = (paths, entriesPath) => {
     .map(path => readFileSync(path, 'utf-8'))
     .map(fm)
     .map(addEntry(paths))
+    .map(addName)
     .map(addCategory(entriesPath))
     .map(addUrl)
     .map(addDate)
@@ -73,6 +74,11 @@ const addCategory = (entriesPath) => (value) => {
   return { ...value, data: { ...data, category: createEntryCategory({ entriesPath, ...data }) } }
 }
 
+const addName = (value) => {
+  const { data } = value
+  return { ...value, data: { ...data, name: createEntryName({ ...data }) } }
+}
+
 const addUrl = (value) => {
   const { data } = value
   return { ...value, data: { ...data, url: createEntryURL({ ...data }) } }
@@ -83,12 +89,22 @@ const addDate = (value) => {
   return { ...value, data: { ...data, date: createEntryDate({ ...data }) } }
 }
 
-const extractName = (path) => basename(path, extname(path))
+const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
+const DATE_MATCH_INDEX = 1
+const NAME_MATCH_INDEX = 2
 
-const createEntryURL = ({ slug, category, _entry, page = 'post' }) => {
+const extractFileName = (path) => basename(path, extname(path))
+
+const createEntryName = ({ _entry }) => {
+  const name = extractFileName(_entry)
+  const match = name.match(DATE_IN_FILE_REGEX)
+
+  return (match) ? match[NAME_MATCH_INDEX] : name
+}
+
+const createEntryURL = ({ slug, category, _entry, name, page = 'post' }) => {
   let url = slug
   if (!slug) {
-    const name = extractName(_entry)
     url = `/${category ? `${category}/` : ''}${name}`
   }
 
@@ -96,11 +112,10 @@ const createEntryURL = ({ slug, category, _entry, page = 'post' }) => {
 }
 
 const createEntryDate = ({ _entry, date }) => {
-  const name = extractName(_entry)
-  const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
+  const name = extractFileName(_entry)
   const match = name.match(DATE_IN_FILE_REGEX)
 
-  return (date ? new Date(date) : (match) ? new Date(match[1]) : fileCreationDate(_entry)).toJSON()
+  return (date ? new Date(date) : (match) ? new Date(match[DATE_MATCH_INDEX]) : fileCreationDate(_entry)).toJSON()
 }
 
 const fileCreationDate = (path) => {
