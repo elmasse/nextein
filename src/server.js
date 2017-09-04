@@ -5,7 +5,7 @@ import { parse } from 'url'
 import route from 'path-match'
 import { sep } from 'path'
 
-import loadEntries, { byFileName } from './load-entries'
+import loadEntries, { byFileName } from './entries/load'
 
 export default class Server {
   constructor ({ dir = '.', dev = true }) {

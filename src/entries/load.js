@@ -69,14 +69,14 @@ const addEntry = (paths) => (value, idx) => {
   return { ...value, data: { ...data, _entry: paths[idx] } }
 }
 
-const addCategory = (entriesPath) => (value) => {
-  const { data } = value
-  return { ...value, data: { ...data, category: createEntryCategory({ entriesPath, ...data }) } }
-}
-
 const addName = (value) => {
   const { data } = value
   return { ...value, data: { ...data, name: createEntryName({ ...data }) } }
+}
+
+const addCategory = (entriesPath) => (value) => {
+  const { data } = value
+  return { ...value, data: { ...data, category: createEntryCategory({ entriesPath, ...data }) } }
 }
 
 const addUrl = (value) => {

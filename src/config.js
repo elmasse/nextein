@@ -1,5 +1,5 @@
 
-import loadEntries from './load-entries'
+import loadEntries from './entries/load'
 import BabiliPlugin from 'babili-webpack-plugin'
 
 export default (original) => {

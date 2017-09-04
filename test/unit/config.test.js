@@ -1,6 +1,6 @@
 
-jest.mock('../../src/load-entries')
-import loadEntries from '../../src/load-entries'
+jest.mock('../../src/entries/load')
+import loadEntries from '../../src/entries/load'
 import nexteinConfig, { exportPathMap } from '../../src/config'
 
 describe('config', () => {

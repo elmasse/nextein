@@ -1,7 +1,7 @@
-jest.mock('../../../src/load-entries')
+jest.mock('../../../src/entries/load')
 import React from 'react'
 
-import loadEntries from '../../../src/load-entries'
+import loadEntries from '../../../src/entries/load'
 import withPosts, { inCategory } from '../../../src/components/posts'
 
 describe('withPosts', () => {

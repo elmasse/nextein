@@ -5,7 +5,7 @@ import remarkParse from 'remark-parse'
 import reactRenderer from 'remark-react'
 import select from 'unist-util-select'
 
-import { byFileName } from '../load-entries'
+import { byFileName } from '../entries/load'
 
 const extractExcerpt = (selector = ':root > paragraph:first-child') => (tree) => {
   tree.children = select(tree, selector)

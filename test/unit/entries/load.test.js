@@ -2,7 +2,7 @@ jest.mock('glob')
 jest.mock('fs')
 jest.mock('frontmatter')
 
-import loadEntries, { byFileName } from '../../src/load-entries'
+import loadEntries, { byFileName } from '../../../src/entries/load'
 import glob from 'glob'
 import { readFileSync, statSync } from 'fs'
 import fm from 'frontmatter'

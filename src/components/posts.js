@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 
-import loadEntries from '../load-entries'
+import loadEntries from '../entries/load'
 
 export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
   const { data } = post

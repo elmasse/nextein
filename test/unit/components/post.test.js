@@ -1,4 +1,4 @@
-jest.mock('../../../src/load-entries')
+jest.mock('../../../src/entries/load')
 jest.mock('unified', () => {
   function mockedUnified() { return new impl() }
   mockedUnified.processSync = jest.fn()
@@ -15,7 +15,7 @@ import React from 'react'
 import renderer from 'react-test-renderer'
 
 import unified from 'unified'
-import { byFileName } from '../../../src/load-entries'
+import { byFileName } from '../../../src/entries/load'
 import withPost, { Content } from '../../../src/components/post'
 
 describe('withPost', () => {
