@@ -13,7 +13,7 @@ describe('processEntries ', () => {
 
   test('retrieves an array of posts with default values', async () => {
     const expectedPage = 'post'
-    const expectedCategory = ''
+    const expectedCategory = undefined
     const expectedName = 'test'
     const expectedEntry = `posts/${expectedName}.md`
     const expectedContent = 'text'
@@ -58,94 +58,78 @@ describe('processEntries ', () => {
 
 })
 
-// describe('byFileName', () => {
-//   test('retrieves a single post', async () => {
-//     const expectedPage = 'post'
-//     const expectedCategory = 'category'
-//     const expectedName = 'test'
-//     const expectedEntry = `posts/${expectedName}.md`
-//     const expectedContent = 'text'
-//     const expectedUrl = `/${expectedCategory}/${expectedName}`
-//     const expectedDate = new Date()
-//     const expectedFileContent = `
-//         ---
-//         page: ${expectedPage}
-//         category: ${expectedCategory}
-//         ---
-//         ${expectedContent}
-//         `
+describe('frontmatter: permalink', () => {
+  
+  test('default permalink', async () => {
+    const expectedPage = 'post'
+    const expectedCategory = 'category'
+    const expectedName = 'test'
+    const expectedEntry = `posts/${expectedName}.md`
+    const expectedUrl = `/${expectedCategory}/${expectedName}`
+    const expectedDate = new Date()
 
-//     readFileSync.mockReturnValueOnce(expectedFileContent)
+    fm.mockReturnValueOnce({
+      data: {
+        category: expectedCategory
+      },
+    })
 
-//     fm.mockReturnValueOnce({
-//       data: {
-//         page: expectedPage,
-//         category: expectedCategory
-//       },
-//       content: expectedContent
-//     })
+    statSync.mockReturnValueOnce({
+      birthtime: expectedDate
+    })
 
-//     statSync.mockReturnValueOnce({
-//       birthtime: expectedDate
-//     })
+    const actual = await processEntries([expectedEntry], 'posts')
 
-//     const actual = await byFileName(expectedEntry)
+    expect(actual).toEqual(expect.arrayContaining([
+      {
+        data: {
+          page: expectedPage,
+          category: expectedCategory,
+          date: expectedDate.toJSON(),
+          name: expectedName,
+          url: expectedUrl,
+          _entry: expectedEntry
+        }
+      }
+    ]))
 
-//     expect(actual).toEqual(expect.objectContaining({
-//         data: {
-//           page: expectedPage,
-//           category: expectedCategory,
-//           name: expectedName,          
-//           date: expectedDate.toJSON(),
-//           url: expectedUrl,
-//           _entry: expectedEntry
-//         },
-//         content: expectedContent
-//       }
-//     ))
-//   })
+  })
 
-//   test('retrieves a post with date in filename', async () => {
-//     const expectedPage = 'post'
-//     const expectedCategory = 'category'
-//     const expectedName = 'test'
-//     const dateStr = '2017-08-23'
-//     const expectedDate = new Date(dateStr)
-//     const expectedEntry = `posts/${dateStr}-${expectedName}.md`
-//     const expectedContent = 'text'
-//     const expectedUrl = `/${expectedCategory}/${expectedName}`
-    
-//     const expectedFileContent = `
-//         ---
-//         page: ${expectedPage}
-//         category: ${expectedCategory}
-//         ---
-//         ${expectedContent}
-//         `
+  test('permalink /:category/:name.html', async () => {
+    const permalink = '/:category/:name.html'
+    const expectedPage = 'post'
+    const expectedCategory = 'category'
+    const expectedName = 'test'
+    const expectedEntry = `posts/${expectedName}.md`
+    const expectedUrl = `/${expectedCategory}/${expectedName}.html`
+    const expectedDate = new Date()
 
-//     readFileSync.mockReturnValueOnce(expectedFileContent)
+    fm.mockReturnValueOnce({
+      data: {
+        category: expectedCategory,
+        permalink
+      },
+    })
 
-//     fm.mockReturnValueOnce({
-//       data: {
-//         page: expectedPage,
-//         category: expectedCategory
-//       },
-//       content: expectedContent
-//     })
+    statSync.mockReturnValueOnce({
+      birthtime: expectedDate
+    })
 
-//     const actual = await byFileName(expectedEntry)
+    const actual = await processEntries([expectedEntry], 'posts')
 
-//     expect(actual).toEqual(expect.objectContaining({
-//         data: {
-//           page: expectedPage,
-//           category: expectedCategory,
-//           name: expectedName,          
-//           date: expectedDate.toJSON(),
-//           url: expectedUrl,
-//           _entry: expectedEntry
-//         },
-//         content: expectedContent
-//       }
-//     ))
-//   })  
-// })
+    expect(actual).toEqual(expect.arrayContaining([
+      {
+        data: {
+          page: expectedPage,
+          category: expectedCategory,
+          date: expectedDate.toJSON(),
+          name: expectedName,
+          permalink,
+          url: expectedUrl,
+          _entry: expectedEntry
+        }
+      }
+    ]))
+
+  })  
+})

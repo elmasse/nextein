@@ -2,6 +2,7 @@
 import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname, relative, dirname, sep } from 'path'
 import fm from 'frontmatter'
+import pathToRegEx from 'path-to-regexp'
 
 export default (paths, entriesPath) => {
   return paths
@@ -49,6 +50,7 @@ const addDate = (value) => {
 const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
 const DATE_MATCH_INDEX = 1
 const NAME_MATCH_INDEX = 2
+const DEFAULT_PERMALINK = '/:category?/:name'
 
 const extractFileName = (path) => basename(path, extname(path))
 
@@ -59,10 +61,12 @@ const createEntryName = ({ _entry }) => {
   return (match) ? match[NAME_MATCH_INDEX] : name
 }
 
-const createEntryURL = ({ slug, category, _entry, name, page = 'post' }) => {
+const createEntryURL = (data) => {
+  const { slug, page, permalink = DEFAULT_PERMALINK } = data
   let url = slug
   if (!slug) {
-    url = `/${category ? `${category}/` : ''}${name}`
+    const toUrl = pathToRegEx.compile(permalink)
+    url = toUrl(data)
   }
 
   return page ? url : undefined
@@ -85,6 +89,6 @@ const createEntryCategory = ({ entriesPath, category, _entry }) => {
   const categorySeparator = '/'
   const root = resolve(process.cwd(), entriesPath)
   const post = resolve(process.cwd(), _entry)
-
-  return relative(root, dirname(post)).replace(sep, categorySeparator)
+  const folderCategory = relative(root, dirname(post)).replace(sep, categorySeparator)
+  return folderCategory || undefined
 }

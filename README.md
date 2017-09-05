@@ -293,7 +293,9 @@ Post Content...
 - `category`: the category name (optional)
 - `slug`: the post url (optional)
 - `date`: date string in YYYY-MM-DD format. Used to sort posts list. (optional)
-- `published`: Set to `false` to remove this post from entries. 
+- `published`: Set to `false` to remove this post from entries.
+- `permalink`: Set the url using any parameter in the frontmatter object. Default value `/:category?/:name`
+- `url`: **Read Only** The post url.
 
 
 ### `nexteinConfig`
