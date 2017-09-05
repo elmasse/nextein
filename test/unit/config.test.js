@@ -23,7 +23,7 @@ describe('exportPathMap', () => {
 
   test('generates post entry with default page', async () => {
     loadEntries.mockReturnValueOnce([
-      { data: { url: '/test' } }
+      { data: { url: '/test', page: 'post' } }
     ])
 
     expect(exportPathMap).toBeDefined()
@@ -47,5 +47,19 @@ describe('exportPathMap', () => {
     expect(loadEntries).toBeCalled()
     expect(result).toHaveProperty('/')
     expect(result).toHaveProperty('/test', { page: '/test' })
-  })  
+  })
+
+  test('does not generates post entry if page is false', async () => {
+    loadEntries.mockReturnValueOnce([
+      { data: { url: '/test',  page: false } }
+    ])
+
+    expect(exportPathMap).toBeDefined()
+    const result = await exportPathMap()
+
+    expect(result).toBeDefined()
+    expect(loadEntries).toBeCalled()
+    expect(result).toHaveProperty('/')
+    expect(result).not.toHaveProperty('/test', { page: '/test' })
+  })    
 })

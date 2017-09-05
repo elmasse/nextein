@@ -56,10 +56,9 @@ export const webpack = (config, { dev }) => {
 
 export const exportPathMap = async () => {
   const entries = await loadEntries()
-
   const map = entries
     .reduce((prev, { data }) => {
-      const { url, page = 'post', _entry } = data
+      const { url, page, _entry } = data
       const query = _entry ? { _entry } : undefined
       return page ? {
         ...prev,

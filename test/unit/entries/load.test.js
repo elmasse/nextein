@@ -1,11 +1,17 @@
 jest.mock('glob')
 jest.mock('fs')
-jest.mock('frontmatter')
+jest.mock('unfetch')
+jest.mock('../../../src/entries/env')
+jest.mock('../../../src/entries/process')
 
-import loadEntries, { byFileName } from '../../../src/entries/load'
 import glob from 'glob'
-import { readFileSync, statSync } from 'fs'
-import fm from 'frontmatter'
+import { readFileSync } from 'fs'
+import fetch from 'unfetch'
+import { isServer } from '../../../src/entries/env'
+import processEntries from '../../../src/entries/process'
+
+// SUT
+import loadEntries, { byFileName } from '../../../src/entries/load'
 
 describe('loadEntries', () => {
   test('exports loadEntries fn as default', () => {
@@ -13,151 +19,88 @@ describe('loadEntries', () => {
   })
 })
 
-describe('loadEntries called from Server', () => {
+describe('from Server', () => {
 
-  test('retrieves an array of posts', async () => {
-    const expectedPage = 'post'
-    const expectedCategory = 'category'
-    const expectedName = 'test'
-    const expectedEntry = `posts/${expectedName}.md`
-    const expectedContent = 'text'
-    const expectedUrl = `/${expectedCategory}/${expectedName}`
-    const expectedDate = new Date()
-    const expectedFileContent = `
-        ---
-        page: ${expectedPage}
-        category: ${expectedCategory}
-        ---
-        ${expectedContent}
-        `
+  beforeEach(() => {
+    isServer.mockReturnValue(true)
+  });
 
-    glob.sync.mockReturnValueOnce([
-      'posts/test.md'
-    ])
+  afterEach(() => {
+    isServer.mockRestore()
+  });
 
-    readFileSync.mockReturnValueOnce(expectedFileContent)
 
-    fm.mockReturnValueOnce({
-      data: {
-        page: expectedPage,
-        category: expectedCategory
-      },
-      content: expectedContent
-    })
+  test('loadEntries retrieves an array of posts reading from Server', async () => {
+    const files = ['posts/test.md']
+    const posts = [{ data: {}, content: '' }]
 
-    statSync.mockReturnValueOnce({
-      birthtime: expectedDate
-    })
+    glob.sync.mockReturnValueOnce(files)
+
+    processEntries.mockReturnValueOnce(posts)
 
     const actual = await loadEntries()
 
-    expect(actual).toEqual(expect.any(Array))
-    expect(actual).toEqual(expect.arrayContaining([
-      {
-        data: {
-          page: expectedPage,
-          category: expectedCategory,
-          date: expectedDate.toJSON(),
-          name: expectedName,
-          url: expectedUrl,
-          _entry: expectedEntry
-        },
-        content: expectedContent
-      }
-    ]))
+    expect(actual).toEqual(expect.arrayContaining(posts))
+
+  })
+
+  test('byFileName retrieves a post reading from Server', async () => {
+    const files = ['posts/test.md']
+    const post = { data: {}, content: '' }
+    const posts = [post]
+
+    glob.sync.mockReturnValueOnce(files)
+
+    processEntries.mockReturnValueOnce(posts)
+
+    const actual = await byFileName('posts/test.md')
+
+    expect(actual).toEqual(expect.objectContaining(post))
 
   })
 
 })
 
-describe('byFileName', () => {
-  test('retrieves a single post', async () => {
-    const expectedPage = 'post'
-    const expectedCategory = 'category'
-    const expectedName = 'test'
-    const expectedEntry = `posts/${expectedName}.md`
-    const expectedContent = 'text'
-    const expectedUrl = `/${expectedCategory}/${expectedName}`
-    const expectedDate = new Date()
-    const expectedFileContent = `
-        ---
-        page: ${expectedPage}
-        category: ${expectedCategory}
-        ---
-        ${expectedContent}
-        `
+describe('from Client', () => {
 
-    readFileSync.mockReturnValueOnce(expectedFileContent)
+  beforeEach(() => {
+    isServer.mockReturnValue(false)
+    global.__NEXT_DATA__ = {}
+  });
 
-    fm.mockReturnValueOnce({
-      data: {
-        page: expectedPage,
-        category: expectedCategory
-      },
-      content: expectedContent
-    })
+  afterEach(() => {
+    isServer.mockRestore()
+  });
+  
 
-    statSync.mockReturnValueOnce({
-      birthtime: expectedDate
-    })
+  test('loadEntries retrieves an array of posts fetching from Server', async () => {
+    const posts = [{ data: {}, content: '' }]
 
-    const actual = await byFileName(expectedEntry)
+    fetch.mockReturnValueOnce(Promise.resolve({ json: () => posts }))
 
-    expect(actual).toEqual(expect.objectContaining({
-        data: {
-          page: expectedPage,
-          category: expectedCategory,
-          name: expectedName,          
-          date: expectedDate.toJSON(),
-          url: expectedUrl,
-          _entry: expectedEntry
-        },
-        content: expectedContent
-      }
-    ))
+    processEntries.mockReturnValueOnce(posts)
+
+    const actual = await loadEntries()
+
+    expect(actual).toEqual(expect.arrayContaining(posts))
+    expect(fetch).toHaveBeenCalledWith('/_load_entries')
+
   })
 
-  test('retrieves a post with date in filename', async () => {
-    const expectedPage = 'post'
-    const expectedCategory = 'category'
-    const expectedName = 'test'
-    const dateStr = '2017-08-23'
-    const expectedDate = new Date(dateStr)
-    const expectedEntry = `posts/${dateStr}-${expectedName}.md`
-    const expectedContent = 'text'
-    const expectedUrl = `/${expectedCategory}/${expectedName}`
-    
-    const expectedFileContent = `
-        ---
-        page: ${expectedPage}
-        category: ${expectedCategory}
-        ---
-        ${expectedContent}
-        `
+  test('byFileName retrieves a post fetching from Server', async () => {
+    const post = { data: {}, content: '' }
+    const posts = [post]
+    const path = 'post/test.md'
 
-    readFileSync.mockReturnValueOnce(expectedFileContent)
+    fetch.mockReturnValueOnce(Promise.resolve({ json: () => post }))
 
-    fm.mockReturnValueOnce({
-      data: {
-        page: expectedPage,
-        category: expectedCategory
-      },
-      content: expectedContent
-    })
+    processEntries.mockReturnValueOnce(posts)
 
-    const actual = await byFileName(expectedEntry)
+    const actual = await byFileName(path)
 
-    expect(actual).toEqual(expect.objectContaining({
-        data: {
-          page: expectedPage,
-          category: expectedCategory,
-          name: expectedName,          
-          date: expectedDate.toJSON(),
-          url: expectedUrl,
-          _entry: expectedEntry
-        },
-        content: expectedContent
-      }
-    ))
-  })  
+    expect(actual).toEqual(expect.objectContaining(post))
+    expect(fetch).toHaveBeenCalledWith(`/_load_entry/${path}`)
+
+  })
+
 })
