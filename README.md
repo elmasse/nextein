@@ -294,7 +294,8 @@ Post Content...
 - `slug`: the post url (optional)
 - `date`: date string in YYYY-MM-DD format. Used to sort posts list. (optional)
 - `published`: Set to `false` to remove this post from entries.
-- `permalink`: Set the url using any parameter in the frontmatter object. Default value `/:category?/:name`
+- `permalink`: Set the url using any parameter in the frontmatter object. Default value `/:category?/:name`. The `?` the parameter will be optional.
+- `name`: **Read Only** The post file name. Date is removed from name if present.
 - `url`: **Read Only** The post url.
 
 

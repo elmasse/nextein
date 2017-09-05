@@ -131,5 +131,45 @@ describe('frontmatter: permalink', () => {
       }
     ]))
 
+  })
+
+  test('permalink /:date/:name.html', async () => {
+    const permalink = '/:date/:name.html'
+    const expectedPage = 'post'
+    const expectedCategory = 'category'
+    const expectedName = 'test'
+    const expectedEntry = `posts/${expectedName}.md`
+    const dateStr = '2017-05-01'
+    const expectedUrl = `/${dateStr}/${expectedName}.html`
+    const expectedDate = new Date(dateStr)
+
+    fm.mockReturnValueOnce({
+      data: {
+        category: expectedCategory,
+        permalink,
+        date: expectedDate
+      },
+    })
+
+    statSync.mockReturnValueOnce({
+      birthtime: expectedDate
+    })
+
+    const actual = await processEntries([expectedEntry], 'posts')
+
+    expect(actual).toEqual(expect.arrayContaining([
+      {
+        data: {
+          page: expectedPage,
+          category: expectedCategory,
+          date: expectedDate.toJSON(),
+          name: expectedName,
+          permalink,
+          url: expectedUrl,
+          _entry: expectedEntry
+        }
+      }
+    ]))
+
   })  
 })

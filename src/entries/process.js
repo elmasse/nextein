@@ -12,8 +12,8 @@ export default (paths, entriesPath) => {
     .map(addEntry(paths))
     .map(addName)
     .map(addCategory(entriesPath))
-    .map(addUrl)
     .map(addDate)
+    .map(addUrl)
 }
 
 const addPage = (value, idx) => {
@@ -62,11 +62,11 @@ const createEntryName = ({ _entry }) => {
 }
 
 const createEntryURL = (data) => {
-  const { slug, page, permalink = DEFAULT_PERMALINK } = data
+  const { slug, page, date, permalink = DEFAULT_PERMALINK } = data
   let url = slug
   if (!slug) {
     const toUrl = pathToRegEx.compile(permalink)
-    url = toUrl(data)
+    url = toUrl({ ...data, date: date.replace(/T.*Z/, '') })
   }
 
   return page ? url : undefined
