@@ -14,7 +14,7 @@ const extractExcerpt = (excerpt) => {
     return
   }
 
-  const selector = ':root > paragraph:first-child'
+  const selector = (typeof excerpt === 'string') ? excerpt : ':root > paragraph:first-child'
 
   return () => /* attacher */ (tree) => {
     /* transformer */
