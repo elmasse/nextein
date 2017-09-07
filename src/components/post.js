@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 
 import unified from 'unified'
-import remarkParse from 'remark-parse'
-import reactRenderer from 'remark-react'
+import markdown from 'remark-parse'
+import remark2rehype from 'remark-rehype'
+import reactRenderer from 'rehype-react'
+import raw from 'rehype-raw'
 import select from 'unist-util-select'
 
 import { byFileName } from '../entries/load'
@@ -14,11 +16,14 @@ const extractExcerpt = (selector = ':root > paragraph:first-child') => (tree) =>
 
 const toReact = ({ content, excerpt, renderers, sanitize = true, prefix = `entry-` }) => (
   unified()
-    .use(remarkParse)
+    .use(markdown)
+    .use(remark2rehype, { allowDangerousHTML: true })
+    .use(raw)
     .use(excerpt && extractExcerpt)
     .use(reactRenderer, {
+      createElement: React.createElement,
       prefix,
-      remarkReactComponents: renderers,
+      components: renderers,
       sanitize
     })
     .processSync(content).contents
