@@ -9,17 +9,26 @@ import select from 'unist-util-select'
 
 import { byFileName } from '../entries/load'
 
-const extractExcerpt = (selector = ':root > paragraph:first-child') => (tree) => {
-  tree.children = select(tree, selector)
-  return tree
+const extractExcerpt = (excerpt) => {
+  if (!excerpt) {
+    return
+  }
+
+  const selector = ':root > paragraph:first-child'
+
+  return () => /* attacher */ (tree) => {
+    /* transformer */
+    tree.children = select(tree, selector)
+    return tree
+  }
 }
 
 const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => (
   unified()
     .use(markdown)
+    .use(extractExcerpt(excerpt))
     .use(remark2rehype, { allowDangerousHTML: true })
     .use(raw)
-    .use(excerpt && extractExcerpt)
     .use(reactRenderer, {
       createElement: React.createElement,
       prefix,
