@@ -51,6 +51,7 @@ const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
 const DATE_MATCH_INDEX = 1
 const NAME_MATCH_INDEX = 2
 const DEFAULT_PERMALINK = '/:category?/:name'
+const PERMALINK_CATEGORIES = ':category(.*)'
 
 const extractFileName = (path) => basename(path, extname(path))
 
@@ -62,12 +63,9 @@ const createEntryName = ({ _entry }) => {
 }
 
 const createEntryURL = (data) => {
-  const { slug, page, date, permalink = DEFAULT_PERMALINK } = data
-  let url = slug
-  if (!slug) {
-    const toUrl = pathToRegEx.compile(permalink)
-    url = toUrl({ ...data, date: date.replace(/T.*Z/, '') })
-  }
+  const { page, date, permalink = DEFAULT_PERMALINK } = data
+  const toUrl = pathToRegEx.compile(permalink.replace(':category', PERMALINK_CATEGORIES))
+  const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => v })
 
   return page ? url : undefined
 }
