@@ -14,7 +14,7 @@ const extractExcerpt = (selector = ':root > paragraph:first-child') => (tree) =>
   return tree
 }
 
-const toReact = ({ content, excerpt, renderers, sanitize = true, prefix = `entry-` }) => (
+const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => (
   unified()
     .use(markdown)
     .use(remark2rehype, { allowDangerousHTML: true })
@@ -23,15 +23,14 @@ const toReact = ({ content, excerpt, renderers, sanitize = true, prefix = `entry
     .use(reactRenderer, {
       createElement: React.createElement,
       prefix,
-      components: renderers,
-      sanitize
+      components: renderers
     })
     .processSync(content).contents
 )
 
 export const Content = (props) => {
-  const { content, excerpt, renderers, data, sanitize, prefix, ...componentProps } = props
-  const cmp = toReact({ content, excerpt, renderers, sanitize, prefix })
+  const { content, excerpt, renderers, data, prefix, ...componentProps } = props
+  const cmp = toReact({ content, excerpt, renderers, prefix })
   const { props: cmpProps } = cmp
 
   return {
