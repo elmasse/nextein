@@ -49,5 +49,5 @@ const byFileNameFromClient = async (path) => {
 const findPostFromNextCache = (path) => {
   const { post, posts } = __NEXT_DATA__.props
 
-  return post || posts.filter((p) => p.data._entry === path).reduce(v => v)
+  return (post && post.data._entry === path) ? post : posts.filter((p) => p.data._entry === path).reduce(v => v)
 }
