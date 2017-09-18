@@ -58,7 +58,7 @@ export default (WrappedComponent) => {
       const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
       const [ { query } ] = args
       const { _entry } = query
-      const post = await byFileName(_entry)
+      const post = _entry ? await byFileName(_entry) : undefined
 
       return {
         ...wrapped,
