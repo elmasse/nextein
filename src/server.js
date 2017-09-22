@@ -22,6 +22,7 @@ export default class Server {
       })
 
     this.entriesMap = new Map(kv)
+    this.exportPathMap = await this.app.config.exportPathMap()
   }
 
   entriesAsJSON () {
@@ -30,9 +31,10 @@ export default class Server {
   }
 
   handleRequest = async (req, res) => {
-    const { entriesMap, app } = this
+    const { app, exportPathMap } = this
     const parsedUrl = parse(req.url, true)
     const { pathname } = parsedUrl
+    const customRoute = exportPathMap[pathname]
 
     const matchEntry = route()('/_load_entry/:path+')
     const entryParam = matchEntry(pathname)
@@ -53,10 +55,9 @@ export default class Server {
       }
     }
 
-    if (entriesMap.has(pathname)) {
-      const entry = entriesMap.get(pathname)
-      const page = entry.data.page || `post`
-      return app.render(req, res, `/${page}`, { _entry: entry.data._entry })
+    if (customRoute) {
+      const { page, ...query } = customRoute
+      return app.render(req, res, page, query)
     }
 
     app.handleRequest(req, res, parsedUrl)
