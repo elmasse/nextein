@@ -56,7 +56,7 @@ export default class Server {
     }
 
     if (customRoute) {
-      const { page, ...query } = customRoute
+      const { page, query } = customRoute
       return app.render(req, res, page, query)
     }
 
