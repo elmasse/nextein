@@ -1,6 +1,6 @@
 
 import loadEntries from './entries/load'
-import BabiliPlugin from 'babili-webpack-plugin'
+import MinifyPlugin from 'babel-minify-webpack-plugin'
 
 export default (original) => {
   const {
@@ -48,7 +48,7 @@ export const webpack = (config, { dev }) => {
   })
 
   if (!dev) {
-    config.plugins.push(new BabiliPlugin())
+    config.plugins.push(new MinifyPlugin({}, {comments: false}))
   }
 
   return config

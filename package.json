@@ -24,7 +24,7 @@
     "post.js"
   ],
   "dependencies": {
-    "babili-webpack-plugin": "^0.1.1",
+    "babel-minify-webpack-plugin": "^0.2.0",
     "cross-spawn": "^5.1.0",
     "frontmatter": "0.0.3",
     "glob": "^7.1.2",
