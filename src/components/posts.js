@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 
 import loadEntries from '../entries/load'
 
+export const entries = loadEntries
+
 export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
   const { data } = post
   const { category: postCategory = '' } = data

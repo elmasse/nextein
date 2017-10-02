@@ -2,7 +2,7 @@ jest.mock('../../../src/entries/load')
 import React from 'react'
 
 import loadEntries from '../../../src/entries/load'
-import withPosts, { inCategory } from '../../../src/components/posts'
+import withPosts, { inCategory, entries } from '../../../src/components/posts'
 
 describe('withPosts', () => {
   test('exports HOC withPosts as default', () => {
@@ -65,4 +65,10 @@ describe('inCategory', () => {
 
   })
 
+})
+
+describe('entries', () => {
+  test('exports entries function', () => {
+    expect(entries).toBeDefined()
+  })  
 })
