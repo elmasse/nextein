@@ -1,7 +1,7 @@
 # nextein
+A static site generator based in Next.js
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/elmasse/nextein.svg)](https://greenkeeper.io/)
-A static site generator based in Next.js
 
 ## What is it?
 `nextein` is  a wrapper around `next.js` that allows you to write static sites using `markdown` and `react`. 
