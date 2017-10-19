@@ -1,4 +1,6 @@
 # nextein
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/elmasse/nextein.svg)](https://greenkeeper.io/)
 A static site generator based in Next.js
 
 ## What is it?
