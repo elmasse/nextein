@@ -1,6 +1,6 @@
 
 import loadEntries from './entries/load'
-import MinifyPlugin from 'babel-minify-webpack-plugin'
+import Uglify from 'uglifyjs-webpack-plugin'
 
 export default (original) => {
   const {
@@ -48,7 +48,12 @@ export const webpack = (config, { dev }) => {
   })
 
   if (!dev) {
-    config.plugins.push(new MinifyPlugin({}, {comments: false}))
+    config.plugins.push(
+      new Uglify({
+        parallel: true,
+        sourceMap: true
+      })
+    )
   }
 
   return config
