@@ -62,7 +62,7 @@
     "next": "4.1.4",
     "react": "16.1.0",
     "react-dom": "16.1.0",
-    "react-test-renderer": "16.1.0",
+    "react-test-renderer": "16.1.1",
     "standard": "10.0.3",
     "taskr": "1.1.0",
     "taskr-standard": "1.0.1"
