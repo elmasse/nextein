@@ -6,6 +6,9 @@ A static site generator based in Next.js
 ## What is it?
 `nextein` is  a wrapper around `next.js` that allows you to write static sites using `markdown` and `react`. 
 
+### Requirements
+*NodeJS* __v8.x__+ is required to run `nextein` commands.
+
 ## Getting Started
 There are a few steps you have to follow to get your site up and running with `nextein`
 
