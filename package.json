@@ -24,6 +24,7 @@
     "post.js"
   ],
   "dependencies": {
+    "chokidar": "1.7.0",
     "cross-spawn": "^5.1.0",
     "frontmatter": "0.0.3",
     "glob": "^7.1.2",
