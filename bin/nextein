@@ -4,7 +4,6 @@ import { join, resolve } from 'path'
 import { spawn } from 'cross-spawn'
 import { watchFile } from 'fs'
 import pkg from '../../package.json'
-import chokidar from 'chokidar'
 
 if (pkg.peerDependencies) {
   Object.keys(pkg.peerDependencies).forEach(dependency => {
@@ -100,12 +99,4 @@ const pagesDirectory = resolve(process.cwd(), 'pages')
 
 if (cmd === 'dev') {
   watchFile(`${resolve(pagesDirectory, '..')}/next.config.js`, restartProcess)
-  
-  const postWatcher = chokidar.watch(resolve(process.cwd(), 'posts'))
-
-  postWatcher.on('all', () => {
-    proc.removeAllListeners('close')
-    proc.kill()
-    proc = startProcess()    
-  })
 }

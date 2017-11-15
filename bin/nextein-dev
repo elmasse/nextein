@@ -6,6 +6,7 @@ import parseArgs from 'minimist'
 import { readFileSync } from 'fs'
 import Server from '../server'
 import pkgUp from 'pkg-up'
+import chokidar from 'chokidar'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -62,7 +63,7 @@ const srv = new Server({ dir, dev: true })
 srv.start(argv.port, argv.hostname)
   .then(async () => {
     if (!process.env.NOW) {
-      console.log(`> Ready on http://${argv.hostname ? argv.hostname : 'localhost'}:${argv.port}`)
+      console.log(`> Ready on http://${argv.hostname ? argv.hostname : 'localhost'}:${argv.port}`)      
     }
   })
   .catch((err) => {
@@ -78,3 +79,12 @@ srv.start(argv.port, argv.hostname)
     }
     process.nextTick(() => process.exit(1))
   })
+
+const hmr_posts = (type, path) => {
+  console.log(`${type}: ${path}`)
+  srv.hotReloadPosts()
+}
+
+chokidar.watch(resolve(process.cwd(), 'posts'), { ignoreInitial: true })
+  .on('change', hmr_posts)
+  .on('unlink', hmr_posts)

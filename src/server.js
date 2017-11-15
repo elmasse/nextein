@@ -3,7 +3,7 @@ import http from 'http'
 import next from 'next'
 import { parse } from 'url'
 import route from 'path-match'
-import { sep } from 'path'
+import { join, relative, sep } from 'path'
 
 import loadEntries, { byFileName } from './entries/load'
 
@@ -74,4 +74,24 @@ export default class Server {
       this.http.listen(port, hostname)
     })
   }
+
+  async hotReloadPosts () {
+    const hotReloader = this.app.hotReloader
+    hotReloader.webpackDevMiddleware.invalidate()
+    await this.readEntries()
+    hotReloader.webpackDevMiddleware.waitUntilValid(() => {
+      const rootDir = join('bundles', 'pages')
+
+      for (const n of new Set([...hotReloader.prevChunkNames])) {
+        const route = toRoute(relative(rootDir, n))
+        hotReloader.send('reload', route)
+      }
+      hotReloader.send('reload', '/bundles/pages/')
+    })
+  }
+}
+
+function toRoute (file) {
+  const f = sep === '\\' ? file.replace(/\\/g, '/') : file
+  return ('/' + f).replace(/(\/index)?\.js$/, '') || '/'
 }
