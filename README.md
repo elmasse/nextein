@@ -18,7 +18,7 @@ There are a few steps you have to follow to get your site up and running with `n
     -  `cd my-site`
     -  `npm init -y` 
 - Install Dependencies
-    -  `npm i nextein@beta next react react-dom`
+    -  `npm i nextein next react react-dom`
 - Add a `next.config.js` config file 
 
     ```js
