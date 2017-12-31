@@ -30,6 +30,10 @@ export default class Server {
     return JSON.stringify(Array.from(entriesMap.values()))
   }
 
+  /**
+   * Freaking issue with babel-eslint or eslint or babel or ... that retrieves an error when using arrow func on class props
+   */
+  /* eslint-disable no-undef */
   handleRequest = async (req, res) => {
     const { app, exportPathMap } = this
     const parsedUrl = parse(req.url, true)
