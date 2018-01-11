@@ -10,6 +10,10 @@ A static site generator based in Next.js
 ### Requirements
 *NodeJS* __v8.x__+ is required to run `nextein` commands.
 
+## Starter Kit
+If you want to jump into a starter project check [nextein-starter](https://github.com/elmasse/nextein-starter)
+
+
 ## Getting Started
 There are a few steps you have to follow to get your site up and running with `nextein`
 
