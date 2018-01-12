@@ -91,7 +91,7 @@ There are a few steps you have to follow to get your site up and running with `n
     ```
 
 ### Example
-see [nextein-example](https://github.com/elmasse/nextein-example) for a working example
+See [nextein-example](https://github.com/elmasse/nextein-example) for a working example
 
 ## Documentation
 
@@ -181,7 +181,7 @@ export default withPost( ({ post }) => { /* render your post here */ } )
 
 ### `Content`
 
-Component to render a `post` object. This component receive the `content` from the post as a property.
+Component to render a `post` object. This component receives the `content` from the post as a property.
 Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
 
 - `content`: `{String}` Markdown content to be render. This is provided by `post.content`
