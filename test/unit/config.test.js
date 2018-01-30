@@ -1,4 +1,3 @@
-
 jest.mock('../../src/entries/load')
 import loadEntries from '../../src/entries/load'
 import nexteinConfig, { exportPathMap } from '../../src/config'
@@ -37,7 +36,7 @@ describe('exportPathMap', () => {
 
   test('generates post entry with given page', async () => {
     loadEntries.mockReturnValueOnce([
-      { data: { url: '/test',  page: 'test' } }
+      { data: { url: '/test', page: 'test' } }
     ])
 
     expect(exportPathMap).toBeDefined()
@@ -51,7 +50,7 @@ describe('exportPathMap', () => {
 
   test('does not generates post entry if page is false', async () => {
     loadEntries.mockReturnValueOnce([
-      { data: { url: '/test',  page: false } }
+      { data: { url: '/test', page: false } }
     ])
 
     expect(exportPathMap).toBeDefined()
@@ -61,5 +60,5 @@ describe('exportPathMap', () => {
     expect(loadEntries).toBeCalled()
     expect(result).toHaveProperty('/')
     expect(result).not.toHaveProperty('/test', { page: '/test' })
-  })    
+  })
 })

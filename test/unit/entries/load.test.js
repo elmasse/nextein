@@ -20,15 +20,13 @@ describe('loadEntries', () => {
 })
 
 describe('from Server', () => {
-
   beforeEach(() => {
     isServer.mockReturnValue(true)
-  });
+  })
 
   afterEach(() => {
     isServer.mockRestore()
-  });
-
+  })
 
   test('loadEntries retrieves an array of posts reading from Server', async () => {
     const files = ['posts/test.md']
@@ -41,7 +39,6 @@ describe('from Server', () => {
     const actual = await loadEntries()
 
     expect(actual).toEqual(expect.arrayContaining(posts))
-
   })
 
   test('byFileName retrieves a post reading from Server', async () => {
@@ -56,22 +53,18 @@ describe('from Server', () => {
     const actual = await byFileName('posts/test.md')
 
     expect(actual).toEqual(expect.objectContaining(post))
-
   })
-
 })
 
 describe('from Client', () => {
-
   beforeEach(() => {
     isServer.mockReturnValue(false)
     global.__NEXT_DATA__ = {}
-  });
+  })
 
   afterEach(() => {
     isServer.mockRestore()
-  });
-  
+  })
 
   test('loadEntries retrieves an array of posts fetching from Server', async () => {
     const posts = [{ data: {}, content: '' }]
@@ -84,7 +77,6 @@ describe('from Client', () => {
 
     expect(actual).toEqual(expect.arrayContaining(posts))
     expect(fetch).toHaveBeenCalledWith('/_load_entries')
-
   })
 
   test('byFileName retrieves a post fetching from Server', async () => {
@@ -100,7 +92,5 @@ describe('from Client', () => {
 
     expect(actual).toEqual(expect.objectContaining(post))
     expect(fetch).toHaveBeenCalledWith(`/_load_entry/${path}`)
-
   })
-
 })

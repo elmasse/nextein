@@ -1,4 +1,3 @@
-
 jest.mock('fs')
 jest.mock('frontmatter')
 
@@ -53,13 +52,10 @@ describe('processEntries ', () => {
         content: expectedContent
       }
     ]))
-
   })
-
 })
 
 describe('frontmatter: permalink', () => {
-  
   test('default permalink', async () => {
     const expectedPage = 'post'
     const expectedCategory = 'category'
@@ -71,7 +67,7 @@ describe('frontmatter: permalink', () => {
     fm.mockReturnValueOnce({
       data: {
         category: expectedCategory
-      },
+      }
     })
 
     statSync.mockReturnValueOnce({
@@ -92,7 +88,6 @@ describe('frontmatter: permalink', () => {
         }
       }
     ]))
-
   })
 
   test('permalink /:category/:name.html', async () => {
@@ -108,7 +103,7 @@ describe('frontmatter: permalink', () => {
       data: {
         category: expectedCategory,
         permalink
-      },
+      }
     })
 
     statSync.mockReturnValueOnce({
@@ -130,7 +125,6 @@ describe('frontmatter: permalink', () => {
         }
       }
     ]))
-
   })
 
   test('permalink /:date/:name.html', async () => {
@@ -148,7 +142,7 @@ describe('frontmatter: permalink', () => {
         category: expectedCategory,
         permalink,
         date: expectedDate
-      },
+      }
     })
 
     statSync.mockReturnValueOnce({
@@ -170,6 +164,5 @@ describe('frontmatter: permalink', () => {
         }
       }
     ]))
-
-  })  
+  })
 })
