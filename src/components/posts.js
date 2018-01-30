@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react'
+import hoistNonReactStatics from 'hoist-non-react-statics'
 
 import loadEntries from '../entries/load'
 import { getDisplayName } from './utils'
@@ -24,25 +25,27 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
   const displayName = getDisplayName(WrappedComponent)
   const postfix = filter ? 'FilterBy' : ''
 
-  return class extends Component {
-    static displayName = `WithPosts${postfix}(${displayName})`
+  return hoistNonReactStatics(
+    class extends Component {
+      static displayName = `WithPosts${postfix}(${displayName})`
 
-    static async getInitialProps (...args) {
-      const wrappedInitial = WrappedComponent.getInitialProps
-      const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-      const all = await loadEntries()
-      const posts = filter ? all.filter(filter) : all
+      static async getInitialProps (...args) {
+        const wrappedInitial = WrappedComponent.getInitialProps
+        const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
+        const all = await loadEntries()
+        const posts = filter ? all.filter(filter) : all
 
-      return {
-        ...wrapped,
-        posts
+        return {
+          ...wrapped,
+          posts
+        }
       }
-    }
 
-    render () {
-      return <WrappedComponent {...this.props} />
-    }
-  }
+      render () {
+        return <WrappedComponent {...this.props} />
+      }
+    },
+    WrappedComponent)
 }
 
 const withPosts = withPostsFilterBy()

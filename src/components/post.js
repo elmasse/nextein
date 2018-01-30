@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import hoistNonReactStatics from 'hoist-non-react-statics'
 import unified from 'unified'
 import markdown from 'remark-parse'
 import remark2rehype from 'remark-rehype'
@@ -55,26 +55,28 @@ export const Content = (props) => {
 export default (WrappedComponent) => {
   const displayName = getDisplayName(WrappedComponent)
 
-  return class extends Component {
-    static displayName = `WithPost(${displayName})`
+  return hoistNonReactStatics(
+    class extends Component {
+      static displayName = `WithPost(${displayName})`
 
-    static async getInitialProps (...args) {
-      const wrappedInitial = WrappedComponent.getInitialProps
-      const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-      const [ { query = {} } ] = args
-      const { _entry } = query
-      const post = _entry ? await byFileName(_entry) : undefined
+      static async getInitialProps (...args) {
+        const wrappedInitial = WrappedComponent.getInitialProps
+        const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
+        const [ { query = {} } ] = args
+        const { _entry } = query
+        const post = _entry ? await byFileName(_entry) : undefined
 
-      return {
-        ...wrapped,
-        post
+        return {
+          ...wrapped,
+          post
+        }
       }
-    }
 
-    render () {
-      const { props } = this
+      render () {
+        const { props } = this
 
-      return <WrappedComponent {...props} />
-    }
-  }
+        return <WrappedComponent {...props} />
+      }
+    },
+    WrappedComponent)
 }
