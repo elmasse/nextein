@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 
 import loadEntries from '../entries/load'
+import { getDisplayName } from './utils'
 
 export const entries = loadEntries
 
@@ -20,7 +21,12 @@ export const sortByDate = (a, b) => {
 }
 
 export const withPostsFilterBy = (filter) => (WrappedComponent) => {
+  const displayName = getDisplayName(WrappedComponent)
+  const postfix = filter ? 'FilterBy' : ''
+
   return class extends Component {
+    static displayName = `WithPosts${postfix}(${displayName})`
+
     static async getInitialProps (...args) {
       const wrappedInitial = WrappedComponent.getInitialProps
       const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}

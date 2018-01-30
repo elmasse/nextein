@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-export default (props) => {
+const NexteinLink = (props) => {
   const { data, children, content, ...rest } = props
   let { href, as } = rest
   if (data) {
@@ -12,3 +12,5 @@ export default (props) => {
 
   return <Link {...{...rest, href, as}} >{children}</Link>
 }
+
+export default NexteinLink

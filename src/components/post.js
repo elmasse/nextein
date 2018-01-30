@@ -8,6 +8,7 @@ import raw from 'rehype-raw'
 import select from 'unist-util-select'
 
 import { byFileName } from '../entries/load'
+import { getDisplayName } from './utils'
 
 const extractExcerpt = (excerpt) => {
   if (!excerpt) {
@@ -52,7 +53,11 @@ export const Content = (props) => {
 }
 
 export default (WrappedComponent) => {
+  const displayName = getDisplayName(WrappedComponent)
+
   return class extends Component {
+    static displayName = `WithPost(${displayName})`
+
     static async getInitialProps (...args) {
       const wrappedInitial = WrappedComponent.getInitialProps
       const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
