@@ -78,5 +78,5 @@ export default (WrappedComponent) => {
         return <WrappedComponent {...props} />
       }
     },
-    WrappedComponent)
+    WrappedComponent, { 'getInitialProps':  true })
 }

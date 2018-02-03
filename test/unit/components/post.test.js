@@ -55,6 +55,34 @@ describe('withPost', () => {
     expect(actual.post).toEqual(expect.objectContaining(expected))
     expect(byFileName).toHaveBeenCalledWith(expectedFileName)
   })
+
+  test('withPosts composes getInitialProps non react statics', async () => {
+    const wrappedProps = { value: 1 }
+    const getInitialProps = jest.fn().mockReturnValueOnce(wrappedProps)
+    const expected = { data: {}, content: `` }
+    const expectedFileName = 'fake'
+    
+    byFileName.mockReturnValueOnce(expected)
+
+    const Component = withPost(
+      class Wrapped extends React.Component {
+        static getInitialProps = getInitialProps
+  
+        render () {
+          return (<div>Test</div>)
+        }
+      }
+    )
+      
+    const actual = await Component.getInitialProps({query: {_entry: expectedFileName}})
+
+    expect(actual.value).toBeDefined()
+    expect(actual.value).toEqual(1)
+
+    expect(actual.post).toBeDefined()
+    expect(actual.post).toEqual(expect.objectContaining(expected))
+    expect(byFileName).toHaveBeenCalledWith(expectedFileName)
+  })  
 })
 
 describe('Content', () => {

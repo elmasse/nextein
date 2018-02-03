@@ -41,6 +41,31 @@ describe('withPosts', () => {
   })
 })
 
+test('withPosts composes getInitialProps non react statics', async () => {
+  const wrappedProps = { value: 1 }
+  const getInitialProps = jest.fn().mockReturnValueOnce(wrappedProps)
+  const expected = [{ data: {}, content: `` }]
+  
+  loadEntries.mockReturnValueOnce(expected)
+  
+  const Component = withPosts(
+    class Wrapped extends React.Component {
+      static getInitialProps = getInitialProps
+
+      render () {
+        const { posts } = this.props
+        return ((<div>There are {posts.length} posts</div>))
+      }
+    }
+  )
+  const actual = await Component.getInitialProps()
+
+  expect(actual.value).toBeDefined()
+  expect(actual.value).toEqual(1)
+  expect(actual.posts).toBeDefined()
+  expect(actual.posts).toEqual(expect.arrayContaining(expected))
+})
+
 describe('withPostsFilterBy', () => {
   test('exports HOC withPosts as default', () => {
     expect(withPostsFilterBy).toBeDefined()

@@ -45,7 +45,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         return <WrappedComponent {...this.props} />
       }
     },
-    WrappedComponent)
+    WrappedComponent, { 'getInitialProps': true })
 }
 
 const withPosts = withPostsFilterBy()
