@@ -15,9 +15,9 @@ export default class Server {
   async readEntries () {
     const entries = await loadEntries()
     const kv = entries
-      .map((entry) => {
+      .map((entry, index) => {
         const { data } = entry
-        const { url } = data
+        const { url = `@@NOURL-${index}` } = data
         return [url, entry]
       })
 
