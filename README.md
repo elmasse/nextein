@@ -1,4 +1,5 @@
 # nextein [![Greenkeeper badge](https://badges.greenkeeper.io/elmasse/nextein.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.org/elmasse/nextein.svg?branch=master)](https://travis-ci.org/elmasse/nextein)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Felmasse%2Fnextein.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Felmasse%2Fnextein?ref=badge_shield)
 
 A static site generator based in Next.js
 
@@ -321,3 +322,7 @@ module.exports = nexteinConfig({
 })
 
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Felmasse%2Fnextein.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Felmasse%2Fnextein?ref=badge_large)
