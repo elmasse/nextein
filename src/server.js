@@ -14,6 +14,8 @@ export default class Server {
 
   async readEntries () {
     const entries = await loadEntries()
+    // next@canary uses nextConfig instead od config
+    const nextConfig = await this.app.nextConfig ? 'nextConfig' : 'config'
     const kv = entries
       .map((entry, index) => {
         const { data } = entry
@@ -22,7 +24,7 @@ export default class Server {
       })
 
     this.entriesMap = new Map(kv)
-    this.exportPathMap = await this.app.config.exportPathMap()
+    this.exportPathMap = await this.app[nextConfig].exportPathMap()
   }
 
   entriesAsJSON () {
