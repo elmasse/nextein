@@ -67,7 +67,7 @@
     "react-test-renderer": "16.2.0",
     "standard": "11.0.0",
     "taskr": "1.1.0",
-    "taskr-standard": "1.0.1"
+    "taskr-standard": "1.0.2"
   },
   "standard": {
     "parser": "babel-eslint",
