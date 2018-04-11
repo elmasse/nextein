@@ -1,6 +1,6 @@
 jest.mock('../../src/entries/load')
 import loadEntries from '../../src/entries/load'
-import nexteinConfig, { exportPathMap } from '../../src/config'
+import nexteinConfig from '../../src/config'
 
 describe('config', () => {
   test('exports nexteinConfig fn as default', () => {
@@ -9,6 +9,7 @@ describe('config', () => {
 })
 
 describe('exportPathMap', () => {
+  const { exportPathMap } = nexteinConfig()
   test('generates index by default ', async () => {
     loadEntries.mockReturnValueOnce([])
 

@@ -2,77 +2,54 @@
 import loadEntries from './entries/load'
 import Uglify from 'uglifyjs-webpack-plugin'
 
-export default (original) => {
-  const {
-    webpack: oWebpack,
-    exportPathMap: oExportPathMap
-  } = original
+export default (nextConfig = {}) => ({
+  ...nextConfig,
+  webpack (config, options) {
+    const { dev } = options
+    config.node = {
+      fs: 'empty'
+    }
 
-  return {
-    ...original,
-    webpack: function (...args) {
-      const our = webpack(...args)
-      let their
+    config.plugins = config.plugins.filter(plugin => {
+      return plugin.constructor.name !== 'UglifyJsPlugin'
+    })
 
-      if (oWebpack) {
-        their = oWebpack(...args)
-      }
+    if (!dev) {
+      config.plugins.push(
+        new Uglify({
+          parallel: true,
+          sourceMap: true
+        })
+      )
+    }
 
+    if (typeof nextConfig.webpack === 'function') {
+      return nextConfig.webpack(config, options)
+    }
+
+    return config
+  },
+
+  async exportPathMap () {
+    const entries = await loadEntries()
+    const map = entries
+      .concat({ data: { url: '/', page: 'index' } })
+      .reduce((prev, { data }) => {
+        const { url, page, _entry } = data
+        const query = _entry ? { _entry } : undefined
+        return page ? {
+          ...prev,
+          [url]: { page: `/${page}`, query }
+        } : prev
+      }, {})
+
+    if (typeof nextConfig.exportPathMap === 'function') {
       return {
-        ...our,
-        ...their
-      }
-    },
-    exportPathMap: async function () {
-      const our = await exportPathMap()
-      let their
-      if (oExportPathMap) {
-        their = await oExportPathMap()
-      }
-
-      return {
-        ...our,
-        ...their
+        ...map,
+        ...(await nextConfig.exportPathMap())
       }
     }
+
+    return map
   }
-}
-
-export const webpack = (config, { dev }) => {
-  config.node = {
-    fs: 'empty'
-  }
-
-  config.plugins = config.plugins.filter(plugin => {
-    return plugin.constructor.name !== 'UglifyJsPlugin'
-  })
-
-  if (!dev) {
-    config.plugins.push(
-      new Uglify({
-        parallel: true,
-        sourceMap: true
-      })
-    )
-  }
-
-  return config
-}
-
-export const exportPathMap = async () => {
-  const entries = await loadEntries()
-  const map = entries
-    .reduce((prev, { data }) => {
-      const { url, page, _entry } = data
-      const query = _entry ? { _entry } : undefined
-      return page ? {
-        ...prev,
-        [url]: { page: `/${page}`, query }
-      } : prev
-    }, {})
-
-  return {
-    '/': { page: '/' },
-    ...map
-  }
-}
+})
