@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import unified from 'unified'
-import markdown from 'remark-parse'
-import remark2rehype from 'remark-rehype'
+import rehype from 'rehype-parse'
+import stringify from 'rehype-stringify'
 import reactRenderer from 'rehype-react'
-import raw from 'rehype-raw'
 import select from 'unist-util-select'
 
 import { byFileName } from '../entries/load'
@@ -15,7 +14,7 @@ const extractExcerpt = (excerpt) => {
     return
   }
 
-  const selector = (typeof excerpt === 'string') ? excerpt : ':root > paragraph:first-child'
+  const selector = (typeof excerpt === 'string') ? excerpt : ':root > p:first-child'
 
   return () => /* attacher */ (tree) => {
     /* transformer */
@@ -24,19 +23,19 @@ const extractExcerpt = (excerpt) => {
   }
 }
 
-const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => (
-  unified()
-    .use(markdown)
+const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
+  const p = unified()
+    .use(rehype)
     .use(extractExcerpt(excerpt))
-    .use(remark2rehype, { allowDangerousHTML: true })
-    .use(raw)
+    .use(stringify)
     .use(reactRenderer, {
       createElement: React.createElement,
       prefix,
       components: renderers
     })
-    .processSync(content).contents
-)
+
+  return p.stringify(content)
+}
 
 export const Content = (props) => {
   const { content, excerpt, renderers, data, prefix, ...componentProps } = props
