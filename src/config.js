@@ -1,6 +1,7 @@
 
 import loadEntries from './entries/load'
 import Uglify from 'uglifyjs-webpack-plugin'
+import { NormalModuleReplacementPlugin } from 'webpack'
 
 export default (nextConfig = {}) => ({
   ...nextConfig,
@@ -13,6 +14,10 @@ export default (nextConfig = {}) => ({
     config.plugins = config.plugins.filter(plugin => {
       return plugin.constructor.name !== 'UglifyJsPlugin'
     })
+
+    config.plugins.push(
+      new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-client.js')
+    )
 
     if (!dev) {
       config.plugins.push(
