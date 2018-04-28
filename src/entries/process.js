@@ -4,6 +4,8 @@ import { resolve, basename, extname, relative, dirname, sep } from 'path'
 import fm from 'frontmatter'
 import pathToRegEx from 'path-to-regexp'
 
+import parser from './parser'
+
 export default (paths, entriesPath) => {
   return paths
     .map(path => readFileSync(path, 'utf-8'))
@@ -14,6 +16,7 @@ export default (paths, entriesPath) => {
     .map(addCategory(entriesPath))
     .map(addDate)
     .map(addUrl)
+    .map(addParsedContent)
 }
 
 const addPage = (value, idx) => {
@@ -45,6 +48,12 @@ const addUrl = (value) => {
 const addDate = (value) => {
   const { data } = value
   return { ...value, data: { ...data, date: createEntryDate({ ...data }) } }
+}
+
+const addParsedContent = (value) => {
+  const { content } = value
+  const root = parser.runSync(parser.parse(content))
+  return { ...value, content: root }
 }
 
 const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
