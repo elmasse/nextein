@@ -10,20 +10,19 @@ import { byFileName } from '../entries/load'
 import { getDisplayName } from './utils'
 
 const extractExcerpt = (excerpt) => {
-  if (!excerpt) {
-    return
-  }
-
   const selector = (typeof excerpt === 'string') ? excerpt : ':root > element[tagName=p]:first-child'
 
   return () => /* attacher */ (tree) => {
     /* transformer */
-    tree.children = select(tree, selector)
+    if (excerpt) {
+      tree.children = select(tree, selector)
+    }
     return tree
   }
 }
 
 const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
+  const hast = JSON.parse(JSON.stringify(content))
   const p = unified()
     .use(rehype)
     .use(extractExcerpt(excerpt))
@@ -34,7 +33,7 @@ const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
       components: renderers
     })
 
-  return p.stringify(p.runSync(content))
+  return p.stringify(p.runSync(hast))
 }
 
 export const Content = (props) => {
