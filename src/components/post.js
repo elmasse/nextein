@@ -14,7 +14,7 @@ const extractExcerpt = (excerpt) => {
     return
   }
 
-  const selector = (typeof excerpt === 'string') ? excerpt : ':root > p:first-child'
+  const selector = (typeof excerpt === 'string') ? excerpt : ':root > element[tagName=p]:first-child'
 
   return () => /* attacher */ (tree) => {
     /* transformer */
@@ -34,7 +34,7 @@ const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
       components: renderers
     })
 
-  return p.stringify(content)
+  return p.stringify(p.runSync(content))
 }
 
 export const Content = (props) => {
