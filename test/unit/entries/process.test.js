@@ -39,7 +39,7 @@ describe('processEntries ', () => {
     const actual = await processEntries([expectedEntry], 'posts')
 
     expect(actual).toEqual(expect.any(Array))
-    expect(actual).toEqual(expect.arrayContaining([
+    expect(actual).toMatchObject([
       {
         data: {
           page: expectedPage,
@@ -49,9 +49,24 @@ describe('processEntries ', () => {
           url: expectedUrl,
           _entry: expectedEntry
         },
-        content: expectedContent
+        content: expect.objectContaining({
+          type: 'root',
+          position: expect.anything(),
+          data: expect.anything(),
+          children: expect.arrayContaining([{
+            type: 'element',
+            tagName: 'p',
+            properties: expect.anything(),
+            position: expect.anything(),
+            children: expect.arrayContaining([{
+              value: expectedContent,
+              type: 'text',
+              position: expect.anything()
+            }])
+          }])
+        })
       }
-    ]))
+    ])
   })
 })
 
@@ -85,7 +100,8 @@ describe('frontmatter: permalink', () => {
           name: expectedName,
           url: expectedUrl,
           _entry: expectedEntry
-        }
+        },
+        content: expect.anything()
       }
     ]))
   })
@@ -122,7 +138,8 @@ describe('frontmatter: permalink', () => {
           permalink,
           url: expectedUrl,
           _entry: expectedEntry
-        }
+        },
+        content: expect.anything()
       }
     ]))
   })
@@ -161,7 +178,8 @@ describe('frontmatter: permalink', () => {
           permalink,
           url: expectedUrl,
           _entry: expectedEntry
-        }
+        },
+        content: expect.anything()
       }
     ]))
   })
