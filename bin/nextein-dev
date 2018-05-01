@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import 'source-map-support/register'
 import { resolve } from 'path'
 import parseArgs from 'minimist'
 import { readFileSync } from 'fs'
