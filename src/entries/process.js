@@ -50,10 +50,14 @@ const addDate = (value) => {
   return { ...value, data: { ...data, date: createEntryDate({ ...data }) } }
 }
 
-const addParsedContent = (value) => {
-  const { content } = value
-  const root = parser.runSync(parser.parse(content))
-  return { ...value, content: root }
+const addParsedContent = value => {
+  const { content: mdContent } = value
+  delete value.content
+  return {
+    ...value,
+    content: parser.runSync(parser.parse(mdContent)),
+    raw: mdContent
+  }
 }
 
 const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
