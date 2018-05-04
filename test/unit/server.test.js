@@ -18,7 +18,7 @@ describe('server', () => {
 
 describe('server instance mode: dev', () => {
   next.mockReturnValueOnce({
-    config: {
+    nextConfig: {
       exportPathMap: () => ({})
     }
   })
