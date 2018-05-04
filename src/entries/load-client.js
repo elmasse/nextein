@@ -1,12 +1,12 @@
+/**
+ * THIS FILE IS LOADED BY WEBPACK TO REPLACE load.js in client
+ */
+
 /* global __NEXT_DATA__ */
 import { sep } from 'path'
 import fetch from 'unfetch'
 
 export default async (path = 'posts') => {
-  return fromClient(path)
-}
-
-const fromClient = async (path) => {
   // in safari the popstate event is fired when user press back and
   // causes the getInitialProps to be called in the SSR version
   // This will pickup the current props and return it as a workaround
@@ -21,10 +21,6 @@ const fromClient = async (path) => {
 }
 
 export const byFileName = async (path, root = 'posts') => {
-  return byFileNameFromClient(path)
-}
-
-const byFileNameFromClient = async (path) => {
   // this is used to make next.js Link to work on exported sites.
   if (__NEXT_DATA__.nextExport) {
     return findPostFromNextCache(path)
