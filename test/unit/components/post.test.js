@@ -18,7 +18,7 @@ import renderer from 'react-test-renderer'
 import h from 'hastscript'
 
 import unified from 'unified'
-import { byFileName } from '../../../src/entries/load'
+import loadEntries, { byFileName } from '../../../src/entries/load'
 import withPost, { Content } from '../../../src/components/post'
 
 describe('withPost', () => {
@@ -51,6 +51,7 @@ describe('withPost', () => {
     const expectedFileName = 'fake'
     const Component = withPost(({ post }) => (<div>Test</div>))
 
+    loadEntries.mockReturnValueOnce([expected])
     byFileName.mockReturnValueOnce(expected)
     const actual = await Component.getInitialProps({query: {_entry: expectedFileName}})
 
@@ -65,6 +66,7 @@ describe('withPost', () => {
     const expected = { data: {}, content: `` }
     const expectedFileName = 'fake'
     
+    loadEntries.mockReturnValueOnce([expected])
     byFileName.mockReturnValueOnce(expected)
 
     const Component = withPost(
