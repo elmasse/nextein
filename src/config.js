@@ -15,12 +15,13 @@ export default (nextConfig = {}) => ({
       return plugin.constructor.name !== 'UglifyJsPlugin'
     })
 
-    config.plugins.push(
-      new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-client.js')
-    )
-
-    if (!dev) {
+    if (dev) {
       config.plugins.push(
+        new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-client.js')
+      )
+    } else {
+      config.plugins.push(
+        new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-exported.js'),
         new Uglify({
           parallel: true,
           sourceMap: true
