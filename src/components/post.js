@@ -6,8 +6,8 @@ import stringify from 'rehype-stringify'
 import reactRenderer from 'rehype-react'
 import select from 'unist-util-select'
 
-import { byFileName } from '../entries/load'
-import { getDisplayName } from './utils'
+import loadEntries, { byFileName } from '../entries/load'
+import { getDisplayName, entriesMapReducer } from './utils'
 
 const extractExcerpt = (excerpt) => {
   const selector = (typeof excerpt === 'string') ? excerpt : ':root > element[tagName=p]:first-child'
@@ -63,10 +63,13 @@ export default (WrappedComponent) => {
         const [ { query = {} } ] = args
         const { _entry } = query
         const post = _entry ? await byFileName(_entry) : undefined
+        const _entries = await loadEntries()
 
         return {
           ...wrapped,
-          post
+          post,
+          _entries,
+          _entriesMap: _entries.reduce(entriesMapReducer, {})
         }
       }
 
