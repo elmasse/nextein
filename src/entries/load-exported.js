@@ -6,8 +6,8 @@
 
 const loadEntries = () => {
   const { props } = __NEXT_DATA__
-  const { entries } = (props.pageProps || props)
-  return entries
+  const { _entries } = (props.pageProps || props)
+  return _entries
 }
 
 export default loadEntries
@@ -18,7 +18,7 @@ export const byFileName = (path, root = 'posts') => {
 
 const findPostInEntriesCache = (path) => {
   const { props } = __NEXT_DATA__
-  const { post, entries } = (props.pageProps || props)
+  const { post, _entries } = (props.pageProps || props)
 
-  return (post && post.data._entry === path) ? post : entries.filter((p) => p.data._entry === path).reduce(v => v)
+  return (post && post.data._entry === path) ? post : _entries.filter((p) => p.data._entry === path).reduce(v => v)
 }
