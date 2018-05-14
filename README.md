@@ -276,11 +276,11 @@ export default withPosts( ({ posts }) => {
     - `data.url` is the generated url for the post
     - `data.category` is the post's category. When not specified, if the post is inside a folder, the directory structure under `posts` will be used. 
     - `data.date`: JSON date from frontmatter's date or date in file name or file creation date
-- `content` is markdown content of the post
+- `raw` is markdown content of the post
 
 ```js
 
-{ data, content } = post
+{ data, raw } = post
 
 ```
 
