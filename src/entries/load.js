@@ -12,5 +12,5 @@ const loadEntries = async (path = 'posts') => {
 export default loadEntries
 
 export const byFileName = async (path, root = 'posts') => {
-  return processEntries([path], path).pop()
+  return processEntries([path], root).pop()
 }
