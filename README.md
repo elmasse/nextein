@@ -187,7 +187,7 @@ export default withPost( ({ post }) => { /* render your post here */ } )
 Component to render a `post` object. This component receives the `content` from the post as a property.
 Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
 
-- `content`: `{String}` Markdown content to be render. This is provided by `post.content`
+- `content`: `{Object}` Markdown content in HAST format to be render. This is provided by `post.content`
 - `excerpt`: `{Boolean}` true to only render the first paragraph. Optional. Default: `false`
 - `renderers`: `{Object}` A set of custom renderers for Markdown elements with the form of `[tagName]: renderer`.
 - `prefix`: `{String}` Prefix to use for the generated React elements. Optional. Default: `'entry-'`
@@ -277,6 +277,7 @@ export default withPosts( ({ posts }) => {
     - `data.category` is the post's category. When not specified, if the post is inside a folder, the directory structure under `posts` will be used. 
     - `data.date`: JSON date from frontmatter's date or date in file name or file creation date
 - `raw` is markdown content of the post
+- `content` is a HAST representation of post content 
 
 ```js
 
