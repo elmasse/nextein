@@ -37,7 +37,7 @@ const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
 }
 
 export const Content = (props) => {
-  const { content, excerpt, renderers, data, prefix, ...componentProps } = props
+  const { content, excerpt, renderers, data, prefix, raw, ...componentProps } = props
   const cmp = toReact({ content, excerpt, renderers, prefix })
   const { props: cmpProps } = cmp
 
