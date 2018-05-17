@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Link from 'next/link'
 
 import loadEntries from '../entries/load'
-import { entriesMapReducer } from './utils'
+import { entriesMapReducer, prefixed } from './utils'
 
 class NexteinLink extends Component {
   state = {
@@ -24,7 +24,7 @@ class NexteinLink extends Component {
       const entry = map[href]
       if (entry) {
         this.setState({
-          href: { pathname: entry.pathname, query: entry.query },
+          href: { pathname: prefixed(entry.pathname), query: entry.query },
           as: href
         })
       }
@@ -40,6 +40,9 @@ class NexteinLink extends Component {
       href = { pathname: `/${page}`, query: { _entry } }
       as = url
     }
+
+    href = prefixed(href)
+    as = prefixed(as)
 
     return <Link {...{...rest, href, as}} >{children}</Link>
   }

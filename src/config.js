@@ -1,10 +1,11 @@
 
 import loadEntries from './entries/load'
 import Uglify from 'uglifyjs-webpack-plugin'
-import { NormalModuleReplacementPlugin } from 'webpack'
+import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 export default (nextConfig = {}) => ({
   ...nextConfig,
+  assetPrefix: nextConfig.assetPrefix || process.env.PUBLIC_URL,
   webpack (config, options) {
     const { dev } = options
     config.node = {
@@ -14,6 +15,12 @@ export default (nextConfig = {}) => ({
     config.plugins = config.plugins.filter(plugin => {
       return plugin.constructor.name !== 'UglifyJsPlugin'
     })
+
+    config.plugins.push(
+      new DefinePlugin({
+        'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '')
+      })
+    )
 
     if (dev) {
       config.plugins.push(
