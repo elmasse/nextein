@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import Link from 'next/link'
 
 import loadEntries from '../entries/load'
-import { entriesMapReducer, prefixed } from './utils'
+import entriesMap from '../entries/map'
+import { prefixed } from './utils'
 
 class NexteinLink extends Component {
   state = {
@@ -18,7 +19,7 @@ class NexteinLink extends Component {
 
   async componentDidMount () {
     const all = await loadEntries()
-    const map = all.reduce(entriesMapReducer, {})
+    const map = entriesMap(all)
     const { href } = this.state
     if (href) {
       const entry = map[href]

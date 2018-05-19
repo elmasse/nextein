@@ -7,7 +7,8 @@ import reactRenderer from 'rehype-react'
 import select from 'unist-util-select'
 
 import loadEntries, { byFileName } from '../entries/load'
-import { getDisplayName, entriesMapReducer } from './utils'
+import entriesMap from '../entries/map'
+import { getDisplayName } from './utils'
 
 const extractExcerpt = (excerpt) => {
   const selector = (typeof excerpt === 'string') ? excerpt : ':root > element[tagName=p]:first-child'
@@ -69,7 +70,7 @@ export default (WrappedComponent) => {
           ...wrapped,
           post,
           _entries,
-          _entriesMap: _entries.reduce(entriesMapReducer, {})
+          _entriesMap: entriesMap(_entries)
         }
       }
 

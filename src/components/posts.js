@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 
 import loadEntries from '../entries/load'
-import { getDisplayName, entriesMapReducer } from './utils'
+import entriesMap from '../entries/map'
+import { getDisplayName } from './utils'
 
 export const entries = loadEntries
 
@@ -39,7 +40,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
           ...wrapped,
           posts,
           _entries,
-          _entriesMap: _entries.reduce(entriesMapReducer, {})
+          _entriesMap: entriesMap(_entries)
         }
       }
 
