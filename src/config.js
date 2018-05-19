@@ -1,11 +1,12 @@
 
 import loadEntries from './entries/load'
+import { setNextExportPathMap } from './entries/map'
 import Uglify from 'uglifyjs-webpack-plugin'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 export default (nextConfig = {}) => ({
   ...nextConfig,
-  assetPrefix: nextConfig.assetPrefix || process.env.PUBLIC_URL,
+  assetPrefix: nextConfig.assetPrefix || process.env.PUBLIC_URL || '',
   webpack (config, options) {
     const { dev } = options
     config.node = {
@@ -24,11 +25,13 @@ export default (nextConfig = {}) => ({
 
     if (dev) {
       config.plugins.push(
-        new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-client.js')
+        new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-client.js'),
+        new NormalModuleReplacementPlugin(/\/entries\/map.js/, './map-exported.js')
       )
     } else {
       config.plugins.push(
         new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-exported.js'),
+        new NormalModuleReplacementPlugin(/\/entries\/map.js/, './map-exported.js'),
         new Uglify({
           parallel: true,
           sourceMap: true
@@ -57,9 +60,11 @@ export default (nextConfig = {}) => ({
       }, {})
 
     if (typeof nextConfig.exportPathMap === 'function') {
+      const nextExportPathMap = await nextConfig.exportPathMap()
+      setNextExportPathMap(nextExportPathMap)
       return {
         ...map,
-        ...(await nextConfig.exportPathMap())
+        ...nextExportPathMap
       }
     }
 
