@@ -1,11 +1,13 @@
 jest.mock('../../../src/entries/load')
 jest.mock('unified', () => {
   function mockedUnified () { return new impl() }
-  mockedUnified.processSync = jest.fn()
+  mockedUnified.stringify = jest.fn()
+  mockedUnified.runSync = jest.fn()
   mockedUnified.use = jest.fn(function () { return this })
   class impl {
     use = mockedUnified.use
-    processSync = mockedUnified.processSync
+    stringify = mockedUnified.stringify
+    runSync = mockedUnified.runSync
   }
 
   return mockedUnified
@@ -13,9 +15,10 @@ jest.mock('unified', () => {
 
 import React from 'react'
 import renderer from 'react-test-renderer'
+import h from 'hastscript'
 
 import unified from 'unified'
-import { byFileName } from '../../../src/entries/load'
+import loadEntries, { byFileName } from '../../../src/entries/load'
 import withPost, { Content } from '../../../src/components/post'
 
 describe('withPost', () => {
@@ -48,6 +51,7 @@ describe('withPost', () => {
     const expectedFileName = 'fake'
     const Component = withPost(({ post }) => (<div>Test</div>))
 
+    loadEntries.mockReturnValueOnce([expected])
     byFileName.mockReturnValueOnce(expected)
     const actual = await Component.getInitialProps({query: {_entry: expectedFileName}})
 
@@ -62,6 +66,7 @@ describe('withPost', () => {
     const expected = { data: {}, content: `` }
     const expectedFileName = 'fake'
     
+    loadEntries.mockReturnValueOnce([expected])
     byFileName.mockReturnValueOnce(expected)
 
     const Component = withPost(
@@ -91,13 +96,16 @@ describe('Content', () => {
   })
 
   test('Content component should render post content', () => {
-    const expectedContent = `lorem ipsum`
+    const expectedText = `lorem ipsum`
+    const expectedContent = h('root', [ h('p', expectedText) ])
 
-    unified.processSync.mockReturnValueOnce({contents: (<p>{expectedContent}</p>) })
+    unified.stringify.mockReturnValueOnce(<p>{expectedText}</p>)
 
     const comp = renderer.create(<Content content={expectedContent} />)
 
-    expect(unified.processSync).toHaveBeenCalledWith(expectedContent)
+    expect(unified.runSync).toHaveBeenCalledWith(expectedContent)
+    expect(unified.stringify).toHaveBeenCalled()
+
     expect(comp.toJSON()).toMatchSnapshot()
   })
 })

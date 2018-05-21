@@ -2,21 +2,15 @@ import glob from 'glob'
 
 import processEntries from './process'
 
-export default async (path = 'posts') => {
-  return fromServer(path)
-}
+const loadEntries = async (path = 'posts') => {
+  const paths = glob.sync(`${path}/**/*.md`, { root: process.cwd() })
 
-const fromServer = async (entriesPath) => {
-  const paths = glob.sync(`${entriesPath}/**/*.md`, { root: process.cwd() })
-
-  return processEntries(paths, entriesPath)
+  return processEntries(paths, path)
     .filter(({data}) => data.published !== false)
 }
 
-export const byFileName = async (path, root = 'posts') => {
-  return byFileNameFromServer(path, root)
-}
+export default loadEntries
 
-const byFileNameFromServer = (path, entriesPath) => {
-  return processEntries([path], entriesPath).pop()
+export const byFileName = async (path, root = 'posts') => {
+  return processEntries([path], root).pop()
 }

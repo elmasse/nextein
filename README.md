@@ -29,32 +29,30 @@ There are a few steps you have to follow to get your site up and running with `n
 - Add a `next.config.js` config file 
 
     ```js
-        const nexteinConfig = require('nextein/config').default
+    const nexteinConfig = require('nextein/config').default
 
-        module.exports = nexteinConfig({
+    module.exports = nexteinConfig({
 
-        })
+    })
 
     ```
 - Create `pages/index.js`
 
     ```js
+    import React from 'react'
 
-        import React from 'react'
+    import withPosts from 'nextein/posts'
+    import { Content } from 'nextein/post'
 
-        import withPosts from 'nextein/posts'
-        import { Content } from 'nextein/post'
-
-        export default withPosts( ({ posts }) => {
-            return (
-                <section>
-                {
-                    posts.map(post => <Content {...post} />)
-                }
-                </section>
-
-            )
-        })
+    export default withPosts( ({ posts }) => {
+      return (
+        <section>
+        {
+          posts.map(post => <Content {...post} />)
+        }
+        </section>
+      )
+    })
 
     ```
 - Create a `markdown` post entry under `posts` folder (`posts/my-first-post.md`)
@@ -73,10 +71,8 @@ There are a few steps you have to follow to get your site up and running with `n
 - Add npm scripts to run dev mode to your `package.json`
 
     ```json
-    {
-        "scripts": {
-            "dev": "nextein"
-        }
+    "scripts": {
+      "dev": "nextein"
     }
     ```
 - Run the development server
@@ -85,11 +81,9 @@ There are a few steps you have to follow to get your site up and running with `n
 - Add another npm script to your `package.json` to export the site
 
     ```json
-    {
-        "scripts": {
-            "dev": "nextein",
-            "export": "nextein build && nextein export"
-        }
+    "scripts": {
+      "dev": "nextein",
+      "export": "nextein build && nextein export"
     }
     ```
 
@@ -123,8 +117,8 @@ Categories are resolved by the folder structure by default. This means that a po
 import withPosts, { inCategory } from 'nextein/posts'
 
 export default withPosts( ({ posts }) => { 
-    const homePosts = posts.filter(inCategory('home'))
-    /* render your homePosts here */ 
+  const homePosts = posts.filter(inCategory('home'))
+  /* render your homePosts here */ 
 } )
 
 ```
@@ -135,9 +129,9 @@ If you want to retrieve all posts under a certain category, let's say `categoryA
 import withPosts, { inCategory } from 'nextein/posts'
 
 export default withPosts( ({ posts }) => { 
-    const categoryAPosts = posts
-        .filter(inCategory('categoryA', { includeSubCategories: true }))
-    /* render your categoryAPostsmePosts here */ 
+  const categoryAPosts = posts
+    .filter(inCategory('categoryA', { includeSubCategories: true }))
+  /* render your categoryAPostsmePosts here */ 
 } )
 
 ```
@@ -152,7 +146,7 @@ import { withPostsFilterBy, inCategory } from 'nextein/posts'
 const withCategoryAPosts = withPostsFilterBy(inCategory('categoryA'))
 
 export default withCategoryAPosts(({ posts }) => { 
-    /* render your posts here */ 
+  /* render your posts here */ 
 })
 
 ```
@@ -165,8 +159,8 @@ Sort function to be applied to posts to sort by date (newest on top). This requi
 import withPosts, { sortByDate } from 'nextein/posts'
 
 export default withPosts( ({ posts }) => { 
-    posts.sort(sortByDate)
-    /* render your posts here */ 
+  posts.sort(sortByDate)
+  /* render your posts here */ 
 } )
 
 ```
@@ -187,7 +181,7 @@ export default withPost( ({ post }) => { /* render your post here */ } )
 Component to render a `post` object. This component receives the `content` from the post as a property.
 Use the `excerpt` property to only render the first paragraph (this is useful when rendering a list of posts).
 
-- `content`: `{String}` Markdown content to be render. This is provided by `post.content`
+- `content`: `{Object}` Markdown content in HAST format to be render. This is provided by `post.content`
 - `excerpt`: `{Boolean}` true to only render the first paragraph. Optional. Default: `false`
 - `renderers`: `{Object}` A set of custom renderers for Markdown elements with the form of `[tagName]: renderer`.
 - `prefix`: `{String}` Prefix to use for the generated React elements. Optional. Default: `'entry-'`
@@ -206,14 +200,14 @@ Using the `excerpt` property
 import withPosts, {inCategory} from 'nextein/posts'
 
 export default withPosts( ({ posts }) => { 
-    const homePosts = posts.filter(inCategory('home'))
-    return (
-        <section>
-        {
-            homePosts.map( (post, idx) => <Content key={idx} {...post} excerpt/> )
-        }
-        </section>
-    )
+  const homePosts = posts.filter(inCategory('home'))
+  return (
+    <section>
+    {
+      homePosts.map( (post, idx) => <Content key={idx} {...post} excerpt/> )
+    }
+    </section>
+  )
 } )
 
 ```
@@ -222,24 +216,25 @@ Using `renderers` to change/style the `<p>` tag
 
 ```js
 export default withPost( ({ post }) => { 
-    return (
-        <Content {...post} 
-            renderers={{
-                p: Paragraph 
-            }}
-        />
-    ) 
+  return (
+    <Content {...post} 
+      renderers={{
+        p: Paragraph 
+      }}
+    />
+  ) 
 } )
 
 const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'}}> { children } </p> )
-
 
 ```
 
 
 ### `Link`
 
-`next/link` will work out of the box. You can use `nextein/link` instead with the exact same parameters. This component wraps the `next/link` one to simplify creating a _Link_ for a given post object.
+You can use `nextein/link` instead with the exact same parameters as `next/link`. This component wraps the `next/link` one to simplify creating a _Link_ for a given post object. `next/link` will work out of the box.
+ When passing a `post.data.url` to `href` it will generate the underlying `next/link` with the `post` information.
+
 
 - `data`: `{Object}` Post frontmatter object. This is provided by `post.data`
 
@@ -248,24 +243,21 @@ const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'
 import withPosts from 'nextein/posts'
 import Link from 'nextein/link'
 
-
-export default withPosts( ({ posts }) => { 
-    return (
-        <section>
-        {
-            posts.map( (post, idx) => {
-                return (
-                    <div>
-                        <h1>{post.data.title}</h1>
-                        <Content key={idx} {...post} excerpt/>
-                        <Link {...post}><a>Read More...</a></Link>
-                    </div>
-                    )
-            })    
-        }
-        </section>
-    )
-} )
+export default withPosts( ({ posts }) => (
+  <section>
+  {
+    posts.map( (post, idx) => {
+      return (
+        <div>
+          <h1>{post.data.title}</h1>
+          <Content key={idx} {...post} excerpt/>
+          <Link {...post}><a>Read More...</a></Link>
+      </div>
+      )
+    })    
+  }
+  </section>
+))
 
 
 ```
@@ -276,11 +268,12 @@ export default withPosts( ({ posts }) => {
     - `data.url` is the generated url for the post
     - `data.category` is the post's category. When not specified, if the post is inside a folder, the directory structure under `posts` will be used. 
     - `data.date`: JSON date from frontmatter's date or date in file name or file creation date
-- `content` is markdown content of the post
+- `raw` is markdown content of the post
+- `content` is a HAST representation of post content 
 
 ```js
 
-{ data, content } = post
+{ data, raw } = post
 
 ```
 
@@ -320,7 +313,7 @@ A wrapper configuration function to be applied into the `next.config.js`. It pro
 const nexteinConfig = require('nextein/config').default
 
 module.exports = nexteinConfig({
-    // Your own next.js config here
+  // Your own next.js config here
 })
 
 ```
