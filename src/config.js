@@ -25,13 +25,13 @@ export default (nextConfig = {}) => ({
 
     if (dev) {
       config.plugins.push(
-        new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-client.js'),
-        new NormalModuleReplacementPlugin(/\/entries\/map.js/, './map-exported.js')
+        new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load-client.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map-exported.js')
       )
     } else {
       config.plugins.push(
-        new NormalModuleReplacementPlugin(/\/entries\/load.js/, './load-exported.js'),
-        new NormalModuleReplacementPlugin(/\/entries\/map.js/, './map-exported.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load-exported.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map-exported.js'),
         new Uglify({
           parallel: true,
           sourceMap: true
