@@ -56,7 +56,7 @@
     "@taskr/esnext": "1.1.0",
     "@taskr/watch": "1.1.0",
     "babel-core": "^6.24.1",
-    "babel-eslint": "8.2.3",
+    "babel-eslint": "8.2.4",
     "babel-jest": "23.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
