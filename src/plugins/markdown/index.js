@@ -1,22 +1,40 @@
 
+import glob from 'glob'
+import fm from 'frontmatter'
 import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname, relative, dirname, sep } from 'path'
-import fm from 'frontmatter'
 import pathToRegEx from 'path-to-regexp'
 
 import parser from './parser'
 
-export default (paths, entriesPath) => {
-  return paths
-    .map(path => readFileSync(path, 'utf-8'))
-    .map(fm)
-    .map(addPage)
-    .map(addEntry(paths))
-    .map(addName)
-    .map(addCategory(entriesPath))
-    .map(addDate)
-    .map(addUrl)
-    .map(addParsedContent)
+export const source = ({ extension = 'md', entriesDir = ['posts'], remark = [], rehype = [] }) => {
+  let all = []
+  for (const dir of entriesDir) {
+    const files = glob.sync(`${dir}/**/*.${extension}`, { root: process.cwd() })
+    all.push(
+      ...files
+        .map(file => readFileSync(file, 'utf-8'))
+        .map(fm)
+        .map(addEntry(files))
+        .map(addPage)
+        .map(addName)
+        .map(addCategory(dir))
+        .map(addDate)
+        .map(addUrl)
+        .map(parse({remark, rehype}))
+    )
+  }
+  return all
+}
+
+const parse = (options) => (value) => {
+  const { content } = value
+  const instance = parser(options)
+  return {
+    ...value,
+    content: instance.runSync(instance.parse(content)),
+    raw: content
+  }
 }
 
 const addPage = (value, idx) => {
@@ -48,16 +66,6 @@ const addUrl = (value) => {
 const addDate = (value) => {
   const { data } = value
   return { ...value, data: { ...data, date: createEntryDate({ ...data }) } }
-}
-
-const addParsedContent = value => {
-  const { content: mdContent } = value
-  delete value.content
-  return {
-    ...value,
-    content: parser.runSync(parser.parse(mdContent)),
-    raw: mdContent
-  }
 }
 
 const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
@@ -103,3 +111,7 @@ const createEntryCategory = ({ entriesPath, category, _entry }) => {
   const folderCategory = relative(root, dirname(post)).replace(sep, categorySeparator)
   return folderCategory || undefined
 }
+
+// export const transform = (options = OPTIONS, post) => {
+
+// }

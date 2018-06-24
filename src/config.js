@@ -6,7 +6,14 @@ import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 export default (nextConfig = {}) => ({
   ...nextConfig,
+
+  serverRuntimeConfig: {
+    ...nextConfig.serverRuntimeConfig,
+    nexteinPlugins: processPlugins(nextConfig)
+  },
+
   assetPrefix: nextConfig.assetPrefix || process.env.PUBLIC_URL || '',
+
   webpack (config, options) {
     const { dev } = options
     config.node = {
@@ -71,3 +78,7 @@ export default (nextConfig = {}) => ({
     return map
   }
 })
+
+const processPlugins = ({ nextein = {} }) => {
+  return nextein.plugins
+}
