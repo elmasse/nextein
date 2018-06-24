@@ -12,7 +12,7 @@ const loadEntries = async (path = 'posts') => {
 
 export default loadEntries
 
-export const byFileName = async (path, root = 'posts') => {
+export const byFileName = async path => {
   const resp = await fetch(`/_load_entry/${path.replace(sep, '/')}`)
   return resp.json()
 }
