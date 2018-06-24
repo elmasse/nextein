@@ -1,16 +1,31 @@
-import glob from 'glob'
+import plugins from '../plugins'
 
-import processEntries from './process'
+let _ENTRIES
 
-const loadEntries = async (path = 'posts') => {
-  const paths = glob.sync(`${path}/**/*.md`, { root: process.cwd() })
+const loadEntries = async () => {
+  const start = new Date().getTime()
+  _ENTRIES = []
+  const { sources, transforms } = plugins()
+  const posts = []
 
-  return processEntries(paths, path)
-    .filter(({data}) => data.published !== false)
+  for (const source of sources) {
+    posts.push(...source())
+  }
+
+  if (transforms.length) {
+    for (const transform of transforms) {
+      _ENTRIES.push(...posts.map(transform))
+    }
+  } else {
+    _ENTRIES = posts
+  }
+
+  console.log(`finished: ${new Date().getTime() - start}ms`)
+  return _ENTRIES
 }
 
 export default loadEntries
 
-export const byFileName = async (path, root = 'posts') => {
-  return processEntries([path], root).pop()
+export const byFileName = async (path) => {
+  return _ENTRIES.filter(post => post.data._entry === path).pop()
 }
