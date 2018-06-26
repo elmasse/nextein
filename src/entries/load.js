@@ -3,7 +3,6 @@ import plugins from '../plugins'
 let _ENTRIES
 
 const loadEntries = async () => {
-  const start = new Date().getTime()
   _ENTRIES = []
   const { sources, transforms } = plugins()
   const posts = []
@@ -20,7 +19,6 @@ const loadEntries = async () => {
     _ENTRIES = posts
   }
 
-  console.log(`finished: ${new Date().getTime() - start}ms`)
   return _ENTRIES
 }
 
