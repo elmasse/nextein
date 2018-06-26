@@ -4,7 +4,7 @@ import { setNextExportPathMap } from './entries/map'
 import Uglify from 'uglifyjs-webpack-plugin'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
-export default (nextConfig = {}) => ({
+export const withNextein = (nextConfig = {}) => ({
   ...nextConfig,
 
   serverRuntimeConfig: {
@@ -79,6 +79,30 @@ export default (nextConfig = {}) => ({
   }
 })
 
-const processPlugins = ({ nextein = {} }) => {
-  return nextein.plugins
+export default withNextein
+
+const createDescriptor = s => {
+  const descriptor = [].concat(s)
+  return (descriptor.lenght === 1) ? [...descriptor, {}] : descriptor
+}
+
+const merge = (...plugins) => {
+  const final = {}
+
+  for (const config of plugins) {
+    for (const each of config) {
+      const [name, options] = createDescriptor(each)
+      const current = final[name]
+      final[name] = current ? { ...current, options } : options
+    }
+  }
+  return Object.entries(final)
+}
+
+const processPlugins = ({ nextein = {}, serverRuntimeConfig = {} }) => {
+  const { plugins = [] } = nextein
+  const { nexteinPlugins = [] } = serverRuntimeConfig
+  const defaults = ['nextein-plugin-markdown']
+
+  return merge(defaults, nexteinPlugins, plugins)
 }
