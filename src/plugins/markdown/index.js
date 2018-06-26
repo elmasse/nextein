@@ -7,7 +7,7 @@ import pathToRegEx from 'path-to-regexp'
 
 import parser from './parser'
 
-export const source = ({ extension = 'md', entriesDir = ['posts'], remark = [], rehype = [] }) => {
+export const source = ({ extension = 'md', entriesDir = ['posts'], remark = [], rehype = [] } = {}) => {
   let all = []
   for (const dir of entriesDir) {
     const files = glob.sync(`${dir}/**/*.${extension}`, { root: process.cwd() })
