@@ -1,7 +1,7 @@
 import config from 'next/config'
 
 const INTERNALS = {
-  'nextein-markdown-plugin': './markdown'
+  'nextein-plugin-markdown': './markdown'
 }
 export default () => {
   const { serverRuntimeConfig: { nexteinPlugins } } = config()
