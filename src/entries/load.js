@@ -8,12 +8,12 @@ const loadEntries = async () => {
   const posts = []
 
   for (const source of sources) {
-    posts.push(...source())
+    posts.push(...await source())
   }
 
   if (transforms.length) {
     for (const transform of transforms) {
-      _ENTRIES.push(...posts.map(transform))
+      _ENTRIES.push(...await Promise.all(posts.map(transform)))
     }
   } else {
     _ENTRIES = posts
