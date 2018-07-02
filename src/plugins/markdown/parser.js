@@ -5,7 +5,15 @@ import raw from 'rehype-raw'
 
 export default ({ remark, rehype }) => unified()
   .use(markdown)
-  .use(...remark.map(p => require(p)))
+  .use(remark.map(mapPlugin))
   .use(remark2rehype, { allowDangerousHTML: true })
-  .use(...rehype.map(p => require(p)))
+  .use(rehype.map(mapPlugin))
   .use(raw)
+
+const mapPlugin = p => {
+  if (Array.isArray(p)) {
+    const [ name, options ] = p
+    return [require(name), options]
+  }
+  return require(p)
+}
