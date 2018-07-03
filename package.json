@@ -24,11 +24,11 @@
     "post.js"
   ],
   "dependencies": {
-    "chokidar": "2.0.3",
+    "chokidar": "2.0.4",
     "cross-spawn": "^6.0.0",
     "frontmatter": "0.0.3",
     "glob": "^7.1.2",
-    "hoist-non-react-statics": "2.5.3",
+    "hoist-non-react-statics": "2.5.5",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
     "path-match": "^1.2.4",
@@ -40,7 +40,7 @@
     "rehype-react": "3.0.2",
     "remark-parse": "5.0.0",
     "remark-rehype": "3.0.0",
-    "uglifyjs-webpack-plugin": "1.2.5",
+    "uglifyjs-webpack-plugin": "1.2.7",
     "unfetch": "^3.0.0",
     "unified": "7.0.0",
     "unist-util-select": "^1.5.0"
@@ -56,7 +56,7 @@
     "@taskr/esnext": "1.1.0",
     "@taskr/watch": "1.1.0",
     "babel-core": "^6.24.1",
-    "babel-eslint": "8.2.3",
+    "babel-eslint": "8.2.5",
     "babel-jest": "23.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
