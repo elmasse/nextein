@@ -7,6 +7,10 @@ import pathToRegEx from 'path-to-regexp'
 
 import parser from './parser'
 
+export const watcher = ({ entriesDir = ['posts'] }) => {
+  return entriesDir
+}
+
 export const source = ({ extension = 'md', entriesDir = ['posts'], remark = [], rehype = [] } = {}) => {
   let all = []
   for (const dir of entriesDir) {

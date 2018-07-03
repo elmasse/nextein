@@ -1,4 +1,4 @@
-import config from 'next/config'
+// import config from 'next/config'
 import { resolve } from 'path'
 
 const INTERNALS = {
@@ -11,25 +11,46 @@ const resolvePlugin = (name) => {
   return INTERNALS[name] || (isLocal(name) ? resolve(process.cwd(), name) : name)
 }
 
-export default () => {
-  const { serverRuntimeConfig: { nexteinPlugins } } = config()
+let _config
+
+export const setPlugins = (nexteinPlugins) => {
+  _config = nexteinPlugins
+}
+
+let _plugins
+
+export const plugins = () => {
+  // const { serverRuntimeConfig: { nexteinPlugins } } = config()
+  const nexteinPlugins = _config
   const sources = []
   const transforms = []
-  for (const plugin of nexteinPlugins) {
-    const [name, options] = plugin
-    const { source, transform } = require(resolvePlugin(name))
-    if (source) {
-      const fn = (...args) => source(options, ...args)
-      fn.__name = name
-      sources.push(fn)
+  const watchers = []
+
+  if (!_plugins) {
+    for (const plugin of nexteinPlugins) {
+      const [name, options] = plugin
+      const { source, transform, watcher } = require(resolvePlugin(name))
+      if (source) {
+        const fn = (...args) => source(options, ...args)
+        fn.__name = name
+        sources.push(fn)
+      }
+      if (transform) {
+        transforms.push((...args) => transform(options, ...args))
+      }
+      if (watcher) {
+        watchers.push(...([].concat(watcher(options))))
+      }
     }
-    if (transform) {
-      transforms.push((...args) => transform(options, ...args))
+
+    _plugins = {
+      sources,
+      transforms,
+      watchers
     }
   }
 
-  return {
-    sources,
-    transforms
-  }
+  return _plugins
 }
+
+export default plugins
