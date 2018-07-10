@@ -1,9 +1,26 @@
 import plugins from '../plugins'
 
-let _ENTRIES
+const createCache = (timeWindow) => {
+  let cache, timestamp
+
+  return {
+    set: (entries) => {
+      cache = entries
+      timestamp = new Date().getTime()
+    },
+    get: () => cache,
+    timestamp: () => timestamp,
+    isValid: () => cache && (timestamp + timeWindow > new Date().getTime())
+  }
+}
+
+const cache = createCache(1000)
 
 const loadEntries = async () => {
-  _ENTRIES = []
+  if (cache.isValid()) {
+    return cache.get()
+  }
+
   const { sources, transforms = [] } = plugins()
   let posts = []
 
@@ -15,13 +32,13 @@ const loadEntries = async () => {
     posts = await transform(posts)
   }
 
-  _ENTRIES = posts
+  cache.set(posts)
 
-  return _ENTRIES
+  return cache.get()
 }
 
 export default loadEntries
 
 export const byFileName = async (path) => {
-  return _ENTRIES.filter(post => post.data._entry === path).pop()
+  return cache.get().filter(post => post.data._entry === path).pop()
 }
