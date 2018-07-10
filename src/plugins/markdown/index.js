@@ -41,6 +41,10 @@ export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = t
   return all
 }
 
+export const transform = async (options = {}, posts) => {
+  return posts.filter(p => p.data.published !== false)
+}
+
 const parse = (options) => (value) => {
   const { content } = value
   const instance = parser(options)
