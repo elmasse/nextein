@@ -5,7 +5,7 @@
 import { sep } from 'path'
 import fetch from 'unfetch'
 
-const loadEntries = async (path = 'posts') => {
+const loadEntries = async () => {
   const resp = await fetch('/_load_entries')
   return resp.json()
 }
