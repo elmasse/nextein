@@ -4,20 +4,18 @@ let _ENTRIES
 
 const loadEntries = async () => {
   _ENTRIES = []
-  const { sources, transforms } = plugins()
-  const posts = []
+  const { sources, transforms = [] } = plugins()
+  let posts = []
 
   for (const source of sources) {
     posts.push(...await source())
   }
 
-  if (transforms.length) {
-    for (const transform of transforms) {
-      _ENTRIES.push(...await Promise.all(posts.map(transform)))
-    }
-  } else {
-    _ENTRIES = posts
+  for (const transform of transforms) {
+    posts = await transform(posts)
   }
+
+  _ENTRIES = posts
 
   return _ENTRIES
 }
