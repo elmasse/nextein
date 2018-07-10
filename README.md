@@ -16,7 +16,6 @@ A static site generator based in Next.js
 ## Starter Kit
 If you want to jump into a starter project check [nextein-starter](https://github.com/elmasse/nextein-starter)
 
-
 ## Getting Started
 There are a few steps you have to follow to get your site up and running with `nextein`
 
@@ -29,9 +28,9 @@ There are a few steps you have to follow to get your site up and running with `n
 - Add a `next.config.js` config file 
 
     ```js
-    const nexteinConfig = require('nextein/config').default
+    const { withNextein } = require('nextein/config')
 
-    module.exports = nexteinConfig({
+    module.exports = withNextein({
 
     })
 
@@ -302,7 +301,7 @@ Post Content...
 - `url`: **Read Only** The post url.
 
 
-### `nexteinConfig`
+### `withNextein`
 
 A wrapper configuration function to be applied into the `next.config.js`. It provides a way to add your own `next.js` config along with `nextein` internal next.js config.
 
@@ -310,9 +309,9 @@ A wrapper configuration function to be applied into the `next.config.js`. It pro
 
 ```js
 
-const nexteinConfig = require('nextein/config').default
+const { withNextein } = require('nextein/config')
 
-module.exports = nexteinConfig({
+module.exports = withNextein({
   // Your own next.js config here
 })
 
