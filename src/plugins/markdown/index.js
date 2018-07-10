@@ -1,5 +1,6 @@
 
 import glob from 'glob'
+import { promisify } from 'util'
 import fm from 'frontmatter'
 import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname, relative, dirname, sep } from 'path'
@@ -11,10 +12,19 @@ export const watcher = ({ entriesDir = ['posts'] } = {}) => {
   return entriesDir
 }
 
-export const source = ({ extension = 'md', entriesDir = ['posts'], remark = [], rehype = [] } = {}) => {
+/**
+ * source
+ * @param config {Object}
+ * @param config.extension {string}
+ * @param config.entriesDir {string[]}
+ * @param config.raw {boolean}
+ * @param config.remark {string[]}
+ * @param config.rehype {string[]]}
+ */
+export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = true, rehype = [], remark = [] } = {}) => {
   let all = []
   for (const dir of entriesDir) {
-    const files = glob.sync(`${dir}/**/*.${extension}`, { root: process.cwd() })
+    const files = await promisify(glob)(`${dir}/**/*.${extension}`, { root: process.cwd() })
     all.push(
       ...files
         .map(file => readFileSync(file, 'utf-8'))
@@ -25,7 +35,7 @@ export const source = ({ extension = 'md', entriesDir = ['posts'], remark = [], 
         .map(addCategory(dir))
         .map(addDate)
         .map(addUrl)
-        .map(parse({remark, rehype}))
+        .map(parse({raw, remark, rehype}))
     )
   }
   return all
@@ -34,10 +44,11 @@ export const source = ({ extension = 'md', entriesDir = ['posts'], remark = [], 
 const parse = (options) => (value) => {
   const { content } = value
   const instance = parser(options)
+  const { raw } = options
   return {
     ...value,
     content: instance.runSync(instance.parse(content)),
-    raw: content
+    raw: raw ? content : undefined
   }
 }
 
@@ -115,7 +126,3 @@ const createEntryCategory = ({ entriesPath, category, _entry }) => {
   const folderCategory = relative(root, dirname(post)).replace(sep, categorySeparator)
   return folderCategory || undefined
 }
-
-// export const transform = (options = OPTIONS, post) => {
-
-// }
