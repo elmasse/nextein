@@ -1,4 +1,3 @@
-// import config from 'next/config'
 import { resolve } from 'path'
 
 const INTERNALS = {
@@ -20,7 +19,6 @@ export const setPlugins = (nexteinPlugins) => {
 let _plugins
 
 export const plugins = () => {
-  // const { serverRuntimeConfig: { nexteinPlugins } } = config()
   const nexteinPlugins = _config
   const sources = []
   const transforms = []
