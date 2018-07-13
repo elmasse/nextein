@@ -7,7 +7,7 @@ import { join, relative, sep, resolve } from 'path'
 import chokidar from 'chokidar'
 
 import plugins from './plugins'
-import loadEntries, { byFileName } from './entries/load'
+import loadEntries, { byFileName, invalidateCache } from './entries/load'
 
 export default class Server {
   constructor ({ dir = '.', dev = true }) {
@@ -98,6 +98,7 @@ export default class Server {
   hotReloadPosts = async () => {
     const hotReloader = this.app.hotReloader
     hotReloader.webpackDevMiddleware.invalidate()
+    invalidateCache()
     await this.readEntries()
     hotReloader.webpackDevMiddleware.waitUntilValid(() => {
       const rootDir = join('bundles', 'pages')
