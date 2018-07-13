@@ -1,20 +1,20 @@
 import plugins from '../plugins'
 
-const createCache = (timeWindow) => {
-  let cache, timestamp
+const createCache = () => {
+  let cache, isValid
 
   return {
     set: (entries) => {
       cache = entries
-      timestamp = new Date().getTime()
+      isValid = true
     },
     get: () => cache,
-    timestamp: () => timestamp,
-    isValid: () => cache && (timestamp + timeWindow > new Date().getTime())
+    isValid: () => isValid,
+    invalidate: () => { isValid = false }
   }
 }
 
-const cache = createCache(1000)
+const cache = createCache()
 
 const loadEntries = async () => {
   if (cache.isValid()) {
@@ -42,3 +42,5 @@ export default loadEntries
 export const byFileName = async (path) => {
   return cache.get().filter(post => post.data._entry === path).pop()
 }
+
+export const invalidateCache = () => cache.invalidate()
