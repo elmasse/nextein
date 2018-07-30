@@ -28,7 +28,7 @@
     "cross-spawn": "^6.0.0",
     "frontmatter": "0.0.3",
     "glob": "^7.1.2",
-    "hoist-non-react-statics": "3.0.0",
+    "hoist-non-react-statics": "3.0.1",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
     "path-match": "^1.2.4",
