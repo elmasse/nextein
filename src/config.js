@@ -3,10 +3,19 @@ import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 import loadEntries from './entries/load'
 import { setNextExportPathMap } from './entries/map'
-import { setPlugins } from './plugins'
+import { setPlugins, getDefaultPlugins } from './plugins'
+
+const getDefaultConfig = () => ({
+  plugins: getDefaultPlugins()
+})
+
+const processConfig = ({ nextein = getDefaultConfig() }) => {
+  const { plugins } = (typeof nextein === 'function') ? nextein(getDefaultConfig()) : nextein
+  setPlugins(plugins)
+}
 
 export const withNextein = (nextConfig = {}) => {
-  setPlugins(processPlugins(nextConfig))
+  processConfig(nextConfig)
 
   return ({
     ...nextConfig,
@@ -80,29 +89,3 @@ export const withNextein = (nextConfig = {}) => {
 }
 
 export default withNextein
-
-const createDescriptor = s => {
-  const descriptor = [].concat(s)
-  return (descriptor.lenght === 1) ? [...descriptor, {}] : descriptor
-}
-
-const merge = (...plugins) => {
-  const final = {}
-
-  for (const config of plugins) {
-    for (const each of config) {
-      const [name, options] = createDescriptor(each)
-      const current = final[name]
-      final[name] = current ? { ...current, options } : options
-    }
-  }
-  return Object.entries(final)
-}
-
-const processPlugins = ({ nextein = {}, serverRuntimeConfig = {} }) => {
-  const { plugins = [] } = nextein
-  const { nexteinPlugins = [] } = serverRuntimeConfig
-  const defaults = ['nextein-plugin-markdown']
-
-  return merge(defaults, nexteinPlugins, plugins)
-}
