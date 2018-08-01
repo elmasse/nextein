@@ -65,7 +65,7 @@
     "hastscript": "4.0.0",
     "jest": "22.1.4",
     "next": "^6.1.1",
-    "react": "16.4.1",
+    "react": "16.4.2",
     "react-dom": "16.4.1",
     "react-test-renderer": "16.4.1",
     "standard": "11.0.1",
