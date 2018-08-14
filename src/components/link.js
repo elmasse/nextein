@@ -6,15 +6,16 @@ import entriesMap from '../entries/map'
 import { prefixed } from './utils'
 
 class NexteinLink extends Component {
+  static getDerivedStateFromProps (state, { href, as }) {
+    if (state.href !== href) {
+      return { href, as }
+    }
+    return null
+  }
+
   state = {
     href: this.props.href,
     as: this.props.as
-  }
-
-  componentWillReceiveProps ({ href, as }) {
-    if (this.state.href !== href) {
-      this.setState({ href, as })
-    }
   }
 
   async componentDidMount () {
