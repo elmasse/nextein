@@ -32,7 +32,7 @@
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
     "path-match": "^1.2.4",
-    "path-to-regexp": "2.3.0",
+    "path-to-regexp": "2.4.0",
     "pkg-up": "^2.0.0",
     "rehype-parse": "^5.0.0",
     "rehype-stringify": "^4.0.0",
