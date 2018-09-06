@@ -67,7 +67,7 @@
     "next": "^6.1.1",
     "react": "16.5.0",
     "react-dom": "16.5.0",
-    "react-test-renderer": "16.4.2",
+    "react-test-renderer": "16.5.0",
     "standard": "11.0.1",
     "taskr": "1.1.0",
     "taskr-standard": "1.0.2"
