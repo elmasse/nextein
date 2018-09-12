@@ -4,6 +4,7 @@ import unified from 'unified'
 import rehype from 'rehype-parse'
 import stringify from 'rehype-stringify'
 import reactRenderer from 'rehype-react'
+import katex from 'rehype-katex'
 import select from 'unist-util-select'
 
 import loadEntries, { byFileName } from '../entries/load'
@@ -26,6 +27,7 @@ const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
   const hast = JSON.parse(JSON.stringify(content))
   const p = unified()
     .use(rehype)
+    .use(katex)
     .use(extractExcerpt(excerpt))
     .use(stringify)
     .use(reactRenderer, {
