@@ -45,7 +45,7 @@ class NexteinLink extends Component {
     href = prefixed(href)
     as = prefixed(as)
 
-    return <Link {...{...rest, href, as}} >{children}</Link>
+    return <Link {...{ ...rest, href, as }} >{children}</Link>
   }
 }
 
