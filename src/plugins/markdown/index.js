@@ -35,9 +35,10 @@ export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = t
         .map(addCategory(dir))
         .map(addDate)
         .map(addUrl)
-        .map(parse({raw, remark, rehype}))
+        .map(parse({ raw, remark, rehype }))
     )
   }
+
   return all
 }
 
@@ -105,7 +106,7 @@ const createEntryName = ({ _entry }) => {
 const createEntryURL = (data) => {
   const { page, date, permalink = DEFAULT_PERMALINK } = data
   const toUrl = pathToRegEx.compile(permalink.replace(':category', PERMALINK_CATEGORIES))
-  const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => v })
+  const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
 
   return page ? url : undefined
 }
