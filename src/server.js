@@ -47,7 +47,7 @@ export default class Server {
     const entryParam = matchEntry(pathname)
 
     if (pathname === '/_load_entries') {
-      res.writeHead(200, {'Content-Type': 'application/json'})
+      res.writeHead(200, { 'Content-Type': 'application/json' })
       return res.end(this.entriesAsJSON())
     }
 
@@ -57,7 +57,7 @@ export default class Server {
       if (path) {
         const e = await byFileName(path)
 
-        res.writeHead(200, {'Content-Type': 'application/json'})
+        res.writeHead(200, { 'Content-Type': 'application/json' })
         return res.end(JSON.stringify(e))
       }
     }
