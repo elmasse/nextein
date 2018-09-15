@@ -6,7 +6,7 @@ const loadEntries = async (path = 'posts') => {
   const paths = glob.sync(`${path}/**/*.md`, { root: process.cwd() })
 
   return processEntries(paths, path)
-    .filter(({data}) => data.published !== false)
+    .filter(({ data }) => data.published !== false)
 }
 
 export default loadEntries
