@@ -1,4 +1,3 @@
-import Uglify from 'uglifyjs-webpack-plugin'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 import loadEntries from './entries/load'
@@ -28,9 +27,9 @@ export const withNextein = (nextConfig = {}) => {
         fs: 'empty'
       }
 
-      config.plugins = config.plugins.filter(plugin => {
-        return plugin.constructor.name !== 'UglifyJsPlugin'
-      })
+      // config.plugins = config.plugins.filter(plugin => {
+      //   return plugin.constructor.name !== 'UglifyJsPlugin'
+      // })
 
       config.plugins.push(
         new DefinePlugin({
@@ -46,11 +45,11 @@ export const withNextein = (nextConfig = {}) => {
       } else {
         config.plugins.push(
           new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load-exported.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map-exported.js'),
-          new Uglify({
-            parallel: true,
-            sourceMap: true
-          })
+          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map-exported.js')
+          // new Uglify({
+          //   parallel: true,
+          //   sourceMap: true
+          // })
         )
       }
 

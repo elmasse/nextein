@@ -40,13 +40,12 @@
     "rehype-stringify": "^3.0.0",
     "remark-parse": "5.0.0",
     "remark-rehype": "3.0.1",
-    "uglifyjs-webpack-plugin": "1.1.6",
     "unfetch": "^3.0.0",
     "unified": "7.0.0",
     "unist-util-select": "^1.5.0"
   },
   "peerDependencies": {
-    "next": "^6.0.0",
+    "next": "^6.0.0 || ^7.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
@@ -65,10 +64,10 @@
     "eslint-config-standard": "12.0.0",
     "hastscript": "4.0.0",
     "jest": "23.2.0",
-    "next": "^6.1.1",
-    "react": "16.5.1",
-    "react-dom": "16.5.1",
-    "react-test-renderer": "16.5.1",
+    "next": "^7.0.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-test-renderer": "^16.5.2",
     "standard": "12.0.1",
     "taskr": "1.1.0",
     "taskr-standard": "1.0.2"
