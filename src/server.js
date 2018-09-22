@@ -1,6 +1,7 @@
 
 import http from 'http'
 import next from 'next'
+import { CLIENT_STATIC_FILES_PATH } from 'next/constants'
 import { parse } from 'url'
 import route from 'path-match'
 import { join, relative, sep, resolve } from 'path'
@@ -101,13 +102,14 @@ export default class Server {
     invalidateCache()
     await this.readEntries()
     hotReloader.webpackDevMiddleware.waitUntilValid(() => {
-      const rootDir = join('bundles', 'pages')
+      // const rootDir = join('bundles', 'pages')
+      const rootDir = join(CLIENT_STATIC_FILES_PATH, hotReloader.buildId, 'pages')
 
       for (const n of new Set([...hotReloader.prevChunkNames])) {
         const route = toRoute(relative(rootDir, n))
         hotReloader.send('reload', route)
       }
-      hotReloader.send('reload', '/bundles/pages/')
+      hotReloader.send('reload', '/_document')
     })
   }
 }
