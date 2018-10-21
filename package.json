@@ -38,7 +38,7 @@
     "rehype-stringify": "^4.0.0",
     "rehype-raw": "3.0.0",
     "rehype-react": "3.0.3",
-    "remark-parse": "5.0.0",
+    "remark-parse": "6.0.0",
     "remark-rehype": "3.0.1",
     "uglifyjs-webpack-plugin": "2.0.0",
     "unfetch": "^4.0.0",
