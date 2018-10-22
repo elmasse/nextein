@@ -40,7 +40,7 @@
     "rehype-stringify": "^3.0.0",
     "remark-parse": "5.0.0",
     "remark-rehype": "3.0.1",
-    "unfetch": "^3.0.0",
+    "unfetch": "^4.0.0",
     "unified": "7.0.0",
     "unist-util-select": "^1.5.0"
   },
