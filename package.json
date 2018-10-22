@@ -62,7 +62,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "eslint-config-standard": "12.0.0",
-    "hastscript": "4.0.0",
+    "hastscript": "4.1.0",
     "jest": "23.2.0",
     "next": "^7.0.0",
     "react": "^16.5.2",
