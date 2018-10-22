@@ -12,11 +12,11 @@ const loadEntries = () => {
 
 export default loadEntries
 
-export const byFileName = (path, root = 'posts') => {
+export const byFileName = path => {
   return findPostInEntriesCache(path)
 }
 
-const findPostInEntriesCache = (path) => {
+const findPostInEntriesCache = path => {
   const { props } = __NEXT_DATA__
   const { post, _entries } = (props.pageProps || props)
 
