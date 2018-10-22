@@ -1,15 +1,19 @@
 
 import http from 'http'
 import next from 'next'
+import { CLIENT_STATIC_FILES_PATH } from 'next/constants'
 import { parse } from 'url'
 import route from 'path-match'
-import { join, relative, sep } from 'path'
+import { join, relative, sep, resolve } from 'path'
+import chokidar from 'chokidar'
 
-import loadEntries, { byFileName } from './entries/load'
+import plugins from './plugins'
+import loadEntries, { byFileName, invalidateCache } from './entries/load'
 
 export default class Server {
   constructor ({ dir = '.', dev = true }) {
     this.app = next({ dev })
+    this.dev = dev
   }
 
   async readEntries () {
@@ -77,20 +81,35 @@ export default class Server {
       this.http.on('listening', () => resolve())
       this.http.listen(port, hostname)
     })
+    this.watchEntries()
   }
 
-  async hotReloadPosts () {
+  watchEntries () {
+    const { dev } = this
+    const { watchers } = plugins()
+
+    if (dev && watchers) {
+      console.log('watching changes in folders:', watchers)
+      chokidar.watch(watchers.map(path => resolve(process.cwd(), path)), { ignoreInitial: true })
+        .on('change', this.hotReloadPosts)
+        .on('unlink', this.hotReloadPosts)
+    }
+  }
+
+  hotReloadPosts = async () => {
     const hotReloader = this.app.hotReloader
     hotReloader.webpackDevMiddleware.invalidate()
+    invalidateCache()
     await this.readEntries()
     hotReloader.webpackDevMiddleware.waitUntilValid(() => {
-      const rootDir = join('bundles', 'pages')
+      // const rootDir = join('bundles', 'pages')
+      const rootDir = join(CLIENT_STATIC_FILES_PATH, hotReloader.buildId, 'pages')
 
       for (const n of new Set([...hotReloader.prevChunkNames])) {
         const route = toRoute(relative(rootDir, n))
         hotReloader.send('reload', route)
       }
-      hotReloader.send('reload', '/bundles/pages/')
+      hotReloader.send('reload', '/_document')
     })
   }
 }

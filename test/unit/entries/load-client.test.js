@@ -1,10 +1,8 @@
 jest.mock('glob')
 jest.mock('fs')
 jest.mock('unfetch')
-jest.mock('../../../src/entries/process')
 
 import fetch from 'unfetch'
-import processEntries from '../../../src/entries/process'
 
 // SUT
 import loadEntries, { byFileName } from '../../../src/entries/load-client'
@@ -19,8 +17,6 @@ describe('from Client', () => {
 
     fetch.mockReturnValueOnce(Promise.resolve({ json: () => posts }))
 
-    processEntries.mockReturnValueOnce(posts)
-
     const actual = await loadEntries()
 
     expect(actual).toEqual(expect.arrayContaining(posts))
@@ -33,8 +29,6 @@ describe('from Client', () => {
     const path = 'post/test.md'
 
     fetch.mockReturnValueOnce(Promise.resolve({ json: () => post }))
-
-    processEntries.mockReturnValueOnce(posts)
 
     const actual = await byFileName(path)
 

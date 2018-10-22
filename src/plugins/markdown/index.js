@@ -1,22 +1,60 @@
 
+import glob from 'glob'
+import { promisify } from 'util'
+import fm from 'frontmatter'
 import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname, relative, dirname, sep } from 'path'
-import fm from 'frontmatter'
 import pathToRegEx from 'path-to-regexp'
 
 import parser from './parser'
 
-export default (paths, entriesPath) => {
-  return paths
-    .map(path => readFileSync(path, 'utf-8'))
-    .map(fm)
-    .map(addPage)
-    .map(addEntry(paths))
-    .map(addName)
-    .map(addCategory(entriesPath))
-    .map(addDate)
-    .map(addUrl)
-    .map(addParsedContent)
+export const watcher = ({ entriesDir = ['posts'] } = {}) => {
+  return entriesDir
+}
+
+/**
+ * source
+ * @param config {Object}
+ * @param config.extension {string}
+ * @param config.entriesDir {string[]}
+ * @param config.raw {boolean}
+ * @param config.remark {string[]}
+ * @param config.rehype {string[]]}
+ */
+export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = true, rehype = [], remark = [] } = {}) => {
+  let all = []
+  for (const dir of entriesDir) {
+    const files = await promisify(glob)(`${dir}/**/*.${extension}`, { root: process.cwd() })
+    all.push(
+      ...files
+        .map(file => readFileSync(file, 'utf-8'))
+        .map(fm)
+        .map(addEntry(files))
+        .map(addPage)
+        .map(addName)
+        .map(addCategory(dir))
+        .map(addDate)
+        .map(addUrl)
+        .map(parse({ raw, remark, rehype }))
+    )
+  }
+
+  return all
+}
+
+export const transform = async (options = {}, posts) => {
+  return posts.filter(p => p.data.published !== false)
+}
+
+const parse = (options) => (value) => {
+  const { content } = value
+  const instance = parser(options)
+  const { raw } = options
+  return {
+    ...value,
+    content: instance.runSync(instance.parse(content)),
+    raw: raw ? content : undefined
+  }
 }
 
 const addPage = (value, idx) => {
@@ -50,16 +88,6 @@ const addDate = (value) => {
   return { ...value, data: { ...data, date: createEntryDate({ ...data }) } }
 }
 
-const addParsedContent = value => {
-  const { content: mdContent } = value
-  delete value.content
-  return {
-    ...value,
-    content: parser.runSync(parser.parse(mdContent)),
-    raw: mdContent
-  }
-}
-
 const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
 const DATE_MATCH_INDEX = 1
 const NAME_MATCH_INDEX = 2
@@ -78,7 +106,7 @@ const createEntryName = ({ _entry }) => {
 const createEntryURL = (data) => {
   const { page, date, permalink = DEFAULT_PERMALINK } = data
   const toUrl = pathToRegEx.compile(permalink.replace(':category', PERMALINK_CATEGORIES))
-  const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => v })
+  const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
 
   return page ? url : undefined
 }

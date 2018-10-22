@@ -16,7 +16,6 @@ A static site generator based in Next.js
 ## Starter Kit
 If you want to jump into a starter project check [nextein-starter](https://github.com/elmasse/nextein-starter)
 
-
 ## Getting Started
 There are a few steps you have to follow to get your site up and running with `nextein`
 
@@ -29,9 +28,9 @@ There are a few steps you have to follow to get your site up and running with `n
 - Add a `next.config.js` config file 
 
     ```js
-    const nexteinConfig = require('nextein/config').default
+    const { withNextein } = require('nextein/config')
 
-    module.exports = nexteinConfig({
+    module.exports = withNextein({
 
     })
 
@@ -302,7 +301,7 @@ Post Content...
 - `url`: **Read Only** The post url.
 
 
-### `nexteinConfig`
+### `withNextein`
 
 A wrapper configuration function to be applied into the `next.config.js`. It provides a way to add your own `next.js` config along with `nextein` internal next.js config.
 
@@ -310,9 +309,78 @@ A wrapper configuration function to be applied into the `next.config.js`. It pro
 
 ```js
 
-const nexteinConfig = require('nextein/config').default
+const { withNextein } = require('nextein/config')
 
-module.exports = nexteinConfig({
+module.exports = withNextein({
+  // Your own next.js config here
+})
+
+```
+
+You can also define nextein plugins using the `withNextein` configuration:
+
+```js
+
+const { withNextein } = require('nextein/config')
+
+module.exports = withNextein({
+  nextein: {
+    plugins: [
+      ['nextein-plugin-markdown', { entriesDir: ['_posts'] }]
+      //your nextein plugins here
+    ]
+  }
+  // Your own next.js config here
+})
+
+```
+
+The `nextein.plugins` configuration accepts an array of plugins with the following formats:
+
+- ` ['plugin-name'] `: Just a string to define the plugin.
+- ` ['plugin-name', {  }] `: A string to define the plugin and a plugins options object.
+
+The plugin name should be a pre-installed plugin (`nextein-plugin-markdown`) , or a local file (`./myplugins/my-awesome-plugin`)
+
+### Default Plugin (nextein-plugin-markdown)
+
+The default plugin will source the posts using a configurable set of options:
+
+- `extension`: Default to `md`
+- `entriesDir`: Default to `['posts']`
+- `raw`: Default to `true`. Make this `false` to not add the `raw` content in the post object.
+- `rehype`: Default to `[]`. Add a set of plugins for `rehype`
+- `remark`: Default to `[]`. Add a set of plugins for `remark`
+
+## Plugins
+
+You can write your own plugins. There are basically 2 different types (source and transforms). Source plugins will be called to generate the posts entries and then the transform plugins will receive those entries and can modify, filter, append, or transform in anyway the posts list.
+
+Both types are just async functions. You have to export a `source` and/or `transform` method from you plugin main module:
+
+```js
+// file: ./plugins/my-plugin
+
+/* source plugin  (options) => post[]  */
+module.exports.source = async (options) => { /* return your posts */ }
+
+/* transform plugin (options, post[]) =>  post[] */
+module.export.transform = async (options, posts) => { /* return your posts */ }
+
+```
+
+Then in the `next.config.js` file you can define your plugin with options as follows. The same `options` object will be passed to both `source` and `transform` methods.
+
+```js
+
+const { withNextein } = require('nextein/config')
+
+module.exports = withNextein({
+  nextein: {
+    plugins: [
+      ['./plugins/my-plugin', { awesome: true }]
+    ]
+  }
   // Your own next.js config here
 })
 
