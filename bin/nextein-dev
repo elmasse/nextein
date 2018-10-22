@@ -5,7 +5,6 @@ import parseArgs from 'minimist'
 import { readFileSync } from 'fs'
 import Server from '../server'
 import pkgUp from 'pkg-up'
-import chokidar from 'chokidar'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -45,19 +44,6 @@ if (argv.help) {
 
 const dir = resolve(argv._[0] || '.')
 
-// // Check if pages dir exists and warn if not
-// if (!existsSync(dir)) {
-//   printAndExit(`> No such directory exists as the project root: ${dir}`)
-// }
-
-// if (!existsSync(join(dir, 'pages'))) {
-//   if (existsSync(join(dir, '..', 'pages'))) {
-//     printAndExit('> No `pages` directory found. Did you mean to run `next` in the parent (`../`) directory?')
-//   }
-
-//   printAndExit('> Couldn\'t find a `pages` directory. Please create one under the project root')
-// }
-
 const srv = new Server({ dir, dev: true })
 srv.start(argv.port, argv.hostname)
   .then(async () => {
@@ -78,12 +64,3 @@ srv.start(argv.port, argv.hostname)
     }
     process.nextTick(() => process.exit(1))
   })
-
-const hmrPosts = (type, path) => {
-  console.log(`${type}: ${path}`)
-  srv.hotReloadPosts()
-}
-
-chokidar.watch(resolve(process.cwd(), 'posts'), { ignoreInitial: true })
-  .on('change', hmrPosts)
-  .on('unlink', hmrPosts)
