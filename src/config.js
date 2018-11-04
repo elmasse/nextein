@@ -27,10 +27,6 @@ export const withNextein = (nextConfig = {}) => {
         fs: 'empty'
       }
 
-      // config.plugins = config.plugins.filter(plugin => {
-      //   return plugin.constructor.name !== 'UglifyJsPlugin'
-      // })
-
       config.plugins.push(
         new DefinePlugin({
           'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '')
@@ -46,10 +42,6 @@ export const withNextein = (nextConfig = {}) => {
         config.plugins.push(
           new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load-exported.js'),
           new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map-exported.js')
-          // new Uglify({
-          //   parallel: true,
-          //   sourceMap: true
-          // })
         )
       }
 
@@ -60,7 +52,7 @@ export const withNextein = (nextConfig = {}) => {
       return config
     },
 
-    async exportPathMap () {
+    async exportPathMap (defaultPathMap, options) {
       const entries = await loadEntries()
       const map = entries
         .concat({ data: { url: '/', page: 'index' } })
@@ -74,7 +66,7 @@ export const withNextein = (nextConfig = {}) => {
         }, {})
 
       if (typeof nextConfig.exportPathMap === 'function') {
-        const nextExportPathMap = await nextConfig.exportPathMap()
+        const nextExportPathMap = await nextConfig.exportPathMap(defaultPathMap, options)
         setNextExportPathMap(nextExportPathMap)
         return {
           ...map,
