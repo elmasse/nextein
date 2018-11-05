@@ -26,7 +26,7 @@ export default class Server {
       })
 
     this.entriesMap = new Map(kv)
-    this.exportPathMap = await this.app.nextConfig.exportPathMap()
+    this.exportPathMap = await this.app.nextConfig.exportPathMap({}, { dev: true })
   }
 
   entriesAsJSON () {

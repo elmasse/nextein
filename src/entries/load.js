@@ -1,18 +1,5 @@
 import plugins from '../plugins'
-
-const createCache = () => {
-  let cache, isValid
-
-  return {
-    set: (entries) => {
-      cache = entries
-      isValid = true
-    },
-    get: () => cache,
-    isValid: () => isValid,
-    invalidate: () => { isValid = false }
-  }
-}
+import createCache from './cache'
 
 const cache = createCache()
 
@@ -40,7 +27,7 @@ const loadEntries = async () => {
 export default loadEntries
 
 export const byFileName = async (path) => {
-  return cache.get().filter(post => post.data._entry === path).pop()
+  return cache.get().find(post => post.data._entry === path)
 }
 
 export const invalidateCache = () => cache.invalidate()

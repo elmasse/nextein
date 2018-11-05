@@ -1,8 +1,14 @@
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
+import { promisify } from 'util'
+import { writeFile as fsWriteFile } from 'fs'
+import { resolve } from 'path'
 
 import loadEntries from './entries/load'
 import { setNextExportPathMap } from './entries/map'
+import { jsonFileFromEntry } from './entries/utils'
 import { setPlugins, getDefaultPlugins } from './plugins'
+
+const writeFile = promisify(fsWriteFile)
 
 const getDefaultConfig = () => ({
   plugins: getDefaultPlugins()
@@ -54,6 +60,7 @@ export const withNextein = (nextConfig = {}) => {
 
     async exportPathMap (defaultPathMap, options) {
       const entries = await loadEntries()
+      let nextExportPathMap
       const map = entries
         .concat({ data: { url: '/', page: 'index' } })
         .reduce((prev, { data }) => {
@@ -66,17 +73,29 @@ export const withNextein = (nextConfig = {}) => {
         }, {})
 
       if (typeof nextConfig.exportPathMap === 'function') {
-        const nextExportPathMap = await nextConfig.exportPathMap(defaultPathMap, options)
+        nextExportPathMap = await nextConfig.exportPathMap(defaultPathMap, options)
         setNextExportPathMap(nextExportPathMap)
-        return {
-          ...map,
-          ...nextExportPathMap
-        }
       }
 
-      return map
+      await createJSONEntries(entries, options)
+
+      return {
+        ...map,
+        ...nextExportPathMap
+      }
     }
   })
 }
 
 export default withNextein
+
+const createJSONEntries = async (entries, { dev, dir, outDir, distDir, buildId }) => {
+  if (!dev) {
+    console.log(`creating entries here...`)
+    return Promise.all(entries.map(async (entry) => {
+      const name = jsonFileFromEntry(entry.data._entry)
+      console.log(`> ${name}`)
+      await writeFile(resolve(outDir, name), JSON.stringify(entry))
+    }))
+  }
+}

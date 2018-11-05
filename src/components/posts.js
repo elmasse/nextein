@@ -39,7 +39,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         return {
           ...wrapped,
           posts,
-          _entries,
+          _entries: _entries.map(e => e.data._entry),
           _entriesMap: entriesMap(_entries)
         }
       }
