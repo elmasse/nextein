@@ -16,7 +16,7 @@ describe('loadEntries', () => {
 describe('from Server', () => {
   test('loadEntries retrieves an array of posts reading from Server', async () => {
     const files = ['posts/test.md']
-    const posts = [{ data: {}, content: '' }]
+    const posts = [{ data: {} }]
 
     plugins.mockReturnValueOnce({
       sources: [() => posts],

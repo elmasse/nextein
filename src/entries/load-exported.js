@@ -10,27 +10,44 @@ import { jsonFileFromEntry } from './utils'
 import createCache from './cache'
 
 const cache = createCache()
-const fetching = createCache()
 
 const shouldFetch = async (_entries) => {
-  return fetching.get() || fetching.set(Promise.all(_entries.map(async (entry) => (await fetch(`/${jsonFileFromEntry(entry)}`)).json())))
+  return Promise.all(_entries.map(async ({ data: { _entry } }) => (await fetch(`/${jsonFileFromEntry(_entry)}`)).json()))
 }
 
 const loadEntries = async () => {
   const { props } = __NEXT_DATA__
   const { _entries } = (props.pageProps || props)
+
+  return _entries
+}
+
+export default loadEntries
+
+export const byEntriesList = async list => {
   let entries = cache.get()
 
   if (!entries) {
     console.log('cache.miss')
-    entries = await shouldFetch(_entries)
+    entries = await shouldFetch(list)
     cache.set(entries)
-  }
-  console.log(cache.get())
-  return entries
-}
+  } else {
+    const _entries = entries.map(e => e.data._entry)
+    const update = []
+    for (const post of list) {
+      if (!_entries.includes(post.data._entry)) {
+        update.push(post)
+      }
+    }
 
-export default loadEntries
+    entries = cache.set([...entries, ...(await shouldFetch(update))])
+  }
+
+  const _entries = list.map(i => i.data._entry)
+
+  const res = entries.filter(e => _entries.includes(e.data._entry))
+  return res
+}
 
 export const byFileName = path => {
   const entries = cache.get()

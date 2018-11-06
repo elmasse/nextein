@@ -1,7 +1,7 @@
 jest.mock('../../../src/entries/load')
 import React from 'react'
 
-import loadEntries from '../../../src/entries/load'
+import { byEntriesList } from '../../../src/entries/load'
 import withPosts, { withPostsFilterBy, inCategory, entries } from '../../../src/components/posts'
 
 describe('withPosts', () => {
@@ -33,7 +33,8 @@ describe('withPosts', () => {
     const expected = [{ data: {}, content: `` }]
     const Component = withPosts(({ posts }) => (<div>There are {posts.length} posts</div>))
 
-    loadEntries.mockReturnValueOnce(expected)
+    byEntriesList.mockReturnValueOnce(expected)
+
     const actual = await Component.getInitialProps()
 
     expect(actual.posts).toBeDefined()
@@ -46,8 +47,8 @@ test('withPosts composes getInitialProps non react statics', async () => {
   const getInitialProps = jest.fn().mockReturnValueOnce(wrappedProps)
   const expected = [{ data: {}, content: `` }]
   
-  loadEntries.mockReturnValueOnce(expected)
-  
+  byEntriesList.mockReturnValueOnce(expected)
+
   const Component = withPosts(
     class Wrapped extends React.Component {
       static getInitialProps = getInitialProps

@@ -1,3 +1,5 @@
+/* global __NEXT_DATA__ */
+
 import React, { Component } from 'react'
 import Link from 'next/link'
 
@@ -19,8 +21,13 @@ class NexteinLink extends Component {
   }
 
   async componentDidMount () {
-    const all = await loadEntries()
-    const map = entriesMap(all)
+    const { props } = __NEXT_DATA__
+    let { _entriesMap: map } = (props.pageProps || props)
+    if (!map) { // dev
+      const all = await loadEntries()
+      map = entriesMap(all)
+    }
+
     const { href } = this.state
     if (href) {
       const entry = map[href]

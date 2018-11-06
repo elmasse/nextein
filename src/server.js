@@ -8,7 +8,7 @@ import { join, relative, sep, resolve } from 'path'
 import chokidar from 'chokidar'
 
 import plugins from './plugins'
-import loadEntries, { byFileName, invalidateCache } from './entries/load'
+import loadEntries, { byFileName, byEntriesList, invalidateCache } from './entries/load'
 
 export default class Server {
   constructor ({ dir = '.', dev = true }) {
@@ -17,7 +17,7 @@ export default class Server {
   }
 
   async readEntries () {
-    const entries = await loadEntries()
+    const entries = await byEntriesList(await loadEntries())
     const kv = entries
       .map((entry, index) => {
         const { data } = entry

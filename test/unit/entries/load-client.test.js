@@ -13,7 +13,7 @@ describe('from Client', () => {
   })
 
   test('loadEntries retrieves an array of posts fetching from Server', async () => {
-    const posts = [{ data: {}, content: '' }]
+    const posts = [{ data: {} }]
 
     fetch.mockReturnValueOnce(Promise.resolve({ json: () => posts }))
 
