@@ -40,7 +40,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
           ...wrapped,
           posts,
           _entries: _entries,
-          _entriesMap: entriesMap(_entries)
+          _entriesMap: await entriesMap(_entries)
         }
       }
 

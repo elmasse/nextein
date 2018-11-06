@@ -23,17 +23,19 @@ class NexteinLink extends Component {
   async componentDidMount () {
     const { props } = __NEXT_DATA__
     let { _entriesMap: map } = (props.pageProps || props)
-    if (!map) { // dev
+
+    if (!map) {
       const all = await loadEntries()
-      map = entriesMap(all)
+      map = await entriesMap(all)
     }
 
     const { href } = this.state
-    if (href) {
+    if (href && map) {
       const entry = map[href]
+
       if (entry) {
         this.setState({
-          href: { pathname: prefixed(entry.pathname), query: entry.query },
+          href: { pathname: entry.pathname, query: entry.query },
           as: href
         })
       }

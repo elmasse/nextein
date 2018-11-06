@@ -6,19 +6,22 @@
 
 // TODO read prefix from config
 
-import { jsonFileFromEntry } from './utils'
+import { jsonFileFromEntry, jsonFileEntries } from './utils'
 import createCache from './cache'
+import { prefixed } from '../components/utils'
 
 const cache = createCache()
 
 const shouldFetch = async (_entries) => {
-  return Promise.all(_entries.map(async ({ data: { _entry } }) => (await fetch(`/${jsonFileFromEntry(_entry)}`)).json()))
+  return Promise.all(_entries.map(async ({ data: { _entry } }) => (await fetch(prefixed(`/${jsonFileFromEntry(_entry)}`))).json()))
 }
 
 const loadEntries = async () => {
-  const { props } = __NEXT_DATA__
-  const { _entries } = (props.pageProps || props)
-
+  let { _entries } = __NEXT_DATA__.props.pageProps
+  if (!_entries) {
+    _entries = await (await fetch(prefixed(`/${jsonFileEntries()}`))).json()
+    __NEXT_DATA__.props.pageProps._entries = _entries
+  }
   return _entries
 }
 
@@ -28,7 +31,6 @@ export const byEntriesList = async list => {
   let entries = cache.get()
 
   if (!entries) {
-    console.log('cache.miss')
     entries = await shouldFetch(list)
     cache.set(entries)
   } else {
@@ -61,7 +63,7 @@ const findPostInEntriesCache = async path => {
   let entry = (post && post.data._entry === path) ? post : undefined
 
   if (!entry) {
-    entry = (await fetch(`/${jsonFileFromEntry(path)}`)).json()
+    entry = (await fetch(prefixed(`/${jsonFileFromEntry(path)}`))).json()
   }
 
   return entry

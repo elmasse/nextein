@@ -4,8 +4,8 @@ import { writeFile as fsWriteFile } from 'fs'
 import { resolve } from 'path'
 
 import loadEntries, { byEntriesList } from './entries/load'
-import { setNextExportPathMap } from './entries/map'
-import { jsonFileFromEntry } from './entries/utils'
+import entriesMap, { setNextExportPathMap } from './entries/map'
+import { jsonFileFromEntry, jsonFileEntriesMap, jsonFileEntries } from './entries/utils'
 import { setPlugins, getDefaultPlugins } from './plugins'
 
 const writeFile = promisify(fsWriteFile)
@@ -93,6 +93,9 @@ const createJSONEntries = async (entries, { dev, dir, outDir, distDir, buildId }
   if (!dev) {
     console.log(`Creating entries...`)
     const all = await byEntriesList(entries)
+
+    await writeFile(resolve(outDir, jsonFileEntries(buildId)), JSON.stringify(entries))
+    await writeFile(resolve(outDir, jsonFileEntriesMap(buildId)), JSON.stringify(entriesMap(entries)))
 
     return Promise.all(all.map(async (entry) => {
       const name = jsonFileFromEntry(entry.data._entry, buildId)
