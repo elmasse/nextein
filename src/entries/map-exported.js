@@ -10,7 +10,7 @@ export default async (entries = []) => {
   let { _entriesMap } = (props.pageProps || props)
 
   if (!_entriesMap) {
-    _entriesMap = (await fetch(`${PREFIX}/${jsonFileEntriesMap()}`)).json()
+    _entriesMap = await (await fetch(`${PREFIX}/${jsonFileEntriesMap()}`)).json()
     __NEXT_DATA__.props.pageProps._entriesMap = _entriesMap
   }
   return _entriesMap
