@@ -42,7 +42,7 @@
     "remark-rehype": "3.0.1",
     "unfetch": "^4.0.0",
     "unified": "7.0.1",
-    "unist-util-select": "^1.5.0"
+    "unist-util-select": "^2.0.0"
   },
   "peerDependencies": {
     "next": "^6.0.0 || ^7.0.0",
