@@ -6,9 +6,8 @@
 
 // TODO read prefix from config
 
-import { jsonFileFromEntry, jsonFileEntries } from './utils'
-import createCache from './cache'
-import { prefixed } from '../components/utils'
+import { jsonFileFromEntry, jsonFileEntries, prefixed } from '../../utils'
+import createCache from '../cache'
 
 const cache = createCache()
 

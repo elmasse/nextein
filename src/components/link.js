@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 import loadEntries from '../entries/load'
 import entriesMap from '../entries/map'
-import { prefixed } from './utils'
+import { prefixed } from '../utils'
 
 class NexteinLink extends Component {
   static getDerivedStateFromProps (state, { href, as }) {

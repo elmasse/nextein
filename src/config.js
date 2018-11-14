@@ -5,7 +5,7 @@ import { resolve } from 'path'
 
 import loadEntries, { byEntriesList } from './entries/load'
 import entriesMap, { setNextExportPathMap } from './entries/map'
-import { jsonFileFromEntry, jsonFileEntriesMap, jsonFileEntries } from './entries/utils'
+import { jsonFileFromEntry, jsonFileEntriesMap, jsonFileEntries } from './utils'
 import { setPlugins, getDefaultPlugins } from './plugins'
 
 const writeFile = promisify(fsWriteFile)
@@ -41,13 +41,13 @@ export const withNextein = (nextConfig = {}) => {
 
       if (dev) {
         config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load-client.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map-exported.js')
+          new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load/client.js'),
+          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map/exported.js')
         )
       } else {
         config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load-exported.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map-exported.js')
+          new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load/exported.js'),
+          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map/exported.js')
         )
       }
 

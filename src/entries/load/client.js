@@ -4,7 +4,7 @@
 
 import { sep } from 'path'
 import fetch from 'unfetch'
-import createCache from './cache'
+import createCache from '../cache'
 
 const cache = createCache()
 

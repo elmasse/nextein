@@ -1,5 +1,5 @@
-import plugins from '../plugins'
-import createCache from './cache'
+import plugins from '../../plugins'
+import createCache from '../cache'
 
 const cache = createCache()
 

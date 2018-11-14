@@ -8,7 +8,7 @@ import select from 'unist-util-select'
 
 import loadEntries, { byFileName } from '../entries/load'
 import entriesMap from '../entries/map'
-import { getDisplayName } from './utils'
+import { getDisplayName } from '../utils'
 
 const extractExcerpt = (excerpt) => {
   const selector = (typeof excerpt === 'string') ? excerpt : ':root > element[tagName=p]:first-child'

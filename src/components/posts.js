@@ -4,7 +4,7 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 
 import loadEntries, { byEntriesList } from '../entries/load'
 import entriesMap from '../entries/map'
-import { getDisplayName } from './utils'
+import { getDisplayName } from '../utils'
 
 export const entries = loadEntries
 

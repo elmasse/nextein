@@ -5,7 +5,7 @@ jest.mock('unfetch')
 import fetch from 'unfetch'
 
 // SUT
-import loadEntries, { byFileName } from '../../../src/entries/load-client'
+import loadEntries, { byFileName } from '../../../../src/entries/load/client'
 
 describe('from Client', () => {
   beforeEach(() => {

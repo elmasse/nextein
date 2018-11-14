@@ -1,11 +1,9 @@
-// jest.mock('glob')
-jest.mock('../../../src/plugins')
+jest.mock('../../../../src/plugins')
 
-// import glob from 'glob'
-import plugins from '../../../src/plugins'
+import plugins from '../../../../src/plugins'
 
 // SUT
-import loadEntries, { byFileName } from '../../../src/entries/load'
+import loadEntries, { byFileName } from '../../../../src/entries/load'
 
 describe('loadEntries', () => {
   test('exports loadEntries fn as default', () => {
