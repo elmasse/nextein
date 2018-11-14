@@ -1,6 +1,6 @@
 /* global __NEXT_DATA__, fetch */
 
-import { jsonFileEntriesMap } from '../utils'
+import { jsonFileEntriesMap } from '../../utils'
 
 const PREFIX = process.env.PUBLIC_URL
 
