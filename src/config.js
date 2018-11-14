@@ -41,18 +41,25 @@ export const withNextein = (nextConfig = {}) => {
 
       if (dev) {
         config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load/client.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map/exported.js')
+          new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './client.js'),
+          new NormalModuleReplacementPlugin(/entries[/\\]map[/\\]index.js/, './exported.js')
         )
       } else {
         config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load.js/, './load/exported.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map.js/, './map/exported.js')
+          new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './exported.js'),
+          new NormalModuleReplacementPlugin(/entries[/\\]map[/\\]index.js/, './exported.js')
         )
       }
 
       if (typeof nextConfig.webpack === 'function') {
         return nextConfig.webpack(config, options)
+      }
+
+      config.module = {
+        ...config.module,
+        // Avoid warning from webpack when require has an expression.
+        // Which is the case for requiring plugins dynamically.
+        exprContextCritical: false
       }
 
       return config
