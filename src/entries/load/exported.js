@@ -1,5 +1,5 @@
 /**
- * THIS FILE IS LOADED BY WEBPACK TO REPLACE load.js in exported client
+ * THIS FILE IS LOADED BY WEBPACK TO REPLACE load/index.js in exported client
  */
 
 /* global __NEXT_DATA__, fetch */

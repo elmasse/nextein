@@ -1,3 +1,7 @@
+/**
+ * THIS FILE IS LOADED BY WEBPACK TO REPLACE map/index.js in dev client and exported client
+ */
+
 /* global __NEXT_DATA__, fetch */
 
 import { jsonFileEntriesMap } from '../../utils'

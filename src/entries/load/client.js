@@ -1,5 +1,5 @@
 /**
- * THIS FILE IS LOADED BY WEBPACK TO REPLACE load.js in dev client
+ * THIS FILE IS LOADED BY WEBPACK TO REPLACE load/index.js in dev client
  */
 
 import { sep } from 'path'
