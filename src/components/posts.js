@@ -2,9 +2,9 @@
 import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 
-import loadEntries from '../entries/load'
+import loadEntries, { byEntriesList } from '../entries/load'
 import entriesMap from '../entries/map'
-import { getDisplayName } from './utils'
+import { getDisplayName } from '../utils'
 
 export const entries = loadEntries
 
@@ -34,13 +34,13 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
         const _entries = await loadEntries()
-        const posts = filter ? _entries.filter(filter) : _entries
+        const posts = await byEntriesList(filter ? _entries.filter(filter) : _entries)
 
         return {
           ...wrapped,
           posts,
-          _entries,
-          _entriesMap: entriesMap(_entries)
+          _entries: _entries,
+          _entriesMap: await entriesMap(_entries)
         }
       }
 

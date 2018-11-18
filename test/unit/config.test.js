@@ -14,7 +14,7 @@ describe('exportPathMap', () => {
     loadEntries.mockReturnValueOnce([])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap()
+    const result = await exportPathMap({}, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()
@@ -27,7 +27,7 @@ describe('exportPathMap', () => {
     ])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap()
+    const result = await exportPathMap({}, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()
@@ -41,7 +41,7 @@ describe('exportPathMap', () => {
     ])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap()
+    const result = await exportPathMap({}, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()
@@ -55,7 +55,7 @@ describe('exportPathMap', () => {
     ])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap()
+    const result = await exportPathMap({}, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()

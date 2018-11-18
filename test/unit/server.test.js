@@ -2,7 +2,7 @@ jest.mock('next')
 jest.mock('../../src/entries/load')
 
 import next from 'next'
-import loadEntries from '../../src/entries/load'
+import { byEntriesList } from '../../src/entries/load'
 
 // SUT
 import Server from '../../src/server'
@@ -28,7 +28,7 @@ describe('server instance mode: dev', () => {
   test('readEntries generates entriesMap', async () => {
     const posts = [postWithoutURL, postWithURL]
 
-    loadEntries.mockReturnValueOnce(posts)
+    byEntriesList.mockReturnValueOnce(posts)
 
     await server.readEntries()
 

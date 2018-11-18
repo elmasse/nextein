@@ -1,11 +1,9 @@
-// jest.mock('glob')
-jest.mock('../../../src/plugins')
+jest.mock('../../../../src/plugins')
 
-// import glob from 'glob'
-import plugins from '../../../src/plugins'
+import plugins from '../../../../src/plugins'
 
 // SUT
-import loadEntries, { byFileName } from '../../../src/entries/load'
+import loadEntries, { byFileName } from '../../../../src/entries/load'
 
 describe('loadEntries', () => {
   test('exports loadEntries fn as default', () => {
@@ -16,7 +14,7 @@ describe('loadEntries', () => {
 describe('from Server', () => {
   test('loadEntries retrieves an array of posts reading from Server', async () => {
     const files = ['posts/test.md']
-    const posts = [{ data: {}, content: '' }]
+    const posts = [{ data: {} }]
 
     plugins.mockReturnValueOnce({
       sources: [() => posts],

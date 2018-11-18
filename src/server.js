@@ -8,7 +8,9 @@ import { join, relative, sep, resolve } from 'path'
 import chokidar from 'chokidar'
 
 import plugins from './plugins'
-import loadEntries, { byFileName, invalidateCache } from './entries/load'
+import loadEntries, { byFileName, byEntriesList, invalidateCache } from './entries/load'
+import { jsonFileEntriesMap } from './utils'
+import entriesMap from './entries/map'
 
 export default class Server {
   constructor ({ dir = '.', dev = true }) {
@@ -17,7 +19,7 @@ export default class Server {
   }
 
   async readEntries () {
-    const entries = await loadEntries()
+    const entries = await byEntriesList(await loadEntries())
     const kv = entries
       .map((entry, index) => {
         const { data } = entry
@@ -26,7 +28,7 @@ export default class Server {
       })
 
     this.entriesMap = new Map(kv)
-    this.exportPathMap = await this.app.nextConfig.exportPathMap()
+    this.exportPathMap = await this.app.nextConfig.exportPathMap({}, { dev: true })
   }
 
   entriesAsJSON () {
@@ -50,6 +52,13 @@ export default class Server {
     if (pathname === '/_load_entries') {
       res.writeHead(200, { 'Content-Type': 'application/json' })
       return res.end(this.entriesAsJSON())
+    }
+
+    if (pathname === `/${jsonFileEntriesMap('development')}`) {
+      const entries = await loadEntries()
+
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      return res.end(JSON.stringify(entriesMap(entries)))
     }
 
     if (entryParam) {

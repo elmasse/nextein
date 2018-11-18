@@ -1,9 +1,11 @@
+/* global __NEXT_DATA__ */
+
 import React, { Component } from 'react'
 import Link from 'next/link'
 
 import loadEntries from '../entries/load'
 import entriesMap from '../entries/map'
-import { prefixed } from './utils'
+import { prefixed } from '../utils'
 
 class NexteinLink extends Component {
   static getDerivedStateFromProps (state, { href, as }) {
@@ -19,14 +21,21 @@ class NexteinLink extends Component {
   }
 
   async componentDidMount () {
-    const all = await loadEntries()
-    const map = entriesMap(all)
+    const { props } = __NEXT_DATA__
+    let { _entriesMap: map } = (props.pageProps || props)
+
+    if (!map) {
+      const all = await loadEntries()
+      map = await entriesMap(all)
+    }
+
     const { href } = this.state
-    if (href) {
+    if (href && map) {
       const entry = map[href]
+
       if (entry) {
         this.setState({
-          href: { pathname: prefixed(entry.pathname), query: entry.query },
+          href: { pathname: entry.pathname, query: entry.query },
           as: href
         })
       }

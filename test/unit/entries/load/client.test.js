@@ -5,7 +5,7 @@ jest.mock('unfetch')
 import fetch from 'unfetch'
 
 // SUT
-import loadEntries, { byFileName } from '../../../src/entries/load-client'
+import loadEntries, { byFileName } from '../../../../src/entries/load/client'
 
 describe('from Client', () => {
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('from Client', () => {
   })
 
   test('loadEntries retrieves an array of posts fetching from Server', async () => {
-    const posts = [{ data: {}, content: '' }]
+    const posts = [{ data: {} }]
 
     fetch.mockReturnValueOnce(Promise.resolve({ json: () => posts }))
 
