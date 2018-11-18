@@ -1,4 +1,4 @@
-/* global __NEXT_DATA__ */
+/* global __NEXT_DATA__, fetch */
 
 export const jsonFileFromEntry = (entry, buildId = __NEXT_DATA__.buildId) => {
   return entry.replace(/\//g, '--').replace('.md', `--${buildId}.json`)
@@ -20,6 +20,15 @@ export const prefixed = (path) => {
   const prefix = ensureNoEndSlash(process.env.PUBLIC_URL)
   if (!prefix || typeof path !== 'string' || /^https?:\/\//.test(path)) return path
   return `${prefix}${path}`
+}
+
+const _fetchCache = {}
+export const fetchOnce = async (path) => {
+  if (!_fetchCache[path]) {
+    _fetchCache[path] = fetch(path)
+  }
+  const res = await _fetchCache[path]
+  return res.clone()
 }
 
 const ensureNoEndSlash = (path) => {
