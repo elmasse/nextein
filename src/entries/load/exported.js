@@ -40,7 +40,6 @@ export const byEntriesList = async list => {
 
   if (update.length) {
     entries = cache.set([...entries, ...(await shouldFetch(update))])
-    console.log('cache set', entries)
   }
 
   const _entries = list.map(i => i.data._entry)
@@ -51,7 +50,6 @@ export const byEntriesList = async list => {
 
 export const byFileName = path => {
   const entries = cache.get()
-  console.log('read fn', entries)
   return (entries && entries.find(post => post.data._entry === path)) || findPostInEntriesCache(path)
 }
 
