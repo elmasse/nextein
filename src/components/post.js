@@ -16,12 +16,7 @@ const extractExcerpt = (excerpt) => {
   return () => /* attacher */ (tree) => {
     /* transformer */
     if (excerpt) {
-      try {
-        tree.children = select(selector, tree)
-      } catch (e) {
-        console.log(selector)
-        console.log(e)
-      }
+      return select(selector, tree)
     }
     return tree
   }
