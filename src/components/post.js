@@ -4,7 +4,7 @@ import unified from 'unified'
 import rehype from 'rehype-parse'
 import stringify from 'rehype-stringify'
 import reactRenderer from 'rehype-react'
-import select from 'unist-util-select'
+import { select } from 'unist-util-select'
 
 import loadEntries, { byFileName } from '../entries/load'
 import entriesMap from '../entries/map'
@@ -16,7 +16,12 @@ const extractExcerpt = (excerpt) => {
   return () => /* attacher */ (tree) => {
     /* transformer */
     if (excerpt) {
-      tree.children = select(tree, selector)
+      try {
+        tree.children = select(selector, tree)
+      } catch (e) {
+        console.log(selector)
+        console.log(e)
+      }
     }
     return tree
   }
