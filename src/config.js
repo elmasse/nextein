@@ -81,7 +81,7 @@ export const withNextein = (nextConfig = {}) => {
 
       if (typeof nextConfig.exportPathMap === 'function') {
         nextExportPathMap = await nextConfig.exportPathMap(defaultPathMap, options)
-        setNextExportPathMap(nextExportPathMap)
+        await setNextExportPathMap(nextExportPathMap)
       }
 
       await createJSONEntries(entries, options)

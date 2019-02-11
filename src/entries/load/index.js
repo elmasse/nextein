@@ -3,11 +3,7 @@ import createCache from '../cache'
 
 const cache = createCache()
 
-const loadEntries = async () => {
-  if (cache.isValid()) {
-    return cache.get()
-  }
-
+const loadCache = async () => {
   const { sources, transforms = [] } = plugins()
   let posts = []
 
@@ -20,6 +16,14 @@ const loadEntries = async () => {
   }
 
   cache.set(posts)
+}
+
+const loadEntries = async () => {
+  if (cache.isValid()) {
+    return cache.get()
+  }
+
+  await loadCache()
 
   return cache.get().map(e => ({ data: e.data }))
 }
@@ -27,6 +31,8 @@ const loadEntries = async () => {
 export default loadEntries
 
 export const byEntriesList = async list => {
+  if (!cache.isValid()) await loadCache()
+
   const entries = cache.get()
 
   if (!list) return entries
@@ -37,6 +43,8 @@ export const byEntriesList = async list => {
 }
 
 export const byFileName = async (path) => {
+  if (!cache.isValid()) await loadCache()
+
   return cache.get().find(post => post.data._entry === path)
 }
 

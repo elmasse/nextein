@@ -20,18 +20,22 @@ const normalizeArray = config => {
 
 const normalizeString = config => typeof config === 'string' ? { name: config } : config
 
-let _config
+const getConfig = () => {
+  return JSON.parse(process.env.__NEXTEIN_PLUGIN_CFG)
+}
 
-export const setPlugins = (nexteinPlugins = []) => {
-  _config = nexteinPlugins
+export const setPlugins = (nexteinPlugins = [], distDir) => {
+  const config = nexteinPlugins
     .map(normalizeString)
     .map(normalizeArray)
+
+  process.env.__NEXTEIN_PLUGIN_CFG = JSON.stringify(config)
 }
 
 let _plugins
 
 export const plugins = () => {
-  const nexteinPlugins = _config
+  const nexteinPlugins = getConfig()
   const sources = []
   const transforms = []
   const watchers = []

@@ -1,17 +1,19 @@
 
 import { entriesMapReducer } from './reducer'
 
-let nextExportPathMap = {}
+const getExportPathMap = () => {
+  return JSON.parse(process.env.___NEXTEIN_EXPORT_PATH_MAP || {})
+}
 
 // entriesMap = entries => object
 export default (entries = []) => {
   return {
     '/': { pathname: '/index' },
     ...entries.reduce(entriesMapReducer, {}),
-    ...nextExportPathMap
+    ...getExportPathMap()
   }
 }
 
 export const setNextExportPathMap = (exportPathMap) => {
-  nextExportPathMap = JSON.parse(JSON.stringify(exportPathMap).replace(/:{"page"/ig, ':{"pathname"'))
+  process.env.___NEXTEIN_EXPORT_PATH_MAP = JSON.stringify(exportPathMap).replace(/:{"page"/ig, ':{"pathname"')
 }
