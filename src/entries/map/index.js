@@ -2,7 +2,7 @@
 import { entriesMapReducer } from './reducer'
 
 const getExportPathMap = () => {
-  return JSON.parse(process.env.___NEXTEIN_EXPORT_PATH_MAP || "{}")
+  return JSON.parse(process.env.___NEXTEIN_EXPORT_PATH_MAP || '{}')
 }
 
 // entriesMap = entries => object
