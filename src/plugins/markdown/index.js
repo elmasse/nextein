@@ -5,6 +5,7 @@ import fm from 'frontmatter'
 import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname, relative, dirname, sep } from 'path'
 import pathToRegEx from 'path-to-regexp'
+import removePosition from 'unist-util-remove-position'
 
 import parser from './parser'
 
@@ -18,10 +19,11 @@ export const watcher = ({ entriesDir = ['posts'] } = {}) => {
  * @param config.extension {string}
  * @param config.entriesDir {string[]}
  * @param config.raw {boolean}
+ * @oaram config.position {boolean}
  * @param config.remark {string[]}
- * @param config.rehype {string[]]}
+ * @param config.rehype {string[]}
  */
-export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = true, rehype = [], remark = [] } = {}) => {
+export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = true, position = false, rehype = [], remark = [] } = {}) => {
   let all = []
   for (const dir of entriesDir) {
     const files = await promisify(glob)(`${dir}/**/*.${extension}`, { root: process.cwd() })
@@ -35,10 +37,9 @@ export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = t
         .map(addCategory(dir))
         .map(addDate)
         .map(addUrl)
-        .map(parse({ raw, remark, rehype }))
+        .map(parse({ raw, position, remark, rehype }))
     )
   }
-
   return all
 }
 
@@ -46,13 +47,14 @@ export const transform = async (options = {}, posts) => {
   return posts.filter(p => p.data.published !== false)
 }
 
-const parse = (options) => (value) => {
+const parse = ({ position, raw, ...options }) => (value) => {
   const { content } = value
   const instance = parser(options)
-  const { raw } = options
+  const parsed = instance.runSync(instance.parse(content))
+
   return {
     ...value,
-    content: instance.runSync(instance.parse(content)),
+    content: position ? parsed : removePosition(parsed, true),
     raw: raw ? content : undefined
   }
 }

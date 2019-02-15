@@ -43,6 +43,7 @@
     "remark-rehype": "4.0.0",
     "unfetch": "^4.0.0",
     "unified": "7.1.0",
+    "unist-util-remove-position": "^1.1.2",
     "unist-util-select": "^2.0.0"
   },
   "peerDependencies": {
