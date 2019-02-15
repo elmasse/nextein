@@ -349,6 +349,7 @@ The default plugin will source the posts using a configurable set of options:
 - `extension`: Default to `md`
 - `entriesDir`: Default to `['posts']`
 - `raw`: Default to `true`. Make this `false` to not add the `raw` content in the post object.
+- `position`: Default to `false`. Make this `true` to add the position info to post content HAST.
 - `rehype`: Default to `[]`. Add a set of plugins for `rehype`
 - `remark`: Default to `[]`. Add a set of plugins for `remark`
 
