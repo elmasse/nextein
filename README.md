@@ -184,6 +184,7 @@ Use the `excerpt` property to only render the first paragraph (this is useful wh
 - `excerpt`: `{Boolean}` true to only render the first paragraph. Optional. Default: `false`
 - `renderers`: `{Object}` A set of custom renderers for Markdown elements with the form of `[tagName]: renderer`.
 - `prefix`: `{String}` Prefix to use for the generated React elements. Optional. Default: `'entry-'`
+- `component`: `{String|React.Component}`	The component used for the root node. Either a string to use or a React Component.
 
 
 ```js

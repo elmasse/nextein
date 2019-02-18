@@ -34,16 +34,10 @@ const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
 
 export default class Content extends Component {
   render () {
-    const { content, excerpt, renderers, data, prefix, raw, ...componentProps } = this.props
-    const cmp = toReact({ content, excerpt, renderers, prefix })
-    const { props: cmpProps } = cmp
-
-    return {
-      ...cmp,
-      props: {
-        ...cmpProps,
-        ...componentProps
-      }
-    }
+    const { content, excerpt, renderers, data, prefix, raw, component, ...componentProps } = this.props
+    const { props, type } = toReact({ content, excerpt, renderers, prefix })
+    console.log(component, type)
+    const Component = component || type
+    return <Component {...props} {...componentProps} />
   }
 }
