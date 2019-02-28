@@ -36,7 +36,6 @@ export default class Content extends Component {
   render () {
     const { content, excerpt, renderers, data, prefix, raw, component, ...componentProps } = this.props
     const { props, type } = toReact({ content, excerpt, renderers, prefix })
-    console.log(component, type)
     const Component = component || type
     return <Component {...props} {...componentProps} />
   }
