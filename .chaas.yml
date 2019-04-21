@@ -1,0 +1,10 @@
+ignore: [
+  ".babelrc",
+  ".editorconfig",
+  ".gitignore",
+  ".npmrc",
+  "package.json",
+  "*.yml",
+  "**/*.md",
+  "test/**"
+]
