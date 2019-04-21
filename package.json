@@ -11,7 +11,8 @@
     "build": "taskr",
     "release": "taskr release",
     "prepublish": "npm run release",
-    "lint": "standard 'bin/*' 'src/**/*.js' "
+    "lint": "standard 'bin/*' 'src/**/*.js'",
+    "version": "chan release ${npm_package_version} && git add ."
   },
   "bin": {
     "nextein": "./dist/bin/nextein"
@@ -56,6 +57,7 @@
     "@taskr/clear": "1.1.0",
     "@taskr/esnext": "1.1.0",
     "@taskr/watch": "1.1.0",
+    "@geut/chan": "^2.0.0",
     "babel-core": "^6.24.1",
     "babel-eslint": "10.0.0",
     "babel-jest": "23.0.1",
