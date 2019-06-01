@@ -37,7 +37,7 @@
     "path-to-regexp": "3.0.0",
     "pkg-up": "^3.0.0",
     "rehype-parse": "^6.0.0",
-    "rehype-raw": "4.0.0",
+    "rehype-raw": "4.0.1",
     "rehype-react": "3.1.0",
     "rehype-stringify": "^5.0.0",
     "remark-parse": "6.0.3",
