@@ -43,7 +43,7 @@
     "remark-parse": "6.0.3",
     "remark-rehype": "4.0.1",
     "unfetch": "^4.0.0",
-    "unified": "8.0.0",
+    "unified": "8.0.1",
     "unist-util-remove-position": "^1.1.2",
     "unist-util-select": "^2.0.0"
   },
