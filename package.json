@@ -68,7 +68,7 @@
     "eslint-config-standard": "12.0.0",
     "hastscript": "5.1.0",
     "jest": "23.2.0",
-    "next": "^8.0.0",
+    "next": "^9.0.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-test-renderer": "^16.8.1",
