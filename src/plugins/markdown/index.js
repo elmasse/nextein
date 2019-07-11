@@ -24,7 +24,7 @@ export const watcher = ({ entriesDir = ['posts'] } = {}) => {
  * @param config.rehype {string[]}
  */
 export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = true, position = false, rehype = [], remark = [] } = {}) => {
-  let all = []
+  const all = []
   for (const dir of entriesDir) {
     const files = await promisify(glob)(`${dir}/**/*.${extension}`, { root: process.cwd() })
     all.push(

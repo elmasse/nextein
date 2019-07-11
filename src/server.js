@@ -1,7 +1,7 @@
 
 import http from 'http'
 import next from 'next'
-import { parse } from 'url'
+import { URL } from 'url'
 import route from 'path-match'
 import { sep, resolve } from 'path'
 import chokidar from 'chokidar'
@@ -41,7 +41,7 @@ export default class Server {
   /* eslint-disable no-undef */
   handleRequest = async (req, res) => {
     const { app, exportPathMap } = this
-    const parsedUrl = parse(req.url, true)
+    const parsedUrl = new URL(req.url, true)
     const { pathname } = parsedUrl
     const customRoute = exportPathMap[pathname]
 

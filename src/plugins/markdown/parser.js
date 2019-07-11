@@ -12,7 +12,7 @@ export default ({ remark, rehype }) => unified()
 
 const mapPlugin = p => {
   if (Array.isArray(p)) {
-    const [ name, options ] = p
+    const [name, options] = p
     return [require(name), options]
   }
   return require(p)

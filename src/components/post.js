@@ -17,7 +17,7 @@ export default (WrappedComponent) => {
       static async getInitialProps (...args) {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-        const [ { query = {} } ] = args
+        const [{ query = {} }] = args
         const { _entry } = query
         const post = _entry ? await byFileName(_entry) : undefined
         const _entries = await loadEntries()
@@ -36,5 +36,5 @@ export default (WrappedComponent) => {
         return <WrappedComponent {...props} />
       }
     },
-    WrappedComponent, { 'getInitialProps': true })
+    WrappedComponent, { getInitialProps: true })
 }
