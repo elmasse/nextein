@@ -1,7 +1,7 @@
 
 import http from 'http'
 import next from 'next'
-import { URL } from 'url'
+import url from 'url'
 import route from 'path-match'
 import { sep, resolve } from 'path'
 import chokidar from 'chokidar'
@@ -15,6 +15,7 @@ export default class Server {
   constructor ({ dir = '.', dev = true }) {
     this.app = next({ dev })
     this.dev = dev
+    this.handle = this.app.getRequestHandler()
   }
 
   async readEntries () {
@@ -27,7 +28,6 @@ export default class Server {
       })
 
     this.entriesMap = new Map(kv)
-    this.exportPathMap = await this.app.nextConfig.exportPathMap({}, { dev: true })
   }
 
   entriesAsJSON () {
@@ -35,48 +35,41 @@ export default class Server {
     return JSON.stringify(Array.from(entriesMap.values()))
   }
 
-  /**
-   * Freaking issue with babel-eslint or eslint or babel or ... that retrieves an error when using arrow func on class props
-   */
-  /* eslint-disable no-undef */
   handleRequest = async (req, res) => {
-    const { app, exportPathMap } = this
-    const parsedUrl = new URL(req.url, true)
+    /* eslint-disable node/no-deprecated-api */
+    const parsedUrl = url.parse(req.url, true)
     const { pathname } = parsedUrl
-    const customRoute = exportPathMap[pathname]
 
     const matchEntry = route()('/_load_entry/:path+')
     const entryParam = matchEntry(pathname)
 
     if (pathname === '/_load_entries') {
       res.writeHead(200, { 'Content-Type': 'application/json' })
-      return res.end(this.entriesAsJSON())
+      res.end(this.entriesAsJSON())
+      return
     }
 
     if (pathname === `/${jsonFileEntriesMap('development')}`) {
       const entries = await loadEntries()
 
       res.writeHead(200, { 'Content-Type': 'application/json' })
-      return res.end(JSON.stringify(entriesMap(entries)))
+      res.end(JSON.stringify(entriesMap(entries)))
+      return
     }
 
     if (entryParam) {
       const path = entryParam.path.join(sep)
 
       if (path) {
-        const e = await byFileName(path)
+        const entry = await byFileName(path)
 
         res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(JSON.stringify(e))
+        res.end(JSON.stringify(entry))
+        return
       }
     }
 
-    if (customRoute) {
-      const { page, query } = customRoute
-      return app.render(req, res, page, query)
-    }
-
-    app.handleRequest(req, res, parsedUrl)
+    this.handle(req, res, parsedUrl)
   }
 
   async start (port, hostname) {
