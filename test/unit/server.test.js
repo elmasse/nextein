@@ -18,9 +18,7 @@ describe('server', () => {
 
 describe('server instance mode: dev', () => {
   next.mockReturnValueOnce({
-    nextConfig: {
-      exportPathMap: () => ({})
-    }
+    getRequestHandler: jest.fn()
   })
 
   const server = new Server({dev: true})
