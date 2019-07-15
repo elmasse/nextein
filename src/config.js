@@ -21,11 +21,12 @@ const processConfig = ({ nextein = getDefaultConfig() }) => {
 
 export const withNextein = (nextConfig = {}) => {
   processConfig(nextConfig)
+  const { exportTrailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
 
   return ({
     ...nextConfig,
-
-    assetPrefix: nextConfig.assetPrefix || process.env.PUBLIC_URL || '',
+    exportTrailingSlash,
+    assetPrefix,
 
     webpack (config, options) {
       const { dev } = options
