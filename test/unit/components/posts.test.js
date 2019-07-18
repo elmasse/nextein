@@ -1,7 +1,7 @@
 jest.mock('../../../src/entries/load')
 import React from 'react'
 
-import { byEntriesList } from '../../../src/entries/load'
+import loadEntries, { byEntriesList} from '../../../src/entries/load'
 import withPosts, { withPostsFilterBy, inCategory, entries } from '../../../src/components/posts'
 
 describe('withPosts', () => {
@@ -91,6 +91,61 @@ describe('withPostsFilterBy', () => {
 
     expect(Component.value).toEqual('value')
   })
+
+  test('withPostsFilterBy should add `posts` property to getInitialProps', async () => {
+    const expected = [{ data: { category: 'test'}, content: `` }]
+    const Component = withPostsFilterBy(inCategory('test'))(({ posts }) => (<div>There are {posts.length} posts</div>))
+
+    loadEntries.mockReturnValueOnce([...expected, { data: { category: 'no-test'}, content: '' }])
+    byEntriesList.mockReturnValueOnce(expected)
+
+    const actual = await Component.getInitialProps()
+
+    expect(actual.posts).toBeDefined()
+    expect(actual.posts).toEqual(expect.arrayContaining(expected))
+  })
+  
+  test('withPostsFilterBy should add `posts` to exisiting posts if chained. ', async () => {
+    const expectedOne = [{ data: { category: 'test-1'}, content: `` }] 
+    const expectedTwo = [{ data: { category: 'test-2'}, content: `` }]
+    const expected = [...expectedTwo, ...expectedOne]
+    
+    const Component = withPostsFilterBy(inCategory('test-1'))(
+      withPostsFilterBy(inCategory('test-2'))(
+        ({ posts }) => (<div>There are {posts.length} posts</div>)
+      ))
+
+    loadEntries.mockReturnValue([...expected, { data: { category: 'no-test'}, content: '' }])
+    
+    byEntriesList.mockReturnValueOnce(expectedOne)
+    byEntriesList.mockReturnValueOnce(expectedTwo)
+
+    const actual = await Component.getInitialProps()
+
+    expect(actual.posts).toBeDefined()
+    expect(actual.posts).toEqual(expect.arrayContaining(expected))
+  }) 
+
+  test('withPostsFilterBy should add `posts` to exisiting posts if chained and they should be unique. ', async () => {
+    const expectedOne = [{ data: { category: 'test-1', flag: true }, content: `` }]
+    const expectedTwo = [{ data: { category: 'test-2', flag: true }, content: `` }]
+    const expected = [...expectedTwo, ...expectedOne]
+    
+    const Component = withPostsFilterBy(post => post.data.flag)(
+      withPostsFilterBy(inCategory('test-2'))(
+        ({ posts }) => (<div>There are {posts.length} posts</div>)
+      ))
+
+    loadEntries.mockReturnValue([...expected, { data: { category: 'no-test'}, content: '' }])
+    
+    byEntriesList.mockReturnValueOnce(expectedOne)
+    byEntriesList.mockReturnValueOnce(expectedTwo)
+
+    const actual = await Component.getInitialProps()
+
+    expect(actual.posts).toBeDefined()
+    expect(actual.posts).toEqual(expect.arrayContaining(expected))
+  }) 
 })
 
 describe('inCategory', () => {

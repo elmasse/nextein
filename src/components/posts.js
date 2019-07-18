@@ -11,9 +11,9 @@ export const entries = loadEntries
 export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
   const { data } = post
   const { category: postCategory = '' } = data
-  const result = !includeSubCategories ? postCategory === category : postCategory.startsWith(category)
+  const result = includeSubCategories ? postCategory.startsWith(category) : postCategory === category
 
-  return category ? result : true
+  return result
 }
 
 export const sortByDate = (a, b) => {
@@ -38,7 +38,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
 
         return {
           ...wrapped,
-          posts,
+          posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
           _entries: _entries,
           _entriesMap: await entriesMap(_entries)
         }
