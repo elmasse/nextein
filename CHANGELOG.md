@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `next v9`.
 - Move to `babel v7`.
 - Tests for `node v12`.
+- Chainable `withPostsFilterBy`
 
 ### Fixed
 - Linter issues.
