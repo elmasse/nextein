@@ -74,7 +74,7 @@
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-test-renderer": "^16.8.1",
-    "standard": "^13.0.1",
+    "standard": "^14.0.0",
     "taskr": "1.1.0",
     "taskr-standard": "^1.2.0"
   },
