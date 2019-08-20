@@ -99,7 +99,7 @@ export default withNextein
 
 const createJSONEntries = async (entries, { dev, dir, outDir, distDir, buildId }) => {
   if (!dev) {
-    console.log(`Creating entries...`)
+    console.log('Creating entries...')
     const all = await byEntriesList(entries)
 
     await writeFile(resolve(outDir, jsonFileEntries(buildId)), JSON.stringify(entries))

@@ -17,7 +17,7 @@ const extractExcerpt = (excerpt) => {
   }
 }
 
-const toReact = ({ content, excerpt, renderers, prefix = `entry-` }) => {
+const toReact = ({ content, excerpt, renderers, prefix = 'entry-' }) => {
   const hast = JSON.parse(JSON.stringify(content))
   const p = unified()
     .use(rehype)
