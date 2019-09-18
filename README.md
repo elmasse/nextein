@@ -2,7 +2,7 @@
 
 A static site generator based in Next.js
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/elmasse/nextein.svg)](https://greenkeeper.io/) 
+[![Financial Contributors on Open Collective](https://opencollective.com/nextein/all/badge.svg?label=financial+contributors)](https://opencollective.com/nextein) [![Greenkeeper badge](https://badges.greenkeeper.io/elmasse/nextein.svg)](https://greenkeeper.io/) 
 [![Build Status](https://travis-ci.org/elmasse/nextein.svg?branch=master)](https://travis-ci.org/elmasse/nextein) 
 [![ProductHunt](https://img.shields.io/badge/producthunt-vote-orange.svg)](https://www.producthunt.com/posts/nextein) 
 [![Gitter](https://badges.gitter.im/elmasse/nextein.svg)](https://gitter.im/nextein/Lobby)
@@ -387,3 +387,33 @@ module.exports = withNextein({
 })
 
 ```
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/elmasse/nextein/graphs/contributors"><img src="https://opencollective.com/nextein/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/nextein/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/nextein"><img src="https://opencollective.com/nextein/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/nextein/contribute)]
+
+<a href="https://opencollective.com/nextein/organization/0/website"><img src="https://opencollective.com/nextein/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/1/website"><img src="https://opencollective.com/nextein/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/2/website"><img src="https://opencollective.com/nextein/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/3/website"><img src="https://opencollective.com/nextein/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/4/website"><img src="https://opencollective.com/nextein/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/5/website"><img src="https://opencollective.com/nextein/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/6/website"><img src="https://opencollective.com/nextein/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/7/website"><img src="https://opencollective.com/nextein/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/8/website"><img src="https://opencollective.com/nextein/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/nextein/organization/9/website"><img src="https://opencollective.com/nextein/organization/9/avatar.svg"></a>
