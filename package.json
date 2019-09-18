@@ -12,7 +12,8 @@
     "release": "taskr release",
     "prepublish": "npm run release",
     "lint": "standard 'bin/*' 'src/**/*.js'",
-    "version": "chan release ${npm_package_version} && git add ."
+    "version": "chan release ${npm_package_version} && git add .",
+    "postinstall": "opencollective-postinstall || true"
   },
   "bin": {
     "nextein": "./dist/bin/nextein"
@@ -33,6 +34,7 @@
     "hoist-non-react-statics": "3.2.1",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
+    "opencollective-postinstall": "2.0.2",
     "path-match": "^1.2.4",
     "path-to-regexp": "^3.0.0",
     "pkg-up": "^3.0.0",
@@ -105,5 +107,9 @@
     "name": "Maximiliano Fierro",
     "email": "elmasse@gmail.com"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/nextein"
+  }
 }
