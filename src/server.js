@@ -8,7 +8,7 @@ import chokidar from 'chokidar'
 
 import plugins from './plugins'
 import loadEntries, { byFileName, byEntriesList, invalidateCache } from './entries/load'
-import { jsonFileEntriesMap } from './utils'
+import { jsonFileEntriesMap } from './entries/json-entry'
 import entriesMap from './entries/map'
 
 export default class Server {

@@ -4,7 +4,9 @@
 
 /* global __NEXT_DATA__ */
 
-import { jsonFileEntriesMap, prefixed, fetchOnce } from '../../utils'
+import { jsonFileEntriesMap } from '../json-entry'
+import { fetchOnce } from '../cache'
+import { prefixed } from '../prefixed'
 
 // entriesMap = entries => object
 export default async (entries = []) => {

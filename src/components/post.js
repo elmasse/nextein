@@ -3,7 +3,7 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 
 import loadEntries, { byFileName } from '../entries/load'
 import entriesMap from '../entries/map'
-import { getDisplayName } from '../utils'
+import { getDisplayName } from './displayName'
 
 export { default as Content } from './content'
 

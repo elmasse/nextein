@@ -5,7 +5,7 @@ import { resolve } from 'path'
 
 import loadEntries, { byEntriesList } from './entries/load'
 import entriesMap, { setNextExportPathMap } from './entries/map'
-import { jsonFileFromEntry, jsonFileEntriesMap, jsonFileEntries } from './utils'
+import { jsonFileFromEntry, jsonFileEntriesMap, jsonFileEntries } from './entries/json-entry'
 import { setPlugins, getDefaultPlugins } from './plugins'
 
 const writeFile = promisify(fsWriteFile)
