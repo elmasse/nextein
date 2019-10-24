@@ -1,11 +1,10 @@
 
 import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
+import getDisplayName from 'react-display-name'
 
 import loadEntries, { byEntriesList } from '../entries/load'
 import entriesMap from '../entries/map'
-import { getDisplayName } from './displayName'
-
 export const entries = loadEntries
 
 export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {

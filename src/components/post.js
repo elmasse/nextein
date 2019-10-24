@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
+import getDisplayName from 'react-display-name'
 
 import loadEntries, { byFileName } from '../entries/load'
 import entriesMap from '../entries/map'
-import { getDisplayName } from './displayName'
 
 export { default as Content } from './content'
 
