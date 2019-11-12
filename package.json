@@ -36,7 +36,7 @@
     "object.assign": "^4.0.4",
     "opencollective-postinstall": "2.0.2",
     "path-match": "^1.2.4",
-    "path-to-regexp": "^3.0.0",
+    "path-to-regexp": "^4.0.0",
     "pkg-up": "^3.0.0",
     "react-display-name": "^0.2.4",
     "rehype-parse": "^6.0.0",
