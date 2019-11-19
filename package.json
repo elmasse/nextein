@@ -31,7 +31,7 @@
     "cross-spawn": "^7.0.0",
     "frontmatter": "^0.0.3",
     "glob": "^7.1.2",
-    "hoist-non-react-statics": "3.2.1",
+    "hoist-non-react-statics": "3.3.1",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
     "opencollective-postinstall": "2.0.2",
