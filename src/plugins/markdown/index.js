@@ -4,7 +4,7 @@ import { promisify } from 'util'
 import fm from 'frontmatter'
 import { readFileSync, statSync } from 'fs'
 import { resolve, basename, extname, relative, dirname, sep } from 'path'
-import pathToRegEx from 'path-to-regexp'
+import { compile } from 'path-to-regexp'
 import removePosition from 'unist-util-remove-position'
 
 import parser from './parser'
@@ -107,7 +107,7 @@ const createEntryName = ({ _entry }) => {
 
 const createEntryURL = (data) => {
   const { page, date, permalink = DEFAULT_PERMALINK } = data
-  const toUrl = pathToRegEx.compile(permalink.replace(':category', PERMALINK_CATEGORIES))
+  const toUrl = compile(permalink.replace(':category', PERMALINK_CATEGORIES))
   const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
 
   return page ? url : undefined
