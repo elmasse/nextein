@@ -42,7 +42,7 @@
     "rehype-parse": "^6.0.0",
     "rehype-raw": "^4.0.1",
     "rehype-react": "^5.0.0",
-    "rehype-stringify": "^6.0.0",
+    "rehype-stringify": "^7.0.0",
     "remark-parse": "^8.0.0",
     "remark-rehype": "^6.0.0",
     "unfetch": "^4.0.0",
