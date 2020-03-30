@@ -2,7 +2,7 @@
 
 A static site generator based in Next.js
 
-[![Financial Contributors on Open Collective](https://opencollective.com/nextein/all/badge.svg?label=financial+contributors)](https://opencollective.com/nextein) [![Greenkeeper badge](https://badges.greenkeeper.io/elmasse/nextein.svg)](https://greenkeeper.io/) 
+[![Financial Contributors on Open Collective](https://opencollective.com/nextein/all/badge.svg?label=financial+contributors)](https://opencollective.com/nextein)  
 [![Build Status](https://travis-ci.org/elmasse/nextein.svg?branch=master)](https://travis-ci.org/elmasse/nextein) 
 [![ProductHunt](https://img.shields.io/badge/producthunt-vote-orange.svg)](https://www.producthunt.com/posts/nextein) 
 [![Gitter](https://badges.gitter.im/elmasse/nextein.svg)](https://gitter.im/nextein/Lobby)
