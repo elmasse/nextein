@@ -22,12 +22,12 @@ const shouldFetch = async (_entries) => {
 }
 
 const loadEntries = async () => {
-  let { _entries } = __NEXT_DATA__.props.pageProps
-  if (!_entries) {
-    const file = prefixed(`/${jsonFileEntries()}`)
-    _entries = await (await fetchOnce(file)).json()
-    __NEXT_DATA__.props.pageProps._entries = _entries
-  }
+  // let { _entries } = __NEXT_DATA__.props.pageProps
+  // if (!_entries) {
+  const file = prefixed(`/${jsonFileEntries()}`)
+  const _entries = await (await fetchOnce(file)).json()
+  //   __NEXT_DATA__.props.pageProps._entries = _entries
+  // }
   return _entries
 }
 

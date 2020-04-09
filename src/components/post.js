@@ -25,7 +25,7 @@ export default (WrappedComponent) => {
         return {
           ...wrapped,
           post,
-          _entries: _entries,
+          // _entries: _entries,
           _entriesMap: await entriesMap(_entries)
         }
       }
