@@ -2,21 +2,13 @@
  * THIS FILE IS LOADED BY WEBPACK TO REPLACE map/index.js in dev client and exported client
  */
 
-/* global __NEXT_DATA__ */
-
 import { jsonFileEntriesMap } from '../json-entry'
 import { fetchOnce } from '../cache'
 import { prefixed } from '../prefixed'
 
 // entriesMap = entries => object
-export default async (entries = []) => {
-  const { props } = __NEXT_DATA__
-  let { _entriesMap } = (props.pageProps || props)
-
-  if (!_entriesMap) {
-    const file = prefixed(`/${jsonFileEntriesMap()}`)
-    _entriesMap = await (await fetchOnce(file)).json()
-    __NEXT_DATA__.props.pageProps._entriesMap = _entriesMap
-  }
+export default async (/* entries = [] */) => {
+  const file = prefixed(`/${jsonFileEntriesMap()}`)
+  const _entriesMap = await (await fetchOnce(file)).json()
   return _entriesMap
 }

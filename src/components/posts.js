@@ -38,7 +38,6 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         return {
           ...wrapped,
           posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
-          _entries: _entries,
           _entriesMap: await entriesMap(_entries)
         }
       }
