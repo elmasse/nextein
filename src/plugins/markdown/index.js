@@ -3,7 +3,7 @@ import glob from 'glob'
 import { promisify } from 'util'
 import fm from 'frontmatter'
 import { readFileSync, statSync } from 'fs'
-import { resolve, basename, extname, relative, dirname, sep } from 'path'
+import { resolve, basename, extname, relative, dirname, sep, normalize } from 'path'
 import { compile } from 'path-to-regexp'
 import removePosition from 'unist-util-remove-position'
 
@@ -23,10 +23,17 @@ export const watcher = ({ entriesDir = ['posts'] } = {}) => {
  * @param config.remark {string[]}
  * @param config.rehype {string[]}
  */
-export const source = async ({ extension = 'md', entriesDir = ['posts'], raw = true, position = false, rehype = [], remark = [] } = {}) => {
+export const source = async ({
+  extension = 'md',
+  entriesDir = ['posts'],
+  raw = true,
+  position = false,
+  rehype = [],
+  remark = []
+} = {}) => {
   const all = []
   for (const dir of entriesDir) {
-    const files = await promisify(glob)(`${dir}/**/*.${extension}`, { root: process.cwd() })
+    const files = (await promisify(glob)(`${dir}/**/*.${extension}`, { root: process.cwd() })).map(normalize)
     all.push(
       ...files
         .map(file => readFileSync(file, 'utf-8'))
