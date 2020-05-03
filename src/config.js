@@ -68,9 +68,8 @@ export const withNextein = (nextConfig = {}) => {
 
     async exportPathMap (defaultPathMap, options) {
       const entries = await loadEntries()
-      let nextExportPathMap
       const map = entries
-        .concat({ data: { url: '/', page: 'index' } })
+        // .concat({ data: { url: '/', page: 'index' } })
         .reduce((prev, { data }) => {
           const { url, page, _entry } = data
           const query = _entry ? { _entry } : undefined
@@ -80,15 +79,28 @@ export const withNextein = (nextConfig = {}) => {
           } : prev
         }, {})
 
-      if (typeof nextConfig.exportPathMap === 'function') {
-        nextExportPathMap = await nextConfig.exportPathMap(defaultPathMap, options)
-        await setNextExportPathMap(nextExportPathMap)
+      // Get all used pages from entries
+      const entriesPages = Array.from(new Set(entries.map(({ data: { page } }) => `/${page}`)))
+
+      let nextExportPathMap = {
+        ...(
+          // Remove from defaultPathMap pages used for entries
+          Object.keys(defaultPathMap)
+            .filter(k => k !== '/index')
+            .filter(k => !entriesPages.includes(defaultPathMap[k].page))
+            .reduce((obj, key) => ({ ...obj, [key]: defaultPathMap[key] }), {})
+        ),
+        ...map
       }
 
+      if (typeof nextConfig.exportPathMap === 'function') {
+        nextExportPathMap = await nextConfig.exportPathMap(nextExportPathMap, options)
+      }
+
+      await setNextExportPathMap(nextExportPathMap)
       await createJSONEntries(entries, options)
 
       return {
-        ...map,
         ...nextExportPathMap
       }
     }
