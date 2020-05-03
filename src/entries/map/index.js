@@ -8,9 +8,8 @@ const getExportPathMap = () => {
 // entriesMap = entries => object
 export default (entries = []) => {
   return {
-    '/': { pathname: '/index' },
-    ...entries.reduce(entriesMapReducer, {}),
-    ...getExportPathMap()
+    ...getExportPathMap(),
+    ...entries.reduce(entriesMapReducer, {})
   }
 }
 

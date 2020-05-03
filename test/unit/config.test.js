@@ -9,12 +9,13 @@ describe('config', () => {
 })
 
 describe('exportPathMap', () => {
+  const defaultPathMap = { '/': { page: '/' } }
   const { exportPathMap } = nexteinConfig()
   test('generates index by default ', async () => {
     loadEntries.mockReturnValueOnce([])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap({}, { dev: true })
+    const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()
@@ -27,7 +28,7 @@ describe('exportPathMap', () => {
     ])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap({}, { dev: true })
+    const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()
@@ -41,7 +42,7 @@ describe('exportPathMap', () => {
     ])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap({}, { dev: true })
+    const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()
@@ -55,7 +56,7 @@ describe('exportPathMap', () => {
     ])
 
     expect(exportPathMap).toBeDefined()
-    const result = await exportPathMap({}, { dev: true })
+    const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
     expect(loadEntries).toBeCalled()
