@@ -34,7 +34,7 @@
     "hoist-non-react-statics": "3.3.2",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
-    "opencollective-postinstall": "2.0.2",
+    "opencollective-postinstall": "2.0.3",
     "path-match": "^1.2.4",
     "path-to-regexp": "^6.0.0",
     "pkg-up": "^3.0.0",
