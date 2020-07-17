@@ -3,7 +3,7 @@
 const { resolve } = require('path')
 const arg = require('next/dist/compiled/arg/index.js')
 const { existsSync } = require('fs')
-const Server = require('../../server')
+const Server = require('../server')
 const { printAndExit } = require('next/dist/server/lib/utils')
 const { startedDevelopmentServer } = require('next/dist/build/output')
 
