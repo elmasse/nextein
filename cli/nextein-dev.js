@@ -86,4 +86,4 @@ const nexteinDev = (argv) => {
     })
 }
 
-module.exports = { nextDev }
+module.exports = { nexteinDev }
