@@ -9,7 +9,6 @@ const { NON_STANDARD_NODE_ENV } = require('next/dist/lib/constants')
     // When 'npm link' is used it checks the clone location. Not the project.
     require.resolve(dependency)
   } catch (err) {
-    // tslint:disable-next-line
     console.warn(
       `The module '${dependency}' was not found. Next.js requires that you include it in 'dependencies' of your 'package.json'. To add it, run 'npm install ${dependency}'`
     )
@@ -22,7 +21,7 @@ const commands = {
   start: async () => await import('next/dist/cli/next-start').then((i) => i.nextStart),
   export: async () =>
     await import('next/dist/cli/next-export').then((i) => i.nextExport),
-  dev: async () => await import('./cli/nextein-dev').then((i) => i.nexteinDev),
+  dev: async () => await import('../cli/nextein-dev.js').then((i) => i.nexteinDev),
 }
 
 const args = arg(
