@@ -1,102 +1,120 @@
 #!/usr/bin/env node
 
-import { join, resolve } from 'path'
-import { spawn } from 'cross-spawn'
-import { watchFile } from 'fs'
-import pkg from '../../package.json'
+const { warn } = require('next/dist/build/output/log')
+const arg = require('next/dist/compiled/arg/index.js')
+const { NON_STANDARD_NODE_ENV } = require('next/dist/lib/constants')
 
-if (pkg.peerDependencies) {
-  Object.keys(pkg.peerDependencies).forEach(dependency => {
-    try {
-      // When 'npm link' is used it checks the clone location. Not the project.
-      require.resolve(dependency)
-    } catch (err) {
-      console.warn(`${dependency} not found. Please install ${dependency} using 'npm install ${dependency}'`)
-    }
-  })
-}
+;['react', 'react-dom'].forEach((dependency) => {
+  try {
+    // When 'npm link' is used it checks the clone location. Not the project.
+    require.resolve(dependency)
+  } catch (err) {
+    console.warn(
+      `The module '${dependency}' was not found. Next.js requires that you include it in 'dependencies' of your 'package.json'. To add it, run 'npm install ${dependency}'`
+    )
+  }
+})
 
 const defaultCommand = 'dev'
-const commands = new Set([
-  // 'init',
-  'build',
-  'export',
-  defaultCommand
-])
+const commands = {
+  build: async () => await import('next/dist/cli/next-build').then((i) => i.nextBuild),
+  start: async () => await import('next/dist/cli/next-start').then((i) => i.nextStart),
+  export: async () =>
+    await import('next/dist/cli/next-export').then((i) => i.nextExport),
+  dev: async () => await import('../cli/nextein-dev.js').then((i) => i.nexteinDev),
+}
 
-let cmd = process.argv[2]
-let args
+const args = arg(
+  {
+    // Types
+    '--version': Boolean,
+    '--help': Boolean,
+    '--inspect': Boolean,
 
-if (new Set(['--version', '-v']).has(cmd)) {
-  console.log(`${pkg.name} v${pkg.version}`)
+    // Aliases
+    '-v': '--version',
+    '-h': '--help',
+  },
+  {
+    permissive: true,
+  }
+)
+
+// Version is inlined into the file using taskr build pipeline
+if (args['--version']) {
+  // tslint:disable-next-line
+  console.log(`Next.js v${process.env.__NEXT_VERSION}`)
   process.exit(0)
 }
 
-if (new Set(['--help', '-h']).has(cmd)) {
+// Check if we are running `next <subcommand>` or `next`
+const foundCommand = Boolean(commands[args._[0]])
+
+// Makes sure the `next <subcommand> --help` case is covered
+// This help message is only showed for `next --help`
+if (!foundCommand && args['--help']) {
+  // tslint:disable-next-line
   console.log(`
     Usage
-      $ nextein <command>
+      $ next <command>
 
     Available commands
-      ${Array.from(commands).join(', ')}
+      ${Object.keys(commands).join(', ')}
+
+    Options
+      --version, -v   Version number
+      --help, -h      Displays this message
 
     For more information run a command with the --help flag
-      $ nextein dev --help
+      $ next build --help
   `)
   process.exit(0)
 }
 
-if (commands.has(cmd)) {
-  args = process.argv.slice(3)
-} else {
-  cmd = defaultCommand
-  args = process.argv.slice(2)
+const command = foundCommand ? args._[0] : defaultCommand
+const forwardedArgs = foundCommand ? args._.slice(1) : args._
+
+if (args['--inspect'])
+  throw new Error(
+    `--inspect flag is deprecated. Use env variable NODE_OPTIONS instead: NODE_OPTIONS='--inspect' next ${command}`
+  )
+
+// Make sure the `next <subcommand> --help` case is covered
+if (args['--help']) {
+  forwardedArgs.push('--help')
 }
 
-let bin
-if (cmd === defaultCommand) {
-  bin = join(__dirname, 'nextein-' + cmd)
-} else {
-  bin = 'next'
-  args.unshift(cmd)
+const defaultEnv = command === 'dev' ? 'development' : 'production'
+
+const standardEnv = ['production', 'development', 'test']
+
+if (process.env.NODE_ENV && !standardEnv.includes(process.env.NODE_ENV)) {
+  warn(NON_STANDARD_NODE_ENV)
 }
 
-const startProcess = () => {
-  const proc = spawn(bin, args, { stdio: 'inherit', customFds: [0, 1, 2], env: { NEXT_TELEMETRY_DISABLED: 1, ...process.env } })
-  proc.on('close', (code, signal) => {
-    if (code !== null) {
-      process.exit(code)
+process.env.NODE_ENV = process.env.NODE_ENV || defaultEnv
+
+// this needs to come after we set the correct NODE_ENV or
+// else it might cause SSR to break
+const React = require('react')
+
+if (typeof React.Suspense === 'undefined') {
+  throw new Error(
+    `The version of React you are using is lower than the minimum required version needed for Next.js. Please upgrade "react" and "react-dom": "npm install react react-dom" https://err.sh/vercel/next.js/invalid-react-version`
+  )
+}
+
+commands[command]().then((exec) => exec(forwardedArgs))
+
+if (command === 'dev') {
+  const { CONFIG_FILE } = require('next/dist/next-server/lib/constants')
+  const { watchFile } = require('fs')
+  watchFile(`${process.cwd()}/${CONFIG_FILE}`, (cur, prev) => {
+    if (cur.size > 0 || prev.size > 0) {
+      // tslint:disable-next-line
+      console.log(
+        `\n> Found a change in ${CONFIG_FILE}. Restart the server to see the changes in effect.`
+      )
     }
-    if (signal) {
-      if (signal === 'SIGKILL') {
-        process.exit(137)
-      }
-      console.log(`got signal ${signal}, exiting`)
-      process.exit(1)
-    }
-    process.exit(0)
   })
-  proc.on('error', (err) => {
-    console.error(err)
-    process.exit(1)
-  })
-  return proc
-}
-
-const restartProcess = (cur, prev) => {
-  if (cur.size > 0 || prev.size > 0) {
-    console.log('\n> Found a change in next.config.js, restarting the server...')
-    // Don't listen to 'close' now since otherwise parent gets killed by listener
-    proc.removeAllListeners('close')
-    proc.kill()
-    proc = startProcess()
-  }
-}
-
-let proc = startProcess()
-// const { pagesDirectory = resolve(process.cwd(), 'pages') } = getConfig(process.cwd())
-const pagesDirectory = resolve(process.cwd(), 'pages')
-
-if (cmd === 'dev') {
-  watchFile(`${resolve(pagesDirectory, '..')}/next.config.js`, restartProcess)
 }

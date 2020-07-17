@@ -5,7 +5,7 @@ import next from 'next'
 import { byEntriesList } from '../../src/entries/load'
 
 // SUT
-import Server from '../../src/server'
+import { Server } from '../../src/server'
 
 const postWithURL = { data: { url: '/post-one'}, content: '' }
 const postWithoutURL = { data: { }, content: '' }
