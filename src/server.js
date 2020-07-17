@@ -11,7 +11,7 @@ import loadEntries, { byFileName, byEntriesList, invalidateCache } from './entri
 import { jsonFileEntriesMap } from './entries/json-entry'
 import entriesMap from './entries/map'
 
-export default class Server {
+export class Server {
   constructor ({ dir = '.', dev = true }) {
     this.app = next({ dev })
     this.dev = dev
