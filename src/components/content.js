@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import unified from 'unified'
 import rehype from 'rehype-parse'
 import stringify from 'rehype-stringify'
@@ -32,11 +32,9 @@ const toReact = ({ content, excerpt, renderers, prefix = 'entry-' }) => {
   return p.stringify(p.runSync(hast))
 }
 
-export default class Content extends Component {
-  render () {
-    const { content, excerpt, renderers, data, prefix, raw, component, ...componentProps } = this.props
-    const { props, type } = toReact({ content, excerpt, renderers, prefix })
-    const Component = component || type
-    return <Component {...props} {...componentProps} />
-  }
-}
+export default React.forwardRef(function Content (fwdProps, ref) {
+  const { content, excerpt, renderers, data, prefix, raw, component, ...componentProps } = fwdProps
+  const { props, type } = toReact({ content, excerpt, renderers, prefix })
+  const Component = component || type
+  return <Component ref={ref} {...props} {...componentProps} />
+})
