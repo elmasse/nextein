@@ -99,11 +99,18 @@ export class Server {
 
   hotReloadPosts = async () => {
     const hotReloader = this.app.hotReloader
-    hotReloader.webpackDevMiddleware.invalidate()
-    invalidateCache()
-    await this.readEntries()
-    hotReloader.webpackDevMiddleware.waitUntilValid(() => {
+    if (hotReloader.webpackDevMiddleware) { // old next version
+      hotReloader.webpackDevMiddleware.invalidate()
+      invalidateCache()
+      await this.readEntries()
+      hotReloader.webpackDevMiddleware.waitUntilValid(() => {
+        hotReloader.send('reloadPage')
+      })
+    } else {
+      invalidateCache()
+      await this.readEntries()
       hotReloader.send('reloadPage')
-    })
+    } 
+    
   }
 }
