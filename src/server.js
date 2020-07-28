@@ -110,7 +110,6 @@ export class Server {
       invalidateCache()
       await this.readEntries()
       hotReloader.send('reloadPage')
-    } 
-    
+    }
   }
 }
