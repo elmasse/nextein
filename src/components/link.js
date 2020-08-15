@@ -28,6 +28,7 @@ class NexteinLink extends Component {
       const all = await loadEntries()
       map = await entriesMap(all)
     }
+    this.setState({ mapped: true })
 
     const { href } = this.state
     if (href && map) {
@@ -43,8 +44,8 @@ class NexteinLink extends Component {
   }
 
   render () {
-    let { href, as } = this.state
-    const { data, children, content, raw, ...rest } = this.props // content & raw are not used but required to remove them from rest
+    let { href, as, mapped } = this.state
+    const { data, content, raw, ...rest } = this.props // content & raw are not used but required to remove them from rest
 
     if (data) {
       const { page = 'post', _entry, url } = data
@@ -55,7 +56,7 @@ class NexteinLink extends Component {
     href = prefixed(href)
     as = prefixed(as)
 
-    return <Link {...{ ...rest, href, as }}>{children}</Link>
+    return (mapped ? <Link {...{ ...rest, href, as }} /> : null)
   }
 }
 
