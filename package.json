@@ -4,7 +4,7 @@
   "description": "A static site and blog generator based on Next.js",
   "repository": "https://github.com/elmasse/nextein",
   "bugs": "https://github.com/elmasse/nextein/issues",
-  "homepage": "https://nextein.now.sh",
+  "homepage": "https://nextein.elmasse.io",
   "main": "index.js",
   "scripts": {
     "test": "jest",
