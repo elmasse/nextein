@@ -1,8 +1,7 @@
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
-import loadEntries from './entries/load'
-import { setNextExportPathMap } from './entries/map'
-import { createJSONEntries } from './entries/create'
+import { metadata, setNextExportPathMap } from './entries'
+import { generateExportedFiles } from './export'
 import { setPlugins, getDefaultPlugins } from './plugins'
 
 const getDefaultConfig = () => ({
@@ -24,7 +23,6 @@ export const withNextein = (nextConfig = {}) => {
     assetPrefix,
 
     webpack (config, options) {
-      const { dev } = options
       config.node = {
         fs: 'empty'
       }
@@ -32,20 +30,11 @@ export const withNextein = (nextConfig = {}) => {
       config.plugins.push(
         new DefinePlugin({
           'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '')
-        })
+        }),
+        new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './exported.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]metadata[/\\]index.js/, './exported.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]pathmap[/\\]index.js/, './exported.js')
       )
-
-      if (dev) {
-        config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './client.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map[/\\]index.js/, './exported.js')
-        )
-      } else {
-        config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './exported.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map[/\\]index.js/, './exported.js')
-        )
-      }
 
       if (typeof nextConfig.webpack === 'function') {
         return nextConfig.webpack(config, options)
@@ -62,12 +51,10 @@ export const withNextein = (nextConfig = {}) => {
     },
 
     async exportPathMap (defaultPathMap, options) {
-      const entries = await loadEntries()
+      const entries = await metadata()
       const map = entries
-        // .concat({ data: { url: '/', page: 'index' } })
-        .reduce((prev, { data }) => {
-          const { url, page, _entry } = data
-          const query = _entry ? { _entry } : undefined
+        .reduce((prev, { url, page, __id }) => {
+          const query = __id ? { __id } : undefined
           return page ? {
             ...prev,
             [url]: { page: `/${page}`, query }
@@ -75,7 +62,7 @@ export const withNextein = (nextConfig = {}) => {
         }, {})
 
       // Get all used pages from entries
-      const entriesPages = Array.from(new Set(entries.map(({ data: { page } }) => `/${page}`)))
+      const entriesPages = Array.from(new Set(entries.map(({ page }) => `/${page}`)))
 
       let nextExportPathMap = {
         ...(
@@ -93,7 +80,7 @@ export const withNextein = (nextConfig = {}) => {
       }
 
       await setNextExportPathMap(nextExportPathMap)
-      await createJSONEntries(entries, options)
+      await generateExportedFiles(options)
 
       return {
         ...nextExportPathMap

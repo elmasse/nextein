@@ -3,9 +3,7 @@ import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import getDisplayName from 'react-display-name'
 
-import loadEntries, { byEntriesList } from '../entries/load'
-import entriesMap from '../entries/map'
-export const entries = loadEntries
+import { load, metadata, pathMap } from '../entries'
 
 export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
   const { data } = post
@@ -32,13 +30,20 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
       static async getInitialProps (...args) {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-        const _entries = await loadEntries()
-        const posts = await byEntriesList(filter ? _entries.filter(filter) : _entries)
+        const _metadata = await metadata()
+        const ids = filter
+          ? _metadata
+            .map(data => ({ data }))
+            .filter(filter)
+            .map(({ data: { __id } }) => __id)
+          : undefined
+        const posts = await load(ids)
 
         return {
           ...wrapped,
           posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
-          _entriesMap: await entriesMap(_entries)
+          __pathMap: pathMap(),
+          __metadata: _metadata
         }
       }
 

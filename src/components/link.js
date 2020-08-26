@@ -3,8 +3,7 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
 
-import loadEntries from '../entries/load'
-import entriesMap from '../entries/map'
+import { pathMap } from '../entries'
 import { prefixed } from '../entries/prefixed'
 
 class NexteinLink extends Component {
@@ -22,11 +21,10 @@ class NexteinLink extends Component {
 
   async componentDidMount () {
     const { props } = __NEXT_DATA__
-    let { _entriesMap: map } = (props.pageProps || props)
+    let { __pathMap: map } = (props.pageProps || props)
 
     if (!map) {
-      const all = await loadEntries()
-      map = await entriesMap(all)
+      map = await pathMap()
     }
     this.setState({ mapped: true })
 
@@ -36,7 +34,7 @@ class NexteinLink extends Component {
 
       if (entry) {
         this.setState({
-          href: { pathname: entry.pathname, query: entry.query },
+          href: { pathname: entry.page, query: entry.query },
           as: href
         })
       }
@@ -48,8 +46,8 @@ class NexteinLink extends Component {
     const { data, content, raw, ...rest } = this.props // content & raw are not used but required to remove them from rest
 
     if (data) {
-      const { page = 'post', _entry, url } = data
-      href = { pathname: `/${page}`, query: { _entry } }
+      const { page = 'post', __id, url } = data
+      href = { pathname: `/${page}`, query: { __id } }
       as = url
     }
 

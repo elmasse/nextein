@@ -3,7 +3,7 @@
 const { resolve } = require('path')
 const arg = require('next/dist/compiled/arg/index.js')
 const { existsSync } = require('fs')
-const { Server } = require('../server')
+const startDevServer = require('../server').default
 const { printAndExit } = require('next/dist/server/lib/utils')
 const { startedDevelopmentServer } = require('next/dist/build/output')
 
@@ -31,7 +31,7 @@ const nexteinDev = (argv) => {
         reporting, etc)
 
       Usage
-        $ next dev <dir> -p <port number>
+        $ nextein dev <dir> -p <port number>
 
       <dir> represents the directory of the Next.js application.
       If no directory is provided, the current directory will be used.
@@ -56,8 +56,7 @@ const nexteinDev = (argv) => {
 
   startedDevelopmentServer(appUrl)
 
-  const srv = new Server({ dir, dev: true, isNextDevCommand: true })
-  srv.start(port, args['--hostname'])
+  startDevServer({ dir, dev: true, isNextDevCommand: true }, port, args['--hostname'])
     .catch((err) => {
       if (err.code === 'EADDRINUSE') {
         let errorMessage = `Port ${port} is already in use.`

@@ -1,26 +1,40 @@
 
-import { resolve } from 'path'
-import { promisify } from 'util'
-import { writeFile as fsWriteFile } from 'fs'
+import { createHash } from 'crypto'
+import { compile } from 'path-to-regexp'
 
-import { jsonFileEntries, jsonFileEntriesMap, jsonFileFromEntry } from './json-entry'
-import { byEntriesList } from './load'
-import entriesMap from './map'
+const DEFAULT_PERMALINK = '/:category?/:name'
+const PERMALINK_CATEGORIES = ':category(.*)'
 
-const writeFile = promisify(fsWriteFile)
+function formatUrl (data) {
+  const { page, date, permalink = DEFAULT_PERMALINK } = data
+  const toUrl = compile(permalink.replace(':category', PERMALINK_CATEGORIES))
+  const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
 
-export const createJSONEntries = async (entries, { dev, outDir, buildId }) => {
-  if (!dev) {
-    console.log('Creating entries...')
-    const all = await byEntriesList(entries)
+  return page ? url : undefined
+}
 
-    await writeFile(resolve(outDir, jsonFileEntries(buildId)), JSON.stringify(entries))
-    await writeFile(resolve(outDir, jsonFileEntriesMap(buildId)), JSON.stringify(entriesMap(entries)))
+/**
+ *
+ * @param {Object} rawEntry
+ */
+export function createEntry ({ meta, raw, content }) {
+  const data = {
+    __id: createHash('md5').update(meta.filePath).digest('hex'),
+    page: 'post',
+    name: meta.name,
+    category: meta.path || undefined,
+    date: JSON.stringify(meta.created),
+    ...meta.extra
+  }
 
-    return Promise.all(all.map(async (entry) => {
-      const name = jsonFileFromEntry(entry.data._entry, buildId)
-      console.log(`> ${name}`)
-      await writeFile(resolve(outDir, name), JSON.stringify(entry))
-    }))
+  return {
+    data: {
+      ...data,
+      year: new Date(data.created).getFullYear(),
+      month: new Date(data.created).getMonth() + 1,
+      url: formatUrl(data)
+    },
+    content,
+    raw
   }
 }
