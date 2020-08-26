@@ -1,6 +1,6 @@
 # Nextein v3
 
-Major update goal is to improve plugins.
+Major update goal is to improve plugins & life cycle.
 
 ## Plugins
 
@@ -10,28 +10,37 @@ We should be able to create remark content based on md files or even plain txt o
 
 ### Stages
 
-The following stages or plugin-types will be executed in the order listed here.
+We will have these stages/plugin-types:
 
-- *source*: This stage compiles an entries list. It should call `action.create` on any entry to be processed. The `action.create` will execute *create* plugins. 
-  - `source(options, action: { create })`. 
+- source
+- build
+- transform
+- filter
+- sort
+
+The stages or plugin-types will be executed in the order listed here.
+
+- *source*: This stage compiles an entries list. It should call `action.build` on any entry to be processed. The `action.build` will execute *build* plugins. 
+  - `source(options, action: { build })`. 
       - options
       - action
-        - create({SourceEntry})
-      - `SourceEntry` {Object}
+        - build(buildOptions)
+      - `buildOptions` {Object}
         - path: Relative to `options.path`. e.g.`'/blog/first-post.md'`
         - name: e.g.`'firts-post.md'`
         - mimeType: e.g.`'text/markdown'`
         - created
         - modified?
         - load() {Promise} return file content
-- *create*: Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
-  - `create(options, sourceEntry, action: { create })`.
+- *build*: Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
+  - `build(options, buildOptions, action: { create })`.
     - options
-    - entries
+    - buildOptions
     - action
-      - create({CreateEntry}): {Entry}
-    - `CreateEntry` {Object}
+      - create(createOptions): {Entry}
+    - `createOptions` {Object}
       - meta
+        - filePath
         - path
         - name
         - mimeType
@@ -41,9 +50,10 @@ The following stages or plugin-types will be executed in the order listed here.
       - content
     - `Entry` {Object}
       - data
+        - __id: MD5(meta.filePath)
         - page: meta.extra.page || `'post'`
         - name: meta.name
-        - category
+        - category: meta.extra.category || meta.path
         - date: meta.extra.date || meta.created
         - month?
         - year?
@@ -124,16 +134,18 @@ This allows to generate multiple instances of the same plugin if an`id` is provi
 }
 ```
 
-> Consider detecting 'nextein-plugin-markdown' and split into 2 configurations to preserve back compat.
+#### NOTE
+ 
+**Consider detecting 'nextein-plugin-markdown' and split into 2 configurations to preserve back compat.**
 
 
 ## Default Settings
 
 - `source-fs`
   - source
-- `create-remark-md`
-  - create
-  - filter
+- `build-remark`
+  - build
+  - filter?
 - `filter-unpublished`
   - filter
 
@@ -142,8 +154,8 @@ This allows to generate multiple instances of the same plugin if an`id` is provi
 
 For *source* plugins there is way to setup file watchers for dev mode. Once the watcher activates, it triggers the action of re-sourcing. This implies:
 
-- *source* calls `action.create` with the file that changed.
-- *source*'s `action.create` executes *create*'s `action.create` and might or might not return an entry.
+- *source* calls `action.build` with the file that changed.
+- *source*'s `action.build` executes *build*'s `action.create` and might or might not return an entry. ??
 
 //TBD
 
