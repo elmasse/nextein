@@ -1,4 +1,4 @@
-jest.mock('../../../src/entries/load')
+jest.mock('../../../src/entries')
 jest.mock('unified', () => {
   function mockedUnified () { return new impl() }
   mockedUnified.stringify = jest.fn()
@@ -18,7 +18,7 @@ import renderer from 'react-test-renderer'
 import h from 'hastscript'
 
 import unified from 'unified'
-import loadEntries, { byFileName } from '../../../src/entries/load'
+import { load, metadata } from '../../../src/entries'
 import withPost, { Content } from '../../../src/components/post'
 
 describe('withPost', () => {
@@ -48,26 +48,23 @@ describe('withPost', () => {
 
   test('withPosts should add `post` property to getInitialProps', async () => {
     const expected = { data: {}, content: `` }
-    const expectedFileName = 'fake'
+    const id = 'fake'
     const Component = withPost(({ post }) => (<div>Test</div>))
 
-    loadEntries.mockReturnValueOnce([expected])
-    byFileName.mockReturnValueOnce(expected)
-    const actual = await Component.getInitialProps({query: {_entry: expectedFileName}})
+    load.mockReturnValueOnce([expected])
+    const actual = await Component.getInitialProps({query: {__id: id}})
 
     expect(actual.post).toBeDefined()
     expect(actual.post).toEqual(expect.objectContaining(expected))
-    expect(byFileName).toHaveBeenCalledWith(expectedFileName)
   })
 
   test('withPosts composes getInitialProps non react statics', async () => {
     const wrappedProps = { value: 1 }
     const getInitialProps = jest.fn().mockReturnValueOnce(wrappedProps)
-    const expected = { data: {}, content: `` }
-    const expectedFileName = 'fake'
+    const id = 'fake'
+    const expected = { data: { __id: id }, content: `` }
     
-    loadEntries.mockReturnValueOnce([expected])
-    byFileName.mockReturnValueOnce(expected)
+    load.mockReturnValueOnce([expected])
 
     const Component = withPost(
       class Wrapped extends React.Component {
@@ -79,14 +76,13 @@ describe('withPost', () => {
       }
     )
       
-    const actual = await Component.getInitialProps({query: {_entry: expectedFileName}})
+    const actual = await Component.getInitialProps({query: { __id: id}})
 
     expect(actual.value).toBeDefined()
     expect(actual.value).toEqual(1)
 
     expect(actual.post).toBeDefined()
     expect(actual.post).toEqual(expect.objectContaining(expected))
-    expect(byFileName).toHaveBeenCalledWith(expectedFileName)
   })  
 })
 

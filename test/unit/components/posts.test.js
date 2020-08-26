@@ -1,7 +1,7 @@
-jest.mock('../../../src/entries/load')
+jest.mock('../../../src/entries')
 import React from 'react'
 
-import loadEntries, { byEntriesList} from '../../../src/entries/load'
+import { load, metadata } from '../../../src/entries/'
 import withPosts, { withPostsFilterBy, inCategory, entries } from '../../../src/components/posts'
 
 describe('withPosts', () => {
@@ -30,10 +30,11 @@ describe('withPosts', () => {
   })
 
   test('withPosts should add `posts` property to getInitialProps', async () => {
-    const expected = [{ data: {}, content: `` }]
+    const expected = [{ data: {__id: 1}, content: `` }]
     const Component = withPosts(({ posts }) => (<div>There are {posts.length} posts</div>))
 
-    byEntriesList.mockReturnValueOnce(expected)
+    load.mockReturnValueOnce(expected)
+    metadata.mockReturnValueOnce(expected.map(({data}) => data))
 
     const actual = await Component.getInitialProps()
 
@@ -47,7 +48,8 @@ test('withPosts composes getInitialProps non react statics', async () => {
   const getInitialProps = jest.fn().mockReturnValueOnce(wrappedProps)
   const expected = [{ data: {}, content: `` }]
   
-  byEntriesList.mockReturnValueOnce(expected)
+  load.mockReturnValueOnce(expected)
+  metadata.mockReturnValueOnce(expected.map(({data}) => data))
 
   const Component = withPosts(
     class Wrapped extends React.Component {
@@ -94,10 +96,11 @@ describe('withPostsFilterBy', () => {
 
   test('withPostsFilterBy should add `posts` property to getInitialProps', async () => {
     const expected = [{ data: { category: 'test'}, content: `` }]
+    const all = [...expected, { data: { category: 'no-test'}, content: '' }]
     const Component = withPostsFilterBy(inCategory('test'))(({ posts }) => (<div>There are {posts.length} posts</div>))
-
-    loadEntries.mockReturnValueOnce([...expected, { data: { category: 'no-test'}, content: '' }])
-    byEntriesList.mockReturnValueOnce(expected)
+    
+    load.mockReturnValueOnce(all)
+    metadata.mockReturnValueOnce(all.map(({data}) => data))
 
     const actual = await Component.getInitialProps()
 
@@ -109,16 +112,15 @@ describe('withPostsFilterBy', () => {
     const expectedOne = [{ data: { category: 'test-1'}, content: `` }] 
     const expectedTwo = [{ data: { category: 'test-2'}, content: `` }]
     const expected = [...expectedTwo, ...expectedOne]
+    const all = [...expected, { data: { category: 'no-test'}, content: '' }]
     
     const Component = withPostsFilterBy(inCategory('test-1'))(
       withPostsFilterBy(inCategory('test-2'))(
         ({ posts }) => (<div>There are {posts.length} posts</div>)
       ))
 
-    loadEntries.mockReturnValue([...expected, { data: { category: 'no-test'}, content: '' }])
-    
-    byEntriesList.mockReturnValueOnce(expectedOne)
-    byEntriesList.mockReturnValueOnce(expectedTwo)
+    load.mockReturnValue(all)
+    metadata.mockReturnValue(all.map(({data}) => data))
 
     const actual = await Component.getInitialProps()
 
@@ -130,16 +132,15 @@ describe('withPostsFilterBy', () => {
     const expectedOne = [{ data: { category: 'test-1', flag: true }, content: `` }]
     const expectedTwo = [{ data: { category: 'test-2', flag: true }, content: `` }]
     const expected = [...expectedTwo, ...expectedOne]
-    
+    const all = [...expected, { data: { category: 'no-test'}, content: '' }]
+
     const Component = withPostsFilterBy(post => post.data.flag)(
       withPostsFilterBy(inCategory('test-2'))(
         ({ posts }) => (<div>There are {posts.length} posts</div>)
       ))
 
-    loadEntries.mockReturnValue([...expected, { data: { category: 'no-test'}, content: '' }])
-    
-    byEntriesList.mockReturnValueOnce(expectedOne)
-    byEntriesList.mockReturnValueOnce(expectedTwo)
+    load.mockReturnValue(all)
+    metadata.mockReturnValue(all.map(({data}) => data))
 
     const actual = await Component.getInitialProps()
 
@@ -186,11 +187,5 @@ describe('inCategory', () => {
     const actual = data.filter(inCategory(expectedCategory, {includeSubCategories: true}))
 
     expect(actual).toEqual(expect.arrayContaining(expected))
-  })
-})
-
-describe('entries', () => {
-  test('exports entries function', () => {
-    expect(entries).toBeDefined()
   })
 })
