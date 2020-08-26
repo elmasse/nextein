@@ -1,6 +1,6 @@
 {
   "name": "nextein",
-  "version": "2.7.3",
+  "version": "3.0.0-beta.0",
   "description": "A static site and blog generator based on Next.js",
   "repository": "https://github.com/elmasse/nextein",
   "bugs": "https://github.com/elmasse/nextein/issues",
@@ -27,11 +27,11 @@
     "post.js"
   ],
   "dependencies": {
-    "chokidar": "3.4.0",
     "cross-spawn": "^7.0.0",
     "frontmatter": "^0.0.3",
     "glob": "^7.1.2",
     "hoist-non-react-statics": "3.3.2",
+    "mime": "^2.4.6",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
     "opencollective-postinstall": "2.0.3",
