@@ -1,21 +1,22 @@
 
-import glob from 'glob'
+import chokidar from 'chokidar'
 import { promisify } from 'util'
 import { readFile, statSync } from 'fs'
-import { resolve, basename, extname, relative, dirname, normalize } from 'path'
+import { resolve, basename, extname, relative, dirname, normalize, isAbsolute } from 'path'
 import mime from 'mime'
 
-const asyncGlob = promisify(glob)
 const asyncReadFile = promisify(readFile)
 
 const DEFAULT_IGNORES = [
+  '**/*.un~',
   '**/.DS_Store',
   '**/.gitignore',
   '**/.npmignore',
   '**/.babelrc',
   '**/yarn.lock',
-  '**/package-lock.json',
-  '**/node_modules'
+  '**/bower_components',
+  '**/node_modules',
+  '**/package-lock.json'
 ]
 
 const DATE_IN_FILE_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)$/
@@ -32,16 +33,16 @@ function buildOptions (filePath, basePath) {
   const match = fileName.match(DATE_IN_FILE_REGEX)
   const { birthtime } = statSync(filePath)
 
-  const path = relative(resolve(process.cwd(), basePath), dirname(filePath))
+  const path = relative(basePath, dirname(filePath))
   const name = (match) ? match[NAME_MATCH_INDEX] : fileName
-  const created = (match) ? new Date(match[DATE_MATCH_INDEX]) : birthtime
+  const createdOn = JSON.stringify((match) ? new Date(match[DATE_MATCH_INDEX]) : birthtime)
 
   return {
     filePath,
     path,
     name,
     mimeType: mime.getType(filePath),
-    created,
+    createdOn,
     async load () {
       return asyncReadFile(filePath, { encoding: 'utf-8' })
     }
@@ -57,18 +58,43 @@ function buildOptions (filePath, basePath) {
  * @param {Object} action
  * @param {function(buildOptions)} action.build
  */
-export async function source ({ path, ignore = [], includes = '**/*.*' } = {}, { build }) {
-  const files = (await asyncGlob(normalize(`${path}/${includes}`), {
-    root: process.cwd(),
-    absolute: true,
-    ignore: [
+export async function source ({ path: pathOptions, ignore, includes = '**/*.*' } = {}, { build }) {
+  // Make sure path is absolute.
+  const path = !isAbsolute(pathOptions) ? resolve(process.cwd(), pathOptions) : pathOptions
+  // Use path with includes to create a glob
+  const watcher = chokidar.watch(normalize(`${path}/${includes}`), {
+    ignored: [
       ...DEFAULT_IGNORES,
-      ...ignore
+      ...(ignore || [])
     ]
-  }))
-    .map(normalize)
+  })
 
-  for (const filePath of files) {
+  // We'll enqueue the first batch. Then after ready we will process updates one by one.
+  let batch = true
+  const queue = []
+
+  // add file
+  watcher.on('add', async filePath => {
+    batch ? queue.push(filePath) : await build(buildOptions(filePath, path))
+  })
+  // modify file
+  watcher.on('change', async filePath => {
     await build(buildOptions(filePath, path))
-  }
+  })
+  // remove file
+  watcher.on('unlink', filePath => {
+    // TODO: removed file
+  })
+
+  // TODO: do we need to process `addDir`, `unlinkDir`?
+
+  return new Promise((resolve) => {
+    watcher.on('ready', async () => {
+      for (const filePath of queue) {
+        await build(buildOptions(filePath, path))
+      }
+      batch = false
+      resolve()
+    })
+  })
 }

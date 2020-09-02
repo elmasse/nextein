@@ -1,23 +1,19 @@
-import { run, subscribe } from '../../plugins'
-import createCache from '../cache'
+/**
+ * THIS FILE IS LOADED BY WEBPACK TO REPLACE load/index.js in dev client
+ */
 
-const cache = createCache()
+import fetch from 'unfetch'
 
-const loadCache = async () => {
-  subscribe(posts => cache.set(posts))
-  cache.set(await run())
-}
+import { prefixed } from '../prefixed'
+import endpoints from '../../endpoints'
 
 /**
  * Return all entries. If ids is provided return all entries matching __id.
  * @param {String | Array<String>} ids Optional.
  */
 export async function load (ids) {
-  if (!cache.isValid()) {
-    await loadCache()
-  }
-
-  const entries = cache.get()
+  const file = prefixed(`/${endpoints.posts()}`)
+  const entries = await (await fetch(file)).json()
   const entriesIds = [].concat(ids).filter(Boolean)
 
   if (entriesIds.length) {

@@ -1,9 +1,12 @@
 
+/* global EventSource */
+
 import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import getDisplayName from 'react-display-name'
 
 import { load, metadata, pathMap } from '../entries'
+import { prefixed } from '../entries/prefixed'
 
 export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
   const { data } = post
@@ -41,14 +44,38 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
 
         return {
           ...wrapped,
+          filter,
           posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
           __pathMap: pathMap(),
           __metadata: _metadata
         }
       }
 
+      componentDidMount () {
+        if (typeof window !== 'undefined') {
+          this.evtSource = new EventSource(prefixed('/nextein-entries-hmr'))
+          const { filter, __metadata } = this.props
+          this.evtSource.onmessage = async (evnt) => {
+            const ids = filter
+              ? __metadata
+                .map(data => ({ data }))
+                .filter(filter)
+                .map(({ data: { __id } }) => __id)
+              : undefined
+
+            this.setState({ posts: await load(ids) })
+          }
+        }
+      }
+
+      componentWillUnmount () {
+        if (this.evtSource) {
+          this.evtSource.close()
+        }
+      }
+
       render () {
-        return <WrappedComponent {...this.props} />
+        return <WrappedComponent {...this.props} {...this.state} />
       }
     },
     WrappedComponent, { getInitialProps: true })

@@ -1,8 +1,11 @@
+/* global EventSource */
+
 import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import getDisplayName from 'react-display-name'
 
 import { load, metadata, pathMap } from '../entries'
+import { prefixed } from '../entries/prefixed'
 
 export { default as Content } from './content'
 
@@ -23,15 +26,31 @@ export default (WrappedComponent) => {
         return {
           ...wrapped,
           post,
+          __id,
           __pathMap: await pathMap(),
           __metadata: await metadata()
         }
       }
 
-      render () {
-        const { props } = this
+      componentDidMount () {
+        if (typeof window !== 'undefined') {
+          this.evtSource = new EventSource(prefixed('/nextein-entries-hmr'))
+          const { __id } = this.props
+          this.evtSource.onmessage = async () => {
+            const [post] = __id ? await load(__id) : []
+            this.setState({ post })
+          }
+        }
+      }
 
-        return <WrappedComponent {...props} />
+      componentWillUnmount () {
+        if (this.evtSource) {
+          this.evtSource.close()
+        }
+      }
+
+      render () {
+        return <WrappedComponent {...this.props} {...this.state} />
       }
     },
     WrappedComponent, { getInitialProps: true })

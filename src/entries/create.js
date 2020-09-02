@@ -23,15 +23,16 @@ export function createEntry ({ meta, raw, content }) {
     page: 'post',
     name: meta.name,
     category: meta.path || undefined,
-    date: JSON.stringify(meta.created),
+    date: JSON.parse(meta.createdOn),
     ...meta.extra
   }
 
   return {
     data: {
       ...data,
-      year: new Date(data.created).getFullYear(),
-      month: new Date(data.created).getMonth() + 1,
+      year: String(new Date(data.date).getFullYear()),
+      month: String(new Date(data.date).getMonth() + 1).padStart(2, '0'),
+      day: String(new Date(data.date).getDate()).padStart(2, '0'),
       url: formatUrl(data)
     },
     content,

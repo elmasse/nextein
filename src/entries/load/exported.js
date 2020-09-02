@@ -6,7 +6,6 @@
 
 import createCache, { fetchOnce } from '../cache'
 import { prefixed } from '../prefixed'
-
 import endpoints from '../../endpoints'
 
 const cache = createCache()

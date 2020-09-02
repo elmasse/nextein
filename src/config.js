@@ -31,7 +31,7 @@ export const withNextein = (nextConfig = {}) => {
         new DefinePlugin({
           'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '')
         }),
-        new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './exported.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, options.dev ? './dev.js' : './exported.js'),
         new NormalModuleReplacementPlugin(/entries[/\\]metadata[/\\]index.js/, './exported.js'),
         new NormalModuleReplacementPlugin(/entries[/\\]pathmap[/\\]index.js/, './exported.js')
       )
