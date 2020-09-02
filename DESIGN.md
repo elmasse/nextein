@@ -29,8 +29,8 @@ The stages or plugin-types will be executed in the order listed here.
         - path: Relative to `options.path`. e.g.`'/blog/first-post.md'`
         - name: e.g.`'firts-post.md'`
         - mimeType: e.g.`'text/markdown'`
-        - created
-        - modified?
+        - createdOn {Date}
+        - removed {Boolean}
         - load() {Promise} return file content
 - *build*: Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
   - `build(options, buildOptions, action: { create })`.
@@ -44,7 +44,7 @@ The stages or plugin-types will be executed in the order listed here.
         - path
         - name
         - mimeType
-        - created
+        - createdOn
         - raw
         - extra: (any user defined data e.g. in frontmatter)
       - content
