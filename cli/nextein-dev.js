@@ -18,7 +18,7 @@ const nexteinDev = (argv) => {
       // Aliases
       '-h': '--help',
       '-p': '--port',
-      '-H': '--hostname',
+      '-H': '--hostname'
     },
     { argv }
   )
@@ -63,7 +63,7 @@ const nexteinDev = (argv) => {
         const pkgAppPath = require('next/dist/compiled/find-up').sync(
           'package.json',
           {
-            cwd: dir,
+            cwd: dir
           }
         )
         const appPackage = require(pkgAppPath)
