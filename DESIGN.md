@@ -21,10 +21,11 @@ We will have these stages/plugin-types:
 The stages or plugin-types will be executed in the order listed here.
 
 - *source*: This stage compiles an entries list. It should call `action.build` on any entry to be processed. The `action.build` will execute *build* plugins. 
-  - `source(options, action: { build })`. 
+  - `source(options, action: { build, remove })`. 
       - options
       - action
         - build(buildOptions)
+        - remove(removeOptions)
       - `buildOptions` {Object}
         - path: Relative to `options.path`. e.g.`'/blog/first-post.md'`
         - name: e.g.`'firts-post.md'`
@@ -32,6 +33,8 @@ The stages or plugin-types will be executed in the order listed here.
         - createdOn {Date}
         - removed {Boolean}
         - load() {Promise} return file content
+      - `removeOptions` {Object}
+        -  filePath
 - *build*: Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
   - `build(options, buildOptions, action: { create })`.
     - options
