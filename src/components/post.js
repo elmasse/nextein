@@ -33,10 +33,13 @@ export default (WrappedComponent) => {
       }
 
       componentDidMount () {
-        if (typeof window !== 'undefined') {
+        if (process.env.NODE_ENV === 'development') {
           this.evtSource = new EventSource(endpoints.entriesHMR())
           const { __id } = this.props
-          this.evtSource.onmessage = async () => {
+          this.evtSource.onmessage = async (event) => {
+            if (event.data === '\uD83D\uDC93') {
+              return
+            }
             const [post] = __id ? await load(__id) : []
             this.setState({ post })
           }

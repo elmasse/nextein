@@ -3,6 +3,7 @@ import http from 'http'
 import next from 'next'
 import { serverEndpoints } from './endpoints'
 import router, { route } from './router'
+import { createEventStream } from './event-stream'
 import { load, metadata, pathMap } from './entries'
 import { subscribe } from './plugins'
 
@@ -13,7 +14,6 @@ export default async function start (serverOptions, port, hostname) {
   const srv = http.createServer(router({ port, hostname, defaultHandler: handler }))
 
   // Define routes
-
   route(serverEndpoints.post(':id'), async (req, res, { id }) => {
     const [result] = await load(id)
     res.writeHead(200, { 'Content-Type': 'application/json' })
@@ -38,26 +38,15 @@ export default async function start (serverOptions, port, hostname) {
     res.end(JSON.stringify(result))
   })
 
-  // ENTRIES HMR
-  let unsubscribeEHMR
-  let count = 0
-  route(serverEndpoints.entriesHMR(), (req, res) => {
-    // Server Event Stream headers.
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Access-Control-Allow-Origin': '*',
-      Connection: 'keep-alive'
+  if (serverOptions.dev) {
+    const eventStream = createEventStream()
+
+    subscribe(() => {
+      eventStream.publish({ data: 'update' })
     })
 
-    // Check if we have already susbcribed and remove subscription.
-    if (unsubscribeEHMR) unsubscribeEHMR()
-
-    unsubscribeEHMR = subscribe(() => {
-      res.write(`id: ${++count} \n`)
-      res.write('data: update\n\n')
-    })
-  })
+    route(serverEndpoints.entriesHMR(), eventStream.handler)
+  }
 
   await new Promise((resolve, reject) => {
     // This code catches EADDRINUSE error if the port is already in use

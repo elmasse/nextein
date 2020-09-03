@@ -52,10 +52,13 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
       }
 
       componentDidMount () {
-        if (typeof window !== 'undefined') {
+        if (process.env.NODE_ENV === 'development') {
           this.evtSource = new EventSource(endpoints.entriesHMR())
           const { filter, __metadata } = this.props
-          this.evtSource.onmessage = async (evnt) => {
+          this.evtSource.onmessage = async (event) => {
+            if (event.data === '\uD83D\uDC93') {
+              return
+            }
             const ids = filter
               ? __metadata
                 .map(data => ({ data }))
