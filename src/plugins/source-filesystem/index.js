@@ -58,7 +58,7 @@ function buildOptions (filePath, basePath) {
  * @param {Object} action
  * @param {function(buildOptions)} action.build
  */
-export async function source ({ path: pathOptions, ignore, includes = '**/*.*' } = {}, { build }) {
+export async function source ({ path: pathOptions, ignore, includes = '**/*.*' } = {}, { build, remove }) {
   // Make sure path is absolute.
   const path = !isAbsolute(pathOptions) ? resolve(process.cwd(), pathOptions) : pathOptions
   // Use path with includes to create a glob
@@ -82,8 +82,8 @@ export async function source ({ path: pathOptions, ignore, includes = '**/*.*' }
     await build(buildOptions(filePath, path))
   })
   // remove file
-  watcher.on('unlink', filePath => {
-    // TODO: removed file
+  watcher.on('unlink', async filePath => {
+    await remove({ filePath })
   })
 
   // TODO: do we need to process `addDir`, `unlinkDir`?

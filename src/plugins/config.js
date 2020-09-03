@@ -2,7 +2,6 @@
 import { resolve } from 'path'
 
 const INTERNALS = {
-  'nextein-plugin-markdown': resolve(__dirname, 'markdown'),
   'nextein-plugin-source-fs': resolve(__dirname, 'source-filesystem'),
   'nextein-plugin-build-remark': resolve(__dirname, 'build-remark')
 }

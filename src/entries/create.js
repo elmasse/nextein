@@ -13,13 +13,17 @@ function formatUrl (data) {
   return page ? url : undefined
 }
 
+export function createId (path) {
+  return createHash('md5').update(path).digest('hex')
+}
+
 /**
  *
  * @param {Object} rawEntry
  */
 export function createEntry ({ meta, raw, content }) {
   const data = {
-    __id: createHash('md5').update(meta.filePath).digest('hex'),
+    __id: createId(meta.filePath),
     page: 'post',
     name: meta.name,
     category: meta.path || undefined,

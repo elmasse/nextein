@@ -1,7 +1,7 @@
 
 import EventEmitter from 'events'
 import { getPluginsConfig, resolvePlugin } from './config'
-import { createEntry } from '../entries'
+import { createEntry, createId } from '../entries'
 
 function compile () {
   const nexteinPlugins = getPluginsConfig()
@@ -70,8 +70,15 @@ async function upsertEntries () {
     }
   }
 
+  function remove (removeOptions) {
+    const __id = createId(removeOptions.filePath)
+    entries.delete(__id)
+
+    if (ready) emitter.emit('entries.update')
+  }
+
   for (const source of sources) {
-    await source({ build })
+    await source({ build, remove })
   }
 }
 
