@@ -4,8 +4,7 @@
 
 import endpoints from '../../endpoints'
 import { fetchOnce } from '../cache'
-import { prefixed } from '../prefixed'
 
 export async function pathMap () {
-  return (await fetchOnce(prefixed(`/${endpoints.pathMap()}`))).json()
+  return (await fetchOnce(endpoints.pathMap())).json()
 }

@@ -1,7 +1,7 @@
 
 import http from 'http'
 import next from 'next'
-import endpoints from './endpoints'
+import { serverEndpoints } from './endpoints'
 import router, { route } from './router'
 import { load, metadata, pathMap } from './entries'
 import { subscribe } from './plugins'
@@ -14,25 +14,25 @@ export default async function start (serverOptions, port, hostname) {
 
   // Define routes
 
-  route(`/${endpoints.post(':id')}`, async (req, res, { id }) => {
+  route(serverEndpoints.post(':id'), async (req, res, { id }) => {
     const [result] = await load(id)
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(result))
   })
 
-  route(`/${endpoints.posts()}`, async (req, res) => {
+  route(serverEndpoints.posts(), async (req, res) => {
     const result = await load()
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(result))
   })
 
-  route(`/${endpoints.metadata()}`, async (req, res) => {
+  route(serverEndpoints.metadata(), async (req, res) => {
     const result = await metadata()
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(result))
   })
 
-  route(`/${endpoints.pathMap()}`, async (req, res) => {
+  route(serverEndpoints.pathMap(), async (req, res) => {
     const result = await pathMap()
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(result))
@@ -41,7 +41,7 @@ export default async function start (serverOptions, port, hostname) {
   // ENTRIES HMR
   let unsubscribeEHMR
   let count = 0
-  route('/nextein-entries-hmr', (req, res) => {
+  route(serverEndpoints.entriesHMR(), (req, res) => {
     // Server Event Stream headers.
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',

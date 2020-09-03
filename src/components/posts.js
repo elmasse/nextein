@@ -6,7 +6,7 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 import getDisplayName from 'react-display-name'
 
 import { load, metadata, pathMap } from '../entries'
-import { prefixed } from '../entries/prefixed'
+import endpoints from '../endpoints'
 
 export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
   const { data } = post
@@ -53,7 +53,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
 
       componentDidMount () {
         if (typeof window !== 'undefined') {
-          this.evtSource = new EventSource(prefixed('/nextein-entries-hmr'))
+          this.evtSource = new EventSource(endpoints.entriesHMR())
           const { filter, __metadata } = this.props
           this.evtSource.onmessage = async (evnt) => {
             const ids = filter

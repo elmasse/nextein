@@ -4,7 +4,6 @@
 
 import fetch from 'unfetch'
 
-import { prefixed } from '../prefixed'
 import endpoints from '../../endpoints'
 
 /**
@@ -12,8 +11,7 @@ import endpoints from '../../endpoints'
  * @param {String | Array<String>} ids Optional.
  */
 export async function load (ids) {
-  const file = prefixed(`/${endpoints.posts()}`)
-  const entries = await (await fetch(file)).json()
+  const entries = await (await fetch(endpoints.posts())).json()
   const entriesIds = [].concat(ids).filter(Boolean)
 
   if (entriesIds.length) {

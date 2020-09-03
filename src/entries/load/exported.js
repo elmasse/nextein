@@ -5,7 +5,6 @@
 /* global __NEXT_DATA__ */
 
 import createCache, { fetchOnce } from '../cache'
-import { prefixed } from '../prefixed'
 import endpoints from '../../endpoints'
 
 const cache = createCache()
@@ -17,7 +16,7 @@ async function findPostInEntriesCache (__id) {
   let entry = (post && post.data.__id === __id) ? post : undefined
 
   if (!entry) {
-    entry = (await fetchOnce(prefixed(`/${endpoints.post(__id)}`))).json()
+    entry = (await fetchOnce(endpoints.post(__id))).json()
   }
 
   return entry
@@ -32,8 +31,7 @@ async function shouldFetch (ids) {
 }
 
 async function loadAll () {
-  const file = prefixed(`/${endpoints.posts()}`)
-  return (await fetchOnce(file)).json()
+  return (await fetchOnce(endpoints.posts())).json()
 }
 
 /**

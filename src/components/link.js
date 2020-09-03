@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import Link from 'next/link'
 
 import { pathMap } from '../entries'
-import { prefixed } from '../entries/prefixed'
+import { prefixed } from '../endpoints'
 
 class NexteinLink extends Component {
   static getDerivedStateFromProps (state, { href, as }) {

@@ -5,7 +5,7 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 import getDisplayName from 'react-display-name'
 
 import { load, metadata, pathMap } from '../entries'
-import { prefixed } from '../entries/prefixed'
+import endpoints from '../endpoints'
 
 export { default as Content } from './content'
 
@@ -34,7 +34,7 @@ export default (WrappedComponent) => {
 
       componentDidMount () {
         if (typeof window !== 'undefined') {
-          this.evtSource = new EventSource(prefixed('/nextein-entries-hmr'))
+          this.evtSource = new EventSource(endpoints.entriesHMR())
           const { __id } = this.props
           this.evtSource.onmessage = async () => {
             const [post] = __id ? await load(__id) : []

@@ -4,8 +4,7 @@
 
 import endpoints from '../../endpoints'
 import { fetchOnce } from '../cache'
-import { prefixed } from '../prefixed'
 
 export async function metadata () {
-  return (await fetchOnce(prefixed(`/${endpoints.metadata()}`))).json()
+  return (await fetchOnce(endpoints.metadata())).json()
 }
