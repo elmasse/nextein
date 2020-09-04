@@ -54,24 +54,30 @@ The stages or plugin-types will be executed in the order listed here.
     - `Entry` {Object}
       - data
         - __id: MD5(meta.filePath)
+        - mimeType: meta.mimeType,
         - page: meta.extra.page || `'post'`
         - name: meta.name
         - category: meta.extra.category || meta.path
         - date: meta.extra.date || meta.created
-        - month?
-        - year?
+        - day: {String} 2 digit padded day from date
+        - month: {String} 2 digit padded month from date
+        - year: {String} 4 digit year from date
         - url: formatted(meta.extra.url || `/:category?/:name`)
         - {...user defined data}
       - content
       - raw
 - *transform*: This stage receive the **_entries** array as `posts`. Here we can modify one or many items.
-  - `transform(options, posts)`
+  - `transform(options, posts): Array<Entry>`
     - options
     - posts
-- *filter*: Similar to *transform* stage but guaranteed to run after all transformations are made. Good for cleanups.
-  - `filter(options, posts)`
-- *sort*: Apply sorters after all transformations and filters are applied.
-  - `sort(options, posts)`:
+- *cleanup*: Same as *transform* stage but useful to remove / clean up data.
+  - `cleanup(options, posts): Array<Entry>`
+    - options
+    - posts
+- *filter*: Filter posts. Predicate function to be run as `posts.filter(fiterPredicate)`
+  - `filter(options, posts): {Boolean}`
+- *sort*: Sort posts. Sorter function to be run as `posts.sort(sorterFn)`
+  - `sort(options, posts): {Number}`
 -*content-render*: This stage runs inside the `Content` component.
 - `render`: TBD
 
@@ -90,7 +96,7 @@ The plugin configuration should allow to:
 
 Configuration resolves to an Object with the form:
  
-```
+```js
 { 
   name: {String},
   id?: {String},
@@ -107,7 +113,7 @@ Accepted forms:
 A plugin configuration will be identified by an internal `id`. This *id* will be set by default to the plugin name if no `id` property is provided.
 This allows to generate multiple instances of the same plugin if an`id` is provided or it can override a pre-configured plugin if not id provided.
 
-```
+```js
 {
   name: 'nextein-plugin-x',
   options: {
@@ -148,7 +154,7 @@ This allows to generate multiple instances of the same plugin if an`id` is provi
   - source
 - `build-remark`
   - build
-  - filter?
+  - cleanup? to remove position, raw, etc.
 - `filter-unpublished`
   - filter
 

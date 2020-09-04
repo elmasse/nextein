@@ -24,6 +24,7 @@ export function createId (path) {
 export function createEntry ({ meta, raw, content }) {
   const data = {
     __id: createId(meta.filePath),
+    mimeType: meta.mimeType,
     page: 'post',
     name: meta.name,
     category: meta.path || undefined,
