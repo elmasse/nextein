@@ -45,11 +45,15 @@ function prefixedEndpoints (prefix) {
 }
 
 export default {
-  ...prefixedEndpoints(ensureNoEndSlash(process.env.PUBLIC_URL))
+  ...prefixedEndpoints(ensureNoEndSlash(process.env.PUBLIC_URL) || '/')
 }
 
 export const serverEndpoints = {
   ...prefixedEndpoints('/')
+}
+
+export const files = {
+  ...prefixedEndpoints()
 }
 
 export function prefixed (path) {

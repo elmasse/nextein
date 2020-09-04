@@ -1,8 +1,9 @@
+
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 import { metadata, setNextExportPathMap } from './entries'
 import { generateExportedFiles } from './export'
-import { setPlugins, getDefaultPlugins } from './plugins'
+import { processPlugins, getDefaultPlugins } from './plugins'
 
 const getDefaultConfig = () => ({
   plugins: getDefaultPlugins()
@@ -10,13 +11,15 @@ const getDefaultConfig = () => ({
 
 const processConfig = ({ nextein = getDefaultConfig() }) => {
   const { plugins } = (typeof nextein === 'function') ? nextein(getDefaultConfig()) : nextein
-  setPlugins(plugins)
+
+  return {
+    plugins: processPlugins(plugins)
+  }
 }
 
 export const withNextein = (nextConfig = {}) => {
-  processConfig(nextConfig)
   const { exportTrailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
-
+  processConfig(nextConfig)
   return ({
     ...nextConfig,
     exportTrailingSlash,
@@ -78,7 +81,6 @@ export const withNextein = (nextConfig = {}) => {
       if (typeof nextConfig.exportPathMap === 'function') {
         nextExportPathMap = await nextConfig.exportPathMap(nextExportPathMap, options)
       }
-
       await setNextExportPathMap(nextExportPathMap)
       await generateExportedFiles(options)
 
