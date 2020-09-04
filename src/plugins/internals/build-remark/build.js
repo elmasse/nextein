@@ -12,7 +12,8 @@ function createOptions (source, raw, options) {
       ...source,
       extra
     },
-    content
+    content,
+    raw
   }
 }
 

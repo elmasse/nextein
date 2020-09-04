@@ -1,43 +1,12 @@
 
 import EventEmitter from 'events'
-import { getPluginsConfig, resolvePlugin } from './config'
+
 import { createEntry, createId } from '../entries'
-
-function compile () {
-  const nexteinPlugins = getPluginsConfig()
-  const sources = []
-  const builders = []
-  const transformers = []
-  const filters = []
-
-  for (const plugin of nexteinPlugins) {
-    const { name, options } = plugin
-    const { source, build, transform, filter } = require(resolvePlugin(name))
-    if (source) {
-      sources.push((...args) => source(options, ...args))
-    }
-    if (build) {
-      builders.push((...args) => build(options, ...args))
-    }
-    if (transform) {
-      transformers.push((...args) => transform(options, ...args))
-    }
-    if (filter) {
-      filters.push((...args) => filter(options, ...args))
-    }
-  }
-
-  return {
-    sources,
-    builders,
-    transformers,
-    filters
-  }
-}
+import { compile } from './compile'
 
 const emitter = new EventEmitter()
 const entries = new Map()
-let ready = false
+let bootstraped = false
 
 /**
  * subscribe
@@ -64,7 +33,7 @@ async function upsertEntries () {
           const entry = createEntry(createOptions)
           entries.set(entry.data.__id, entry)
 
-          if (ready) emitter.emit('entries.update')
+          if (bootstraped) emitter.emit('entries.update')
         }
       })
     }
@@ -74,7 +43,7 @@ async function upsertEntries () {
     const __id = createId(removeOptions.filePath)
     entries.delete(__id)
 
-    if (ready) emitter.emit('entries.update')
+    if (bootstraped) emitter.emit('entries.update')
   }
 
   for (const source of sources) {
@@ -101,7 +70,7 @@ async function processEntries () {
     entries.set(post.data.__id, post)
   })
 
-  if (ready) emitter.emit('update')
+  if (bootstraped) emitter.emit('update')
 }
 
 /**
@@ -111,7 +80,7 @@ export async function run () {
   await upsertEntries()
   await processEntries()
 
-  ready = true
+  bootstraped = true
 
   return Array.from(entries.values())
 }
