@@ -1,6 +1,6 @@
 
 export async function compile (task, opts) {
-  await task.source(opts.src || 'src/**/*.js').babel({ sourceMaps: true }).target('dist/')
+  await task.source(opts.src || 'src/**/*.js').babel().target('dist/')
   await task.source(opts.src || 'cli/**/*.js').babel().target('dist/cli')
 }
 
