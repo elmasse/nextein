@@ -15,10 +15,15 @@ function createPlugin (options) {
   const resolved = resolvePlugin(options.name)
   const renderer = hasRenderer(resolved)
   return {
+    id: options.name,
     ...options,
     resolved,
     renderer
   }
+}
+
+function processDuplicates(prev, curr) {
+  return prev.filter(({ id }) => id !== curr.id).concat(curr)
 }
 
 export function processPlugins (nexteinPlugins = []) {
@@ -26,7 +31,7 @@ export function processPlugins (nexteinPlugins = []) {
     .map(normalizeString)
     .map(normalizeArray)
     .map(createPlugin)
-    // TODO flat duplicated entries
+    .reduce(processDuplicates, [])
 
   process.env.__NEXTEIN_PLUGIN_CFG = JSON.stringify(config)
 
