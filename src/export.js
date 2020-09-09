@@ -27,7 +27,7 @@ export async function generateExportedFiles ({ dev, outDir, buildId }) {
   }
 }
 
-export async function generatePluginCache ({ plugins = [] }) {
+export async function generateCache ({ plugins = [] }) {
   const cache = resolve(process.cwd(), '.nextein', 'cache')
   try {
     rmdirSync(cache, { recursive: true })

@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 import { metadata, setNextExportPathMap } from './entries'
-import { generateExportedFiles, generatePluginCache } from './export'
+import { generateExportedFiles, generateCache } from './export'
 import { processPlugins, getDefaultPlugins } from './plugins'
 
 const getDefaultConfig = () => ({
@@ -21,7 +21,7 @@ const processConfig = ({ nextein = getDefaultConfig() }) => {
 export const withNextein = (nextConfig = {}) => {
   const { exportTrailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
   const nexteinConfig = processConfig(nextConfig)
-  generatePluginCache(nexteinConfig)
+  generateCache(nexteinConfig)
 
   return ({
     ...nextConfig,
