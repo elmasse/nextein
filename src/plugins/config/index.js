@@ -1,5 +1,5 @@
 
-import { resolvePlugin, hasRenderer } from './resolver'
+import { resolvePlugin, hasRenderer } from '../resolver'
 
 const normalizeArray = config => {
   if (Array.isArray(config)) {

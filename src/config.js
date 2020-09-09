@@ -1,8 +1,9 @@
 
+import { resolve } from 'path'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 import { metadata, setNextExportPathMap } from './entries'
-import { generateExportedFiles } from './export'
+import { generateExportedFiles, generatePluginCache } from './export'
 import { processPlugins, getDefaultPlugins } from './plugins'
 
 const getDefaultConfig = () => ({
@@ -19,7 +20,9 @@ const processConfig = ({ nextein = getDefaultConfig() }) => {
 
 export const withNextein = (nextConfig = {}) => {
   const { exportTrailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
-  processConfig(nextConfig)
+  const nexteinConfig = processConfig(nextConfig)
+  generatePluginCache(nexteinConfig)
+
   return ({
     ...nextConfig,
     exportTrailingSlash,
@@ -29,6 +32,17 @@ export const withNextein = (nextConfig = {}) => {
       config.node = {
         fs: 'empty'
       }
+      if (!options.isServer) {
+        const _entry = config.entry
+        config.entry = async function () {
+          const original = await _entry()
+          return {
+            ...original,
+            // 'nextein-plugins': resolve(process.cwd(), '.cache', 'plugins-cache.js'),
+            'nextein-plugins': resolve('.nextein', 'cache', 'plugins-cache.js')
+          }
+        }
+      }
 
       config.plugins.push(
         new DefinePlugin({
@@ -36,7 +50,9 @@ export const withNextein = (nextConfig = {}) => {
         }),
         new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, options.dev ? './dev.js' : './exported.js'),
         new NormalModuleReplacementPlugin(/entries[/\\]metadata[/\\]index.js/, './exported.js'),
-        new NormalModuleReplacementPlugin(/entries[/\\]pathmap[/\\]index.js/, './exported.js')
+        new NormalModuleReplacementPlugin(/entries[/\\]pathmap[/\\]index.js/, './exported.js'),
+        new NormalModuleReplacementPlugin(/plugins[/\\]config[/\\]index.js/, './exported.js'),
+        new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './exported.js')
       )
 
       if (typeof nextConfig.webpack === 'function') {
@@ -48,6 +64,15 @@ export const withNextein = (nextConfig = {}) => {
         // Avoid warning from webpack when require has an expression.
         // Which is the case for requiring plugins dynamically.
         exprContextCritical: false
+      }
+
+      config.resolve = {
+        ...config.resolve,
+        alias: {
+          ...config.resolve.alias,
+          // 'nextein-cache': resolve(process.cwd(), '.cache')
+          'nextein-cache': resolve(process.cwd(), '.nextein', 'cache')
+        }
       }
 
       return config

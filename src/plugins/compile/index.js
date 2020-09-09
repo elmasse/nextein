@@ -1,5 +1,5 @@
 
-import { plugins } from './config'
+import { plugins } from '../config'
 
 export function compile () {
   const sources = []

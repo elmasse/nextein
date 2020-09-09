@@ -1,7 +1,7 @@
 
 import EventEmitter from 'events'
 
-import { createEntry, createId } from '../entries'
+import { createEntry, createId } from '../entries/create'
 import { compile } from './compile'
 
 const emitter = new EventEmitter()
