@@ -1,25 +1,9 @@
 jest.mock('../../../src/entries')
-jest.mock('unified', () => {
-  function mockedUnified () { return new impl() }
-  mockedUnified.stringify = jest.fn()
-  mockedUnified.runSync = jest.fn()
-  mockedUnified.use = jest.fn(function () { return this })
-  class impl {
-    use = mockedUnified.use
-    stringify = mockedUnified.stringify
-    runSync = mockedUnified.runSync
-  }
-
-  return mockedUnified
-})
 
 import React from 'react'
-import renderer from 'react-test-renderer'
-import h from 'hastscript'
 
-import unified from 'unified'
-import { load, metadata } from '../../../src/entries'
-import withPost, { Content } from '../../../src/components/post'
+import { load } from '../../../src/entries'
+import withPost from '../../../src/components/post'
 
 describe('withPost', () => {
   test('exports HOC withPost as default', () => {
@@ -86,22 +70,22 @@ describe('withPost', () => {
   })  
 })
 
-describe('Content', () => {
-  test('exports Content', () => {
-    expect(Content).toBeDefined()
-  })
+// describe('Content', () => {
+//   test('exports Content', () => {
+//     expect(Content).toBeDefined()
+//   })
 
-  test('Content component should render post content', () => {
-    const expectedText = `lorem ipsum`
-    const expectedContent = h('root', [ h('p', expectedText) ])
+//   test('Content component should render post content', () => {
+//     const expectedText = `lorem ipsum`
+//     const expectedContent = h('root', [ h('p', expectedText) ])
 
-    unified.stringify.mockReturnValueOnce(<p>{expectedText}</p>)
+//     unified.stringify.mockReturnValueOnce(<p>{expectedText}</p>)
 
-    const comp = renderer.create(<Content content={expectedContent} />)
+//     const comp = renderer.create(<Content content={expectedContent} />)
 
-    expect(unified.runSync).toHaveBeenCalledWith(expectedContent)
-    expect(unified.stringify).toHaveBeenCalled()
+//     expect(unified.runSync).toHaveBeenCalledWith(expectedContent)
+//     expect(unified.stringify).toHaveBeenCalled()
 
-    expect(comp.toJSON()).toMatchSnapshot()
-  })
-})
+//     expect(comp.toJSON()).toMatchSnapshot()
+//   })
+// })
