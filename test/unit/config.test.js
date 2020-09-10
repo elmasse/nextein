@@ -1,15 +1,7 @@
-jest.mock('fs')
 jest.mock('../../src/entries')
 
-import fs from 'fs'
 import { metadata } from '../../src/entries'
 import nexteinConfig from '../../src/config'
-
-beforeAll(() => {
-  // Mock fs functions
-  fs.mkdirSync.mockClear()
-  fs.writeFile.mockClear()
-})
 
 describe('config', () => {
   test('exports nexteinConfig fn as default', () => {
