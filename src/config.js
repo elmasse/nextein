@@ -1,9 +1,9 @@
 
-import { resolve } from 'path'
+import path from 'path'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
 import { metadata, setNextExportPathMap } from './entries'
-import { generateExportedFiles, generateCache } from './export'
+import { generateExportedFiles } from './export'
 import { processPlugins, getDefaultPlugins } from './plugins'
 
 const getDefaultConfig = () => ({
@@ -21,7 +21,6 @@ const processConfig = ({ nextein = getDefaultConfig() }) => {
 export const withNextein = (nextConfig = {}) => {
   const { exportTrailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
   const nexteinConfig = processConfig(nextConfig)
-  generateCache(nexteinConfig)
 
   return ({
     ...nextConfig,
@@ -31,17 +30,6 @@ export const withNextein = (nextConfig = {}) => {
     webpack (config, options) {
       config.node = {
         fs: 'empty'
-      }
-      if (!options.isServer) {
-        const _entry = config.entry
-        config.entry = async function () {
-          const original = await _entry()
-          return {
-            ...original,
-            // 'nextein-plugins': resolve(process.cwd(), '.cache', 'plugins-cache.js'),
-            'nextein-plugins': resolve('.nextein', 'cache', 'plugins-cache.js')
-          }
-        }
       }
 
       config.plugins.push(
@@ -55,10 +43,6 @@ export const withNextein = (nextConfig = {}) => {
         new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './exported.js')
       )
 
-      if (typeof nextConfig.webpack === 'function') {
-        return nextConfig.webpack(config, options)
-      }
-
       config.module = {
         ...config.module,
         // Avoid warning from webpack when require has an expression.
@@ -66,13 +50,25 @@ export const withNextein = (nextConfig = {}) => {
         exprContextCritical: false
       }
 
-      config.resolve = {
-        ...config.resolve,
-        alias: {
-          ...config.resolve.alias,
-          // 'nextein-cache': resolve(process.cwd(), '.cache')
-          'nextein-cache': resolve(process.cwd(), '.nextein', 'cache')
-        }
+      config.module.rules = [
+        {
+          test: /\.js$/,
+          include: path.dirname(require.resolve('nextein/dist/plugins/render')),
+          use: [
+            options.defaultLoaders.babel,
+            {
+              loader: 'nextein/dist/plugins/render/loader',
+              options: {
+                plugins: nexteinConfig.plugins
+              }
+            }
+          ]
+        },
+        ...config.module.rules
+      ]
+
+      if (typeof nextConfig.webpack === 'function') {
+        return nextConfig.webpack(config, options)
       }
 
       return config

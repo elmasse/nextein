@@ -11,7 +11,7 @@ export async function compile () {
   for (const plugin of renderPlugins) {
     const { name, options } = plugin
 
-    const render = require('nextein-cache/plugins-cache')[name]
+    const render = require('nextein/dist/plugins/render')[name]
 
     if (render) {
       renders.push((...args) => render(options, ...args))
