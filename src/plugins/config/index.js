@@ -45,5 +45,6 @@ export function plugins () {
 // TODO
 export const getDefaultPlugins = () => [
   ['nextein-plugin-source-fs', { path: 'posts' }],
-  ['nextein-plugin-build-remark', {}]
+  'nextein-plugin-build-remark',
+  'nextein-plugin-filter-unpublished'
 ]
