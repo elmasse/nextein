@@ -44,7 +44,7 @@ export async function build (options, { load, ...source }, { create }) {
 export function cleanup ({ raw = false, position = false }, posts) {
   return posts.map(post => {
     if (post.data.mimeType === 'text/markdown') {
-      post.content = removePosition(post.content)
+      if (!position) post.content = removePosition(post.content)
       if (!raw) delete post.raw
     }
     return post
