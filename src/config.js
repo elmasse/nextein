@@ -10,8 +10,18 @@ const getDefaultConfig = () => ({
   plugins: getDefaultPlugins()
 })
 
-const processConfig = ({ nextein = getDefaultConfig() }) => {
-  const { plugins } = (typeof nextein === 'function') ? nextein(getDefaultConfig()) : nextein
+const processConfig = ({ nextein = {} }) => {
+  const defaultConfig = getDefaultConfig()
+  const { plugins } = (typeof nextein === 'function')
+    ? nextein(defaultConfig)
+    : {
+      ...nextein,
+      ...defaultConfig,
+      plugins: [
+        ...defaultConfig.plugins,
+        ...(nextein.plugins || [])
+      ]
+    }
 
   return {
     plugins: processPlugins(plugins)
@@ -19,12 +29,12 @@ const processConfig = ({ nextein = getDefaultConfig() }) => {
 }
 
 export const withNextein = (nextConfig = {}) => {
-  const { exportTrailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
+  const { trailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
   const nexteinConfig = processConfig(nextConfig)
 
   return ({
     ...nextConfig,
-    exportTrailingSlash,
+    trailingSlash,
     assetPrefix,
 
     webpack (config, options) {
