@@ -6,6 +6,7 @@ import { compile } from './compile'
 
 const emitter = new EventEmitter()
 const entries = new Map()
+let posts = []
 let bootstraped = false
 
 /**
@@ -13,7 +14,7 @@ let bootstraped = false
  * @param {*} fn
  */
 export function subscribe (fn) {
-  const handler = () => fn(Array.from(entries.values()))
+  const handler = () => fn(posts)
   emitter.on('update', handler)
 
   return function unsubscribe () {
@@ -54,7 +55,7 @@ async function upsertEntries () {
 async function processEntries () {
   const { transformers = [], cleaners = [], filters = [] } = compile()
 
-  let posts = Array.from(entries.values())
+  posts = Array.from(entries.values())
 
   for (const transform of transformers) {
     posts = await transform(posts)
@@ -70,10 +71,6 @@ async function processEntries () {
 
   entries.clear()
 
-  posts.map(post => {
-    entries.set(post.data.__id, post)
-  })
-
   if (bootstraped) emitter.emit('update')
 }
 
@@ -86,5 +83,5 @@ export async function run () {
 
   bootstraped = true
 
-  return Array.from(entries.values())
+  return posts
 }
