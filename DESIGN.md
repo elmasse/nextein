@@ -15,8 +15,10 @@ We will have these stages/plugin-types:
 - source
 - build
 - transform
+- cleanup
 - filter
 - sort
+- render
 
 The stages or plugin-types will be executed in the order listed here.
 
@@ -78,9 +80,8 @@ The stages or plugin-types will be executed in the order listed here.
   - `filter(options, posts): {Boolean}`
 - *sort*: Sort posts. Sorter function to be run as `posts.sort(sorterFn)`
   - `sort(options, posts): {Number}`
--*content-render*: This stage runs inside the `Content` component.
-- `render`: TBD
-
+-*render*: This stage runs inside the `Content` component.
+- `render(options, post): {Component}`: **It MUST be defined as a named export in a `render.js` file on the plugin root folder.** This method should return a React Component. 
 
 ## Plugin Configuration
 
