@@ -52,12 +52,16 @@ async function upsertEntries () {
 }
 
 async function processEntries () {
-  const { transformers = [], filters = [] } = compile()
+  const { transformers = [], cleaners = [], filters = [] } = compile()
 
   let posts = Array.from(entries.values())
 
   for (const transform of transformers) {
     posts = await transform(posts)
+  }
+
+  for (const cleanup of cleaners) {
+    posts = await cleanup(posts)
   }
 
   for (const filter of filters) {
