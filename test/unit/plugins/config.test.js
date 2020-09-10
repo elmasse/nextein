@@ -40,9 +40,9 @@ describe('processPlugins', () => {
 
     expect(result).toEqual(expected)
   })
-  test('process plugins overrides: ["plugin", ["plugin"]]', () => {
-    const evaluated = [nameA, [nameA]]
-    const expected = [{ name: nameA, id: nameA, resolved: nameA, renderer: false }]
+  test('process plugins overrides: ["plugin", ["plugin", { test: true }]]', () => {
+    const evaluated = [nameA, [nameA, options]]
+    const expected = [{ name: nameA, id: nameA, resolved: nameA, renderer: false, options }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
