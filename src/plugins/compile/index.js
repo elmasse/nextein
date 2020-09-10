@@ -9,7 +9,7 @@ export function compile () {
   const filters = []
 
   for (const plugin of plugins()) {
-    const { resolved, options } = plugin
+    const { resolved, options = {} } = plugin
     const { source, build, transform, cleanup, filter } = require(resolved)
     if (source) {
       sources.push((...args) => source(options, ...args))
