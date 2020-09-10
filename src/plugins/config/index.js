@@ -1,7 +1,11 @@
 
 import { resolvePlugin, hasRenderer } from '../resolver'
 
-const normalizeArray = config => {
+function normalizeString (config) {
+  return typeof config === 'string' ? { name: config } : config
+}
+
+function normalizeArray (config) {
   if (Array.isArray(config)) {
     const [name, options] = config
     return { name, options }
@@ -9,7 +13,28 @@ const normalizeArray = config => {
   return config
 }
 
-const normalizeString = config => typeof config === 'string' ? { name: config } : config
+function checkForOldMarkdownPlugin (config) {
+  if (config.name === 'nextein-plugin-markdown') {
+    const { remark, rehype, position, raw, ...deprecated } = config.options
+
+    console.log('Configuration options for nextein-plugin-markdown has been moved to "nextein-plugin-build-remark".')
+
+    if (Object.keys(deprecated).length) {
+      console.warn(`Check if ${JSON.stringify(deprecated)} from config fits into "nextein-plugin-source-fs"`)
+    }
+
+    return {
+      name: 'nextein-plugin-build-remark',
+      options: {
+        remark,
+        rehype,
+        position,
+        raw
+      }
+    }
+  }
+  return config
+}
 
 function createPlugin (options) {
   const resolved = resolvePlugin(options.name)
@@ -30,6 +55,7 @@ export function processPlugins (nexteinPlugins = []) {
   const config = nexteinPlugins
     .map(normalizeString)
     .map(normalizeArray)
+    .map(checkForOldMarkdownPlugin)
     .map(createPlugin)
     .reduce(processDuplicates, [])
 
