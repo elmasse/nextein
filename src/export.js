@@ -1,7 +1,7 @@
 
 import { resolve } from 'path'
 import { promisify } from 'util'
-import { writeFile as fsWriteFile, mkdirSync, rmdirSync } from 'fs'
+import { writeFile as fsWriteFile } from 'fs'
 
 import { load, pathMap, metadata } from './entries'
 import { plugins } from './plugins/config'
@@ -25,24 +25,4 @@ export async function generateExportedFiles ({ dev, outDir, buildId }) {
       await writeFile(resolve(outDir, name), JSON.stringify(entry))
     }))
   }
-}
-
-export async function generateCache ({ plugins = [] }) {
-  const cache = resolve(process.cwd(), '.nextein', 'cache')
-  try {
-    rmdirSync(cache, { recursive: true })
-  } catch (err) {
-    // ignore
-  }
-
-  mkdirSync(cache, { recursive: true })
-  await writeFile(resolve(cache, 'plugins-cache.js'), `
-    module.exports = {
-      ${plugins
-        .filter(p => p.renderer)
-        .map(({ resolved, name }) => `"${name}": require("${resolved}/render").render`)
-        .join(',')
-      }
-    }
-  `)
 }
