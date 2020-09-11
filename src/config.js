@@ -49,7 +49,6 @@ export const withNextein = (nextConfig = {}) => {
         new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, options.dev ? './dev.js' : './exported.js'),
         new NormalModuleReplacementPlugin(/entries[/\\]metadata[/\\]index.js/, './exported.js'),
         new NormalModuleReplacementPlugin(/entries[/\\]pathmap[/\\]index.js/, './exported.js'),
-        new NormalModuleReplacementPlugin(/plugins[/\\]config[/\\]index.js/, './exported.js'),
         new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './exported.js')
       )
 

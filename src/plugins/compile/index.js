@@ -7,9 +7,10 @@ export function compile () {
   const transformers = []
   const cleaners = []
   const filters = []
+  const renders = []
 
   for (const plugin of plugins()) {
-    const { resolved, options = {} } = plugin
+    const { resolved, options = {}, renderer } = plugin
     const { source, build, transform, cleanup, filter } = require(resolved)
     if (source) {
       sources.push((...args) => source(options, ...args))
@@ -26,6 +27,13 @@ export function compile () {
     if (filter) {
       filters.push((...args) => filter(options, ...args))
     }
+
+    if (renderer) {
+      const { render } = require(`${resolved}/render`)
+      if (render) {
+        renders.push((...args) => render(options, ...args))
+      }
+    }
   }
 
   return {
@@ -33,6 +41,7 @@ export function compile () {
     builders,
     transformers,
     cleaners,
-    filters
+    filters,
+    renders
   }
 }

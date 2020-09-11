@@ -5,7 +5,7 @@ import { serverEndpoints } from './endpoints'
 import router, { route } from './router'
 import { createEventStream } from './event-stream'
 import { load, metadata, pathMap } from './entries'
-import { subscribe, plugins } from './plugins'
+import { subscribe } from './plugins'
 
 export default async function start (serverOptions, port, hostname) {
   const app = next(serverOptions)
@@ -34,12 +34,6 @@ export default async function start (serverOptions, port, hostname) {
 
   route(serverEndpoints.pathMap(), async (req, res) => {
     const result = await pathMap()
-    res.writeHead(200, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify(result))
-  })
-
-  route(serverEndpoints.pluginsManifest(), (req, res) => {
-    const result = plugins()
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(result))
   })

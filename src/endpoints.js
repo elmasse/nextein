@@ -29,10 +29,6 @@ function pathMap (buildId = BUILD_ID) {
   return `pathmap--${buildId}.json`
 }
 
-function pluginsManifest (buildId = BUILD_ID) {
-  return `plugins-manifest--${buildId}.json`
-}
-
 function entriesHMR () {
   return '__nextein-entries-hmr'
 }
@@ -44,8 +40,7 @@ function prefixedEndpoints (prefix) {
     post: withPrefix(post),
     metadata: withPrefix(metadata),
     pathMap: withPrefix(pathMap),
-    entriesHMR: withPrefix(entriesHMR),
-    pluginsManifest: withPrefix(pluginsManifest)
+    entriesHMR: withPrefix(entriesHMR)
   }
 }
 

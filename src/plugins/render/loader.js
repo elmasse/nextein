@@ -16,6 +16,7 @@ module.exports = function () {
   const { plugins = [] } = loaderUtils.getOptions(this)
 
   return `module.exports = {
+    "__PLUGINS__": ${JSON.stringify(plugins)},
     ${plugins
       .filter(p => p.renderer)
       .map(({ resolved, name }) => `"${name}": require("${resolved}/render").render`)

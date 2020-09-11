@@ -1,5 +1,5 @@
 
-import { resolvePlugin, hasRenderer } from '../resolver'
+import { resolvePlugin, hasRenderer } from './resolver'
 
 function normalizeString (config) {
   return typeof config === 'string' ? { name: config } : config
