@@ -8,7 +8,9 @@ const INTERNALS = {
   'nextein-plugin-filter-unpublished': resolve(__dirname, 'internals/filter-unpublished')
 }
 
-const isLocal = (name) => name.startsWith('.')
+function isLocal (name) {
+  return name.startsWith('.')
+}
 
 export function resolvePlugin (name) {
   return INTERNALS[name] || (isLocal(name) ? resolve(process.cwd(), name) : name)
