@@ -36,6 +36,19 @@ function checkForOldMarkdownPlugin (config) {
   return config
 }
 
+function resolveSimplifiedNames (config) {
+  let { name } = config
+
+  if (!name.startsWith('.') && !name.startsWith('@') && !name.startsWith('nextein-plugin-')) {
+    name = `nextein-plugin-${name}`
+  }
+
+  return {
+    ...config,
+    name
+  }
+}
+
 function createPlugin (options) {
   const resolved = resolvePlugin(options.name)
   const renderer = hasRenderer(resolved)
@@ -56,6 +69,7 @@ export function processPlugins (nexteinPlugins = []) {
     .map(normalizeString)
     .map(normalizeArray)
     .map(checkForOldMarkdownPlugin)
+    .map(resolveSimplifiedNames)
     .map(createPlugin)
     .reduce(processDuplicates, [])
 

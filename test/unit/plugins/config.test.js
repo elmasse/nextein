@@ -9,54 +9,73 @@ beforeAll(() => {
 })
 
 describe('processPlugins', () => {
-  const nameA = 'pluginA'
+  const nexteinPluginFullName = 'nextein-plugin-pluginA'
+  const nexteinPluginShortName = 'pluginA'
+  const nexteinLocalName = './local/name'
   const options = { test: true }
 
   test('process plugins: ["plugin"]', () => {
-    const evaluated = [nameA]
-    const expected = [{ name: nameA, id: nameA, resolved: nameA, renderer: false }]
+    const evaluated = [nexteinPluginFullName]
+    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
   })
   test('process plugins: [["plugin"]]', () => {
-    const evaluated = [[nameA]]
-    const expected = [{ name: nameA, id: nameA, resolved: nameA, renderer: false }]
+    const evaluated = [[nexteinPluginFullName]]
+    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
   })  
   test('process plugins: [["plugin", { test: true }]]', () => {
-    const evaluated = [[nameA, options]]
-    const expected = [{ name: nameA, id: nameA, resolved: nameA, renderer: false, options }]
+    const evaluated = [[nexteinPluginFullName, options]]
+    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false, options }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
   })
   test('process plugins: [{name: "plugin", options: { test: true }}]', () => {
-    const evaluated = [{ name: nameA, options }]
-    const expected = [{ name: nameA, id: nameA, resolved: nameA, renderer: false, options }]
+    const evaluated = [{ name: nexteinPluginFullName, options }]
+    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false, options }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
   })
   test('process plugins overrides: ["plugin", ["plugin", { test: true }]]', () => {
-    const evaluated = [nameA, [nameA, options]]
-    const expected = [{ name: nameA, id: nameA, resolved: nameA, renderer: false, options }]
+    const evaluated = [nexteinPluginFullName, [nexteinPluginFullName, options]]
+    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false, options }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
   })
   test('process plugins multiple instances: ["plugin", {name: "plugin", id: "second"}]', () => {
-    const evaluated = [nameA, {name: nameA, id: 'second'}]
+    const evaluated = [nexteinPluginFullName, {name: nexteinPluginFullName, id: 'second'}]
     const expected = [
-      { name: nameA, id: nameA, resolved: nameA, renderer: false },
-      { name: nameA, id: 'second', resolved: nameA, renderer: false }
+      { name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false },
+      { name: nexteinPluginFullName, id: 'second', resolved: nexteinPluginFullName, renderer: false }
     ]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
-  })    
+  })
+  test('process plugins short names: ["plugin"]', () => {
+    const evaluated = [nexteinPluginShortName]
+    const expected = [
+      { name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false }
+    ]
+    const result = processPlugins(evaluated)
 
+    expect(result).toEqual(expected)
+  })
+  test('process local plugins names: ["./plugin"]', () => {
+    const evaluated = [nexteinLocalName]
+    const expected = [
+      { name: nexteinLocalName, id: nexteinLocalName, resolved: nexteinLocalName, renderer: false }
+    ]
+    const result = processPlugins(evaluated)
+
+    expect(result).toEqual(expected)
+  })
 })
 
