@@ -153,9 +153,9 @@ This allows to generate multiple instances of the same plugin if an`id` is provi
 
 - `source-fs`
   - source
-- `build-remark`
+- `markdown`
   - build
-  - cleanup? to remove position, raw, etc.
+  - cleanup (remove position, raw, etc.)
 - `filter-unpublished`
   - filter
 

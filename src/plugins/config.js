@@ -2,35 +2,34 @@
 import { resolvePlugin, hasRenderer } from './resolver'
 
 function normalizeString (config) {
-  return typeof config === 'string' ? { name: config } : config
+  return typeof config === 'string' ? { name: config, options: {} } : config
 }
 
 function normalizeArray (config) {
   if (Array.isArray(config)) {
-    const [name, options] = config
+    const [name, options = {}] = config
     return { name, options }
   }
   return config
 }
 
+function normalizeObject (config) {
+  // At this point we already processed String and Array config. Assuming object.
+  return {
+    id: config.id || config.name,
+    options: config.options || {},
+    ...config
+  }
+}
+
 function checkForOldMarkdownPlugin (config) {
-  if (config.name === 'nextein-plugin-markdown') {
-    const { remark, rehype, position, raw, ...deprecated } = config.options
+  const { name, options = {} } = config
+  if (name === 'nextein-plugin-markdown') {
+    const { entriesDir, extension } = options
 
-    console.log('Configuration options for nextein-plugin-markdown has been moved to "nextein-plugin-build-remark".')
-
-    if (Object.keys(deprecated).length) {
-      console.warn(`Check if ${JSON.stringify(deprecated)} from config fits into "nextein-plugin-source-fs"`)
-    }
-
-    return {
-      name: 'nextein-plugin-build-remark',
-      options: {
-        remark,
-        rehype,
-        position,
-        raw
-      }
+    if (entriesDir || extension) {
+      console.warn('"entriesDir" and "exentension" configs have been removed from markdown plugin.')
+      console.warn('Add a "nextein-plugin-source-fs" configuration instead.')
     }
   }
   return config
@@ -53,7 +52,6 @@ function createPlugin (options) {
   const resolved = resolvePlugin(options.name)
   const renderer = hasRenderer(resolved)
   return {
-    id: options.name,
     ...options,
     resolved,
     renderer
@@ -68,6 +66,7 @@ export function processPlugins (nexteinPlugins = []) {
   const config = nexteinPlugins
     .map(normalizeString)
     .map(normalizeArray)
+    .map(normalizeObject)
     .map(checkForOldMarkdownPlugin)
     .map(resolveSimplifiedNames)
     .map(createPlugin)
@@ -85,6 +84,6 @@ export function plugins () {
 // TODO
 export const getDefaultPlugins = () => [
   ['nextein-plugin-source-fs', { path: 'posts' }],
-  'nextein-plugin-build-remark',
+  'nextein-plugin-markdown',
   'nextein-plugin-filter-unpublished'
 ]

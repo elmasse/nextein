@@ -16,14 +16,14 @@ describe('processPlugins', () => {
 
   test('process plugins: ["plugin"]', () => {
     const evaluated = [nexteinPluginFullName]
-    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false }]
+    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false, options: {} }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
   })
   test('process plugins: [["plugin"]]', () => {
     const evaluated = [[nexteinPluginFullName]]
-    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false }]
+    const expected = [{ name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false, options: {} }]
     const result = processPlugins(evaluated)
 
     expect(result).toEqual(expected)
@@ -52,8 +52,8 @@ describe('processPlugins', () => {
   test('process plugins multiple instances: ["plugin", {name: "plugin", id: "second"}]', () => {
     const evaluated = [nexteinPluginFullName, {name: nexteinPluginFullName, id: 'second'}]
     const expected = [
-      { name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false },
-      { name: nexteinPluginFullName, id: 'second', resolved: nexteinPluginFullName, renderer: false }
+      { name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false, options: {} },
+      { name: nexteinPluginFullName, id: 'second', resolved: nexteinPluginFullName, renderer: false, options: {} }
     ]
     const result = processPlugins(evaluated)
 
@@ -62,7 +62,7 @@ describe('processPlugins', () => {
   test('process plugins short names: ["plugin"]', () => {
     const evaluated = [nexteinPluginShortName]
     const expected = [
-      { name: nexteinPluginFullName, id: nexteinPluginFullName, resolved: nexteinPluginFullName, renderer: false }
+      { name: nexteinPluginFullName, id: nexteinPluginShortName, resolved: nexteinPluginFullName, renderer: false, options: {} }
     ]
     const result = processPlugins(evaluated)
 
@@ -71,7 +71,7 @@ describe('processPlugins', () => {
   test('process local plugins names: ["./plugin"]', () => {
     const evaluated = [nexteinLocalName]
     const expected = [
-      { name: nexteinLocalName, id: nexteinLocalName, resolved: nexteinLocalName, renderer: false }
+      { name: nexteinLocalName, id: nexteinLocalName, resolved: nexteinLocalName, renderer: false, options: {} }
     ]
     const result = processPlugins(evaluated)
 
