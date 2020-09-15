@@ -17,11 +17,10 @@ const { NON_STANDARD_NODE_ENV } = require('next/dist/lib/constants')
 
 const defaultCommand = 'dev'
 const commands = {
-  build: async () => await import('next/dist/cli/next-build').then((i) => i.nextBuild),
-  start: async () => await import('next/dist/cli/next-start').then((i) => i.nextStart),
-  export: async () =>
-    await import('next/dist/cli/next-export').then((i) => i.nextExport),
-  dev: async () => await import('../cli/nextein-dev.js').then((i) => i.nexteinDev),
+  build: async () => import('next/dist/cli/next-build').then((i) => i.nextBuild),
+  start: async () => import('next/dist/cli/next-start').then((i) => i.nextStart),
+  export: async () => import('next/dist/cli/next-export').then((i) => i.nextExport),
+  dev: async () => import('../cli/nextein-dev.js').then((i) => i.nexteinDev)
 }
 
 const args = arg(
@@ -33,10 +32,10 @@ const args = arg(
 
     // Aliases
     '-v': '--version',
-    '-h': '--help',
+    '-h': '--help'
   },
   {
-    permissive: true,
+    permissive: true
   }
 )
 
@@ -74,10 +73,11 @@ if (!foundCommand && args['--help']) {
 const command = foundCommand ? args._[0] : defaultCommand
 const forwardedArgs = foundCommand ? args._.slice(1) : args._
 
-if (args['--inspect'])
+if (args['--inspect']) {
   throw new Error(
     `--inspect flag is deprecated. Use env variable NODE_OPTIONS instead: NODE_OPTIONS='--inspect' next ${command}`
   )
+}
 
 // Make sure the `next <subcommand> --help` case is covered
 if (args['--help']) {
@@ -100,7 +100,7 @@ const React = require('react')
 
 if (typeof React.Suspense === 'undefined') {
   throw new Error(
-    `The version of React you are using is lower than the minimum required version needed for Next.js. Please upgrade "react" and "react-dom": "npm install react react-dom" https://err.sh/vercel/next.js/invalid-react-version`
+    'The version of React you are using is lower than the minimum required version needed for Next.js. Please upgrade "react" and "react-dom": "npm install react react-dom" https://err.sh/vercel/next.js/invalid-react-version'
   )
 }
 
