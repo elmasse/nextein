@@ -2,6 +2,7 @@
 import { plugins } from '../config'
 
 export function compile () {
+  const configs = []
   const sources = []
   const builders = []
   const transformers = []
@@ -11,7 +12,11 @@ export function compile () {
 
   for (const plugin of plugins()) {
     const { resolved, options = {}, renderer } = plugin
-    const { source, build, transform, cleanup, filter } = require(resolved)
+    const { config, source, build, transform, cleanup, filter } = require(resolved)
+
+    if (config) {
+      configs.push((...args) => config(options, ...args))
+    }
     if (source) {
       sources.push((...args) => source(options, ...args))
     }
@@ -37,6 +42,7 @@ export function compile () {
   }
 
   return {
+    configs,
     sources,
     builders,
     transformers,

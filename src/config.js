@@ -5,6 +5,7 @@ import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 import { metadata, setNextExportPathMap } from './entries'
 import { generateExportedFiles } from './export'
 import { processPlugins, getDefaultPlugins } from './plugins'
+import { compile } from './plugins/compile'
 
 const getDefaultConfig = () => ({
   plugins: getDefaultPlugins()
@@ -31,8 +32,9 @@ const processConfig = ({ nextein = {} }) => {
 export const withNextein = (nextConfig = {}) => {
   const { trailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
   const nexteinConfig = processConfig(nextConfig)
+  const { configs } = compile()
 
-  return ({
+  let config = {
     ...nextConfig,
     trailingSlash,
     assetPrefix,
@@ -118,7 +120,13 @@ export const withNextein = (nextConfig = {}) => {
         ...nextExportPathMap
       }
     }
-  })
+  }
+
+  for (const configPlugin of configs) {
+    config = configPlugin(config)
+  }
+
+  return config
 }
 
 export default withNextein
