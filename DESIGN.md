@@ -12,6 +12,7 @@ We should be able to create remark content based on md files or even plain txt o
 
 We will have these stages/plugin-types:
 
+- config
 - source
 - build
 - transform
@@ -22,6 +23,10 @@ We will have these stages/plugin-types:
 
 The stages or plugin-types will be executed in the order listed here.
 
+- *config*: This stage allows plugin developers to inject configuration into the `next.config.js` module. It *MUST* return the `nextConfig` or the modified version of it.
+  - `config(options, nextConfig): {Object}`
+    - options
+    - nextConfig
 - *source*: This stage compiles an entries list. It should call `action.build` on any entry to be processed. The `action.build` will execute *build* plugins. 
   - `source(options, action: { build, remove })`. 
       - options
@@ -69,17 +74,21 @@ The stages or plugin-types will be executed in the order listed here.
       - content
       - raw
 - *transform*: This stage receive the **_entries** array as `posts`. Here we can modify one or many items.
-  - `transform(options, posts): Array<Entry>`
+  - `transform(options, posts): {Array<Entry>}`
     - options
     - posts
 - *cleanup*: Same as *transform* stage but useful to remove / clean up data.
-  - `cleanup(options, posts): Array<Entry>`
+  - `cleanup(options, posts): {Array<Entry>}`
     - options
     - posts
-- *filter*: Filter posts. Predicate function to be run as `posts.filter(fiterPredicate)`
-  - `filter(options, posts): {Boolean}`
-- *sort*: Sort posts. Sorter function to be run as `posts.sort(sorterFn)`
-  - `sort(options, posts): {Number}`
+- *filter*: Filter posts. Same as transform stage plugins but guaranteed to run after cleanup.
+  - `filter(options, posts): {Array<Entry>}`
+    - options
+    - posts
+- *sort*: Sort posts. Same as transform stage plugins but guaranteed to run after filter.
+  - `sort(options, posts): {Array<Entry>}`
+    - options
+    - posts
 -*render*: This stage runs inside the `Content` component.
 - `render(options, post): {Component}`: **It MUST be defined as a named export in a `render.js` file on the plugin root folder.** This method should return a React Component. 
 
@@ -144,11 +153,6 @@ This allows to generate multiple instances of the same plugin if an`id` is provi
 }
 ```
 
-#### NOTE
- 
-**Consider detecting 'nextein-plugin-markdown' and split into 2 configurations to preserve back compat.**
-
-
 ## Default Settings
 
 - `source-fs`
@@ -164,10 +168,11 @@ This allows to generate multiple instances of the same plugin if an`id` is provi
 
 For *source* plugins there is way to setup file watchers for dev mode. Once the watcher activates, it triggers the action of re-sourcing. This implies:
 
-- *source* calls `action.build` with the file that changed.
-- *source*'s `action.build` executes *build*'s `action.create` and might or might not return an entry. ??
+- *source* calls `action.build` with the file that changed or `action.remove` if file is removed.
+- *source*'s `action.build` executes *build*'s `action.create`.
+- *source*'s `action.remove` executes a remove of entry from current entry set.
 
-//TBD
+Once this stage is completed, the entry set is cloned and all plugins from `transform` stage are run against the new set.
 
 ## Rendering `content`
 
