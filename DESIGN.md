@@ -34,14 +34,14 @@ The stages or plugin-types will be executed in the order listed here.
         - build(buildOptions)
         - remove(removeOptions)
       - `buildOptions` {Object}
+        - filePath: Absolute path
         - path: Relative to `options.path`. e.g.`'/blog/first-post.md'`
         - name: e.g.`'firts-post.md'`
         - mimeType: e.g.`'text/markdown'`
         - createdOn {Date}
-        - removed {Boolean}
         - load() {Promise} return file content
       - `removeOptions` {Object}
-        -  filePath
+        -  filePath: Absolute path
 - *build*: Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
   - `build(options, buildOptions, action: { create })`.
     - options
