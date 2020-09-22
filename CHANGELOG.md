@@ -5,6 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- New Plugin System. Evolved into stages.
+- Render Plugins for Content.
+- Fast refresh for posts/entries via source plugin.
+
+### Fixed
+- Issue with trailing slash export configuration.
+- Issue with `nextein/link` not compliant with latest changes from Next.
+
+### Removed
+- Support for Next lower than v9.5.
+- Support for Node lower than v10
 
 ## [2.7.3] - 2020-08-15
 ### Fixed
