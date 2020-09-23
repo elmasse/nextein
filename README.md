@@ -152,7 +152,7 @@ export default withCategoryAPosts(({ posts }) => {
 
 ### `sortByDate`
 
-Sort function to be applied to posts to sort by date (newest on top). This requires the post contains a `date` in `frontmatter` or in the file name (ala jekyll)
+Sort function to be applied to posts to sort by date (newest on top). This requires that the post contains a `date` in `frontmatter` or in the file name (ala jekyll)
 
 ```js
 import withPosts, { sortByDate } from 'nextein/posts'
