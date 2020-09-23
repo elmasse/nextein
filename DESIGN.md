@@ -81,11 +81,11 @@ The stages or plugin-types will be executed in the order listed here.
   - `cleanup(options, posts): {Array<Entry>}`
     - options
     - posts
-- *filter*: Filter posts. Same as transform stage plugins but guaranteed to run after cleanup.
+- *filter*: Filter posts. Same as *transform* stage plugins but guaranteed to run after *cleanup*.
   - `filter(options, posts): {Array<Entry>}`
     - options
     - posts
-- *sort*: Sort posts. Same as transform stage plugins but guaranteed to run after filter.
+- *sort*: Sort posts. Same as *transform* stage plugins but guaranteed to run after *filter*.
   - `sort(options, posts): {Array<Entry>}`
     - options
     - posts
