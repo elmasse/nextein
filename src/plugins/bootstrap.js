@@ -53,7 +53,7 @@ async function upsertEntries () {
 }
 
 async function processEntries () {
-  const { transformers = [], cleaners = [], filters = [] } = compile()
+  const { transformers = [], cleaners = [], filters = [], sorters = [] } = compile()
 
   posts = JSON.parse(JSON.stringify(Array.from(entries.values()))) // deep clone
 
@@ -67,6 +67,10 @@ async function processEntries () {
 
   for (const filter of filters) {
     posts = await filter(posts)
+  }
+
+  for (const sort of sorters) {
+    posts = await sort(posts)
   }
 
   if (bootstraped) emitter.emit('update')
