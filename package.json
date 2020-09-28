@@ -7,13 +7,13 @@
   "homepage": "https://nextein.elmasse.io",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
     "build": "taskr",
-    "release": "taskr release",
+    "lint": "taskr lint",
+    "postinstall": "opencollective-postinstall || true",
     "prepublish": "npm run release",
-    "lint": "standard 'bin/*' 'src/**/*.js'",
-    "version": "chan release ${npm_package_version} && git add .",
-    "postinstall": "opencollective-postinstall || true"
+    "release": "taskr release",
+    "test": "jest",
+    "version": "chan release ${npm_package_version} && git add ."
   },
   "bin": {
     "nextein": "./dist/bin/nextein"
