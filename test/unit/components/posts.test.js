@@ -2,7 +2,7 @@ jest.mock('../../../src/entries')
 import React from 'react'
 
 import { load, metadata } from '../../../src/entries/'
-import withPosts, { withPostsFilterBy, inCategory, entries } from '../../../src/components/posts'
+import withPosts, { withPostsFilterBy, inCategory } from '../../../src/components/posts'
 
 describe('withPosts', () => {
   test('exports HOC withPosts as default', () => {
