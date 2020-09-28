@@ -7,7 +7,7 @@ import reactRenderer from 'rehype-react'
 import { select } from 'unist-util-select'
 
 const extractExcerpt = (excerpt) => {
-  const selector = (typeof excerpt === 'string') ? excerpt : ':root > element[tagName=p]:first-child'
+  const selector = (typeof excerpt === 'string') ? excerpt : ':root > element[tagName=p]'
 
   return () => /* attacher */ (tree) => {
     /* transformer */
