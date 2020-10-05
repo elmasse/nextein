@@ -19,7 +19,7 @@ function createOptions (source, raw, options) {
 }
 
 /**
- *
+ * build
  * @param {Object} options
  * @param {Array} options.remark plugins for remark
  * @param {Array} options.rehype plugins for rehype
@@ -35,7 +35,7 @@ export async function build (options, { load, ...source }, { create }) {
 }
 
 /**
- *
+ * cleanup
  * @param {Object} options
  * @param {Boolean} options.raw set to true to keep raw value in post object. Default to false.
  * @param {Boolean} options.position set to true to keep position information in content hast. Default to false.
