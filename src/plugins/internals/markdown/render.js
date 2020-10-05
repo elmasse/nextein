@@ -20,7 +20,7 @@ const extractExcerpt = (options) => (excerpt) => {
 }
 
 /**
- * render 
+ * render
  * @param {Object} options
  * @param {String} options.excerpt Default excerpt selector to be used in Content when excerpt is set to true.
  * It must be a valid `unist-util-select` selector. Default to ':root > element[tagName=p]' (first paragraph).
