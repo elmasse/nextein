@@ -183,8 +183,8 @@ Use the `excerpt` property to only render the first paragraph (this is useful wh
 - `content`: `{Object}` Markdown content in HAST format to be render. This is provided by `post.content`
 - `excerpt`: `{Boolean}` true to only render the first paragraph. Optional. Default: `false`
 - `renderers`: `{Object}` A set of custom renderers for Markdown elements with the form of `[tagName]: renderer`.
-- `prefix`: `{String}` Prefix to use for the generated React elements. Optional. Default: `'entry-'`
-- `component`: `{String|React.Component}`	The component used for the root node. Either a string to use or a React Component.
+- `components`: `{Object}`. Convenient alias to `renderers`.
+- `component`: `{String|React.Component}`	The component used for the root node.
 
 
 ```js
@@ -343,50 +343,62 @@ The `nextein.plugins` configuration accepts an array of plugins with the followi
 
 The plugin name should be a pre-installed plugin (`nextein-plugin-markdown`) , or a local file (`./myplugins/my-awesome-plugin`)
 
-### Default Plugin (nextein-plugin-markdown)
+### Default Plugins
 
-The default plugin will source the posts using a configurable set of options:
+The default configuration includes:
 
-- `extension`: Default to `md`
-- `entriesDir`: Default to `['posts']`
+```js
+plugins: [
+  ['nextein-plugin-source-fs', { path: 'posts' }],
+  'nextein-plugin-markdown',
+  'nextein-plugin-filter-unpublished'
+]
+
+```
+
+#### nextein-plugin-source-fs
+
+Read files from file system.
+
+Options:
+
+- `path`: Path to read files from.
+- `includes`: Default to `**/*.*`. 
+- `ignore`: A set of ignored files. The default list includes:
+  ```js
+  '**/.DS_Store',
+  '**/.gitignore',
+  '**/.npmignore',
+  '**/.babelrc',
+  '**/node_modules',
+  '**/yarn.lock',
+  '**/package-lock.json'
+  ```
+
+#### nextein-plugin-markdown
+
+Render markdown files.
+
+Options:
+
 - `raw`: Default to `true`. Make this `false` to not add the `raw` content in the post object.
 - `position`: Default to `false`. Make this `true` to add the position info to post content HAST.
 - `rehype`: Default to `[]`. Add a set of plugins for `rehype`
 - `remark`: Default to `[]`. Add a set of plugins for `remark`
 
+#### nextein-plugin-filter-unpublished
+
+Filter posts by using a property to prevent draft / unpublished entries to be displayed.
+
+Options:
+
+- `field`: Default to`'published'`. Will check if a `field` is present in post `data` and filter if set to `false`.
+
 ## Plugins
 
 You can write your own plugins. There are basically 2 different types (source and transforms). Source plugins will be called to generate the posts entries and then the transform plugins will receive those entries and can modify, filter, append, or transform in anyway the posts list.
 
-Both types are just async functions. You have to export a `source` and/or `transform` method from you plugin main module:
-
-```js
-// file: ./plugins/my-plugin
-
-/* source plugin  (options) => post[]  */
-module.exports.source = async (options) => { /* return your posts */ }
-
-/* transform plugin (options, post[]) =>  post[] */
-module.export.transform = async (options, posts) => { /* return your posts */ }
-
-```
-
-Then in the `next.config.js` file you can define your plugin with options as follows. The same `options` object will be passed to both `source` and `transform` methods.
-
-```js
-
-const { withNextein } = require('nextein/config')
-
-module.exports = withNextein({
-  nextein: {
-    plugins: [
-      ['./plugins/my-plugin', { awesome: true }]
-    ]
-  }
-  // Your own next.js config here
-})
-
-```
+// TODO - Add definitions here.
 
 ## Contributors
 
