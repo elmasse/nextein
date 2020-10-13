@@ -24,8 +24,7 @@
     "content.js",
     "link.js",
     "posts.js",
-    "post.js",
-    "statics.js"
+    "post.js"
   ],
   "dependencies": {
     "chokidar": "^3.4.2",
