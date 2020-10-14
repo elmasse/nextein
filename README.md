@@ -44,7 +44,7 @@ There are a few steps you have to follow to get your site up and running with `n
     import React from 'react'
 
     import withPosts from 'nextein/posts'
-    import { Content } from 'nextein/post'
+    import Content from 'nextein/content'
 
     export default withPosts( ({ posts }) => {
       return (
@@ -188,7 +188,8 @@ Use the `excerpt` property to only render the first paragraph (this is useful wh
 
 
 ```js
-import withPost, { Content } from 'nextein/post'
+import withPost from 'nextein/post'
+import Content from 'nextein/content'
 
 export default withPost( ({ post }) => { return (<Content {...post} />) } )
 
@@ -197,9 +198,10 @@ export default withPost( ({ post }) => { return (<Content {...post} />) } )
 Using the `excerpt` property
 
 ```js
-import withPosts, {inCategory} from 'nextein/posts'
+import withPosts, { inCategory } from 'nextein/posts'
+import Content from 'nextein/content'
 
-export default withPosts( ({ posts }) => { 
+export default withPosts(({ posts }) => { 
   const homePosts = posts.filter(inCategory('home'))
   return (
     <section>
@@ -208,14 +210,19 @@ export default withPosts( ({ posts }) => {
     }
     </section>
   )
-} )
+})
 
 ```
 
 Using `renderers` to change/style the `<p>` tag
 
 ```js
-export default withPost( ({ post }) => { 
+import withPost from 'nextein/post'
+import Content from 'nextein/content'
+
+const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'}}> { children } </p> )
+
+export default withPost(({ post }) => { 
   return (
     <Content {...post} 
       renderers={{
@@ -223,17 +230,14 @@ export default withPost( ({ post }) => {
       }}
     />
   ) 
-} )
-
-const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'}}> { children } </p> )
+})
 
 ```
 
 
 ### `Link`
 
-You can use `nextein/link` instead with the exact same parameters as `next/link`. This component wraps the `next/link` one to simplify creating a _Link_ for a given post object. `next/link` will work out of the box.
- When passing a `post.data.url` to `href` it will generate the underlying `next/link` with the `post` information.
+You can use `nextein/link` with the exact same parameters as `next/link`. This component wraps the `next/link` to simplify creating a _Link_ for a given `post` object. When passing a `post.data.url` to `href` it will generate the underlying `next/link` with the `post` information.
 
 
 - `data`: `{Object}` Post frontmatter object. This is provided by `post.data`
@@ -268,12 +272,11 @@ export default withPosts( ({ posts }) => (
     - `data.url` is the generated url for the post
     - `data.category` is the post's category. When not specified, if the post is inside a folder, the directory structure under `posts` will be used. 
     - `data.date`: JSON date from frontmatter's date or date in file name or file creation date
-- `raw` is markdown content of the post
-- `content` is a HAST representation of post content 
+- `content` is representation of post content (generally in HAST format) created by the build plugin for a given mimeType.
 
 ```js
 
-{ data, raw } = post
+{ data, content } = post
 
 ```
 
@@ -309,7 +312,6 @@ A wrapper configuration function to be applied into the `next.config.js`. It pro
 > next.config.js
 
 ```js
-
 const { withNextein } = require('nextein/config')
 
 module.exports = withNextein({
@@ -321,13 +323,11 @@ module.exports = withNextein({
 You can also define nextein plugins using the `withNextein` configuration:
 
 ```js
-
 const { withNextein } = require('nextein/config')
 
 module.exports = withNextein({
   nextein: {
     plugins: [
-      ['nextein-plugin-markdown', { entriesDir: ['_posts'] }]
       //your nextein plugins here
     ]
   }
@@ -398,7 +398,7 @@ Options:
 
 You can write your own plugins. There are basically 2 different types (source and transforms). Source plugins will be called to generate the posts entries and then the transform plugins will receive those entries and can modify, filter, append, or transform in anyway the posts list.
 
-// TODO - Add definitions here.
+See [plugins & lifecyle design document](./DESIGN.md).
 
 ## Contributors
 
