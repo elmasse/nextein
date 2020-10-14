@@ -2,13 +2,12 @@
 
 A static site generator based in Next.js
 
-[![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_5.svg)](https://cafecito.app/elmasse)  
-[![Financial Contributors on Open Collective](https://opencollective.com/nextein/all/badge.svg?label=financial+contributors)](https://opencollective.com/nextein)  
 [![Build Status](https://travis-ci.org/elmasse/nextein.svg?branch=master)](https://travis-ci.org/elmasse/nextein) 
+[![npm](https://img.shields.io/npm/v/nextein)](https://www.npmjs.com/package/nextein)
 [![ProductHunt](https://img.shields.io/badge/producthunt-vote-orange.svg)](https://www.producthunt.com/posts/nextein) 
 [![Gitter](https://badges.gitter.im/elmasse/nextein.svg)](https://gitter.im/nextein/Lobby)
 
-## [Site](https://nextein.elmasse.io/) | [Documentation](https://nextein.elmasse.io/docs) | [Guides](https://nextein.elmasse.io/guides)
+#### [Site](https://nextein.elmasse.io/) | [Documentation](https://nextein.elmasse.io/docs) | [Guides](https://nextein.elmasse.io/guides)
 
 ## What is it?
 `nextein` is  a wrapper around `next.js` that allows you to write static sites using `markdown` and `react`. 
