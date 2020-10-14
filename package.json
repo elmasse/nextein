@@ -7,10 +7,11 @@
   "homepage": "https://nextein.elmasse.io",
   "main": "index.js",
   "scripts": {
-    "build": "taskr",
+    "build": "taskr build",
+    "build:watch": "taskr watch",
     "lint": "taskr lint",
     "postinstall": "opencollective-postinstall || true",
-    "prepublish": "npm run release",
+    "prepublishOnly": "npm run release",
     "release": "taskr release",
     "test": "jest",
     "version": "chan release ${npm_package_version} && git add ."
