@@ -184,6 +184,8 @@ Once this stage is completed, the entry set is cloned and all plugins from `tran
 
 Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths) can be used with this new experimental feature.
 
+> **NOTE**: For now, all posts rendered in a dynamic route require a `page: false` or `dynamic: true`
+
 Example for a `[name].js` dynamic route
 
 ```js
