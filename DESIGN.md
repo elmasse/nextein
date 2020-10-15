@@ -178,6 +178,77 @@ Once this stage is completed, the entry set is cloned and all plugins from `tran
 
 // TBD
 
-## Extra - Run Plugin Stack from `getStaticProps`?
+## New `fetcher` 
 
-// TBD
+**Experimental**
+
+Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths) can be used with this new experimental feature.
+
+Example for a `[name].js` dynamic route
+
+```js
+import fetcher from 'nextein/fetcher'
+
+const { getData, getPost } = fetcher(/* filter */)
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: data.map(({ name }) => ({ params: { name } })),
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const post = await getPost(params)
+  return {
+    props: {
+      post
+    }
+  }
+}
+
+export default function Post ({ post }) {
+  //...
+}
+
+```
+
+Example for a `[[...name]].js` dynamic route:
+
+```js
+import fetcher from 'nextein/fetcher'
+import { inCategory } from 'nextein/filters'
+
+const { getData, getPosts, getPost } = fetcher(inCategory('guides'))
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: [{
+      params: {
+        name: []
+        }
+      },
+      ...data.map(({ name }) => ({ params: { name: [name] } }))
+    ],
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const posts = await getPosts()
+  const post = await getPost(params) // This can be null if not matching `...name`
+  return {
+    props: {
+      posts,
+      post
+    }
+  }
+}
+
+export default function Guides ({ posts, post }) {
+  //...
+}
+
+```

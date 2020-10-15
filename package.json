@@ -23,6 +23,8 @@
     "dist",
     "config.js",
     "content.js",
+    "fetcher.js",
+    "filters.js",
     "link.js",
     "posts.js",
     "post.js"

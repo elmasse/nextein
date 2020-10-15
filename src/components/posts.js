@@ -8,13 +8,7 @@ import getDisplayName from 'react-display-name'
 import { load, metadata, pathMap } from '../entries'
 import endpoints from '../endpoints'
 
-export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
-  const { data } = post
-  const { category: postCategory = '' } = data
-  const result = includeSubCategories ? postCategory.startsWith(category) : postCategory === category
-
-  return result
-}
+export { inCategory } from '../entries/filters'
 
 export const sortByDate = (a, b) => {
   const aTime = new Date(a.data.date).getTime()
