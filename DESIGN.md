@@ -174,17 +174,17 @@ For *source* plugins there is way to setup file watchers for dev mode. Once the 
 
 Once this stage is completed, the entry set is cloned and all plugins from `transform` stage are run against the new set.
 
-## Rendering `content`
+## Rendering with `Content`
 
-// TBD
+The `Content` component will run the appropriate render based on the `post` data.
 
-## New `fetcher` 
+## New `fetcher` for Dynamic Routes
 
-**Experimental**
+> Status: **Experimental**
 
 Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths) can be used with this new experimental feature.
 
-> **NOTE**: For now, all posts rendered in a dynamic route require a `page: false` or `dynamic: true`
+> **NOTE**: For now, all posts rendered in a dynamic route require to have `page: false`. 
 
 Example for a `[name].js` dynamic route
 
@@ -254,3 +254,9 @@ export default function Guides ({ posts, post }) {
 }
 
 ```
+
+### Caveats
+
+- Post are required to be marked with `page: false`.
+- No fast refresh for post changes.
+- The `nextein` Link won't work since page is set to false.
