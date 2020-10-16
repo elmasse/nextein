@@ -203,11 +203,7 @@ export async function getStaticPaths () {
 
 export async function getStaticProps ({ params }) {
   const post = await getPost(params)
-  return {
-    props: {
-      post
-    }
-  }
+  return { props: { post } }
 }
 
 export default function Post ({ post }) {
@@ -227,11 +223,7 @@ const { getData, getPosts, getPost } = fetcher(inCategory('guides'))
 export async function getStaticPaths () {
   const data = await getData()
   return {
-    paths: [{
-      params: {
-        name: []
-        }
-      },
+    paths: [{ params: { name: [] } },
       ...data.map(({ name }) => ({ params: { name: [name] } }))
     ],
     fallback: false
@@ -241,12 +233,7 @@ export async function getStaticPaths () {
 export async function getStaticProps ({ params }) {
   const posts = await getPosts()
   const post = await getPost(params) // This can be null if not matching `...name`
-  return {
-    props: {
-      posts,
-      post
-    }
-  }
+  return { props: { posts, post } }
 }
 
 export default function Guides ({ posts, post }) {
