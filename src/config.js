@@ -88,8 +88,8 @@ export const withNextein = (nextConfig = {}) => {
     async exportPathMap (defaultPathMap, options) {
       const entries = await metadata()
       const map = entries
-        .reduce((prev, { url, page, dynamic = false, __id }) => {
-          return (!dynamic && page) ? {
+        .reduce((prev, { url, page, __id }) => {
+          return page ? {
             ...prev,
             [url]: { page: `/${page}`, query: __id ? { __id } : undefined }
           } : prev

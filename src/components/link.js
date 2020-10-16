@@ -46,9 +46,15 @@ class NexteinLink extends Component {
     const { data, content, raw, ...rest } = this.props // content & raw are not used but required to remove them from rest
 
     if (data) {
-      const { page = 'post', __id, url } = data
+      const { page, __id, url } = data
+
+      if (!page) {
+        console.warn(`Link Component (from nextein) is trying to render a link to a post (name: ${ data.name }) with no page.`)
+        return null
+      }
+
       href = { pathname: `/${page}`, query: { __id } }
-      as = url
+      as = url      
     }
 
     href = prefixed(href)
