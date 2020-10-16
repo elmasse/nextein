@@ -45,12 +45,16 @@ class NexteinLink extends Component {
     let { href, as, mapped } = this.state
     const { data, content, raw, ...rest } = this.props // content & raw are not used but required to remove them from rest
 
+    if (!mapped) return null
+
     if (data) {
       const { page, __id, url } = data
 
       if (!page) {
-        console.warn(`Link Component (from nextein) is trying to render a link to a post (name: ${data.name}) with no page.`)
-        return null
+        console.warn(`Link Component (from nextein) is trying to render a link to a post (name: ${data.name}) with no page. Link has no effect. Review.`)
+        // Do not fail, like an anchor without props, still renders its own children.
+        // past this point, meaning a Link to be used as a NextJS Link, it will be up to them on how to handle errors.
+        return (<>{this.props.children}</>)
       }
 
       href = { pathname: `/${page}`, query: { __id } }
@@ -60,7 +64,7 @@ class NexteinLink extends Component {
     href = prefixed(href)
     as = prefixed(as)
 
-    return (mapped ? <Link {...{ ...rest, href, as }} /> : null)
+    return (<Link {...{ ...rest, href, as }} />)
   }
 }
 
