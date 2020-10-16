@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - New Plugin System. Evolved into stages.
-- Render Plugins for Content.
-- Fast refresh for posts/entries via source plugin.
+- New File System Plugin for `source`.
+- Improved / Refactored `markdown` plugin.
+- New `render` Plugin for `Content`.
+- Fast refresh for posts/entries via `source` plugin.
+- New `fetcher` for loading/querying posts in dynamic routes. (*Experimental*)
+- Moved `inCategory` to `nextein/filters`. Still exported from `nextein/posts`.
 
 ### Fixed
 - Issue with trailing slash export configuration.
 - Issue with `nextein/link` not compliant with latest changes from Next.
+- Issue with `nextein/link` rendering posts with no `page` or `page` set to `false`.
 
 ### Removed
 - Support for Next lower than v9.5.
