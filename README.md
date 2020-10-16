@@ -112,7 +112,8 @@ Filter function to be applied to posts to retrieve posts in a given category.
 Categories are resolved by the folder structure by default. This means that a post located at `posts/categoryA/subOne` will have a category `categoryA/subOne` unless you specify the category name in frontmatter. 
 
 ```js
-import withPosts, { inCategory } from 'nextein/posts'
+import withPosts from 'nextein/posts'
+import { inCategory } from 'nextein/filters'
 
 export default withPosts( ({ posts }) => { 
   const homePosts = posts.filter(inCategory('home'))
@@ -124,7 +125,8 @@ export default withPosts( ({ posts }) => {
 If you want to retrieve all posts under a certain category, let's say `categoryA` which will include all those under `subOne`, use the options `includeSubCategories: true`. 
 
 ```js
-import withPosts, { inCategory } from 'nextein/posts'
+import withPosts from 'nextein/posts'
+import { inCategory } from 'nextein/filters'
 
 export default withPosts( ({ posts }) => { 
   const categoryAPosts = posts
@@ -139,7 +141,8 @@ export default withPosts( ({ posts }) => {
 Returns an HOC that gets all posts filtered out by the given filter function. This can be used in conjunction with `inCategory` to get only the desired posts in a certain category.
 
  ```js
-import { withPostsFilterBy, inCategory } from 'nextein/posts'
+import { withPostsFilterBy } from 'nextein/posts'
+import { inCategory } from 'nextein/filters'
 
 const withCategoryAPosts = withPostsFilterBy(inCategory('categoryA'))
 
@@ -303,6 +306,75 @@ Post Content...
 - `name`: **Read Only** The post file name. Date is removed from name if present.
 - `url`: **Read Only** The post url.
 
+### `fetcher` 
+
+Status: **Experimental**
+
+Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths) can be used with this new experimental feature.
+
+**NOTE**: For now, all posts rendered in a dynamic route require to have `page: false`. 
+
+Example for a `[name].js` dynamic route
+
+```js
+import fetcher from 'nextein/fetcher'
+
+const { getData, getPost } = fetcher(/* filter */)
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: data.map(({ name }) => ({ params: { name } })),
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const post = await getPost(params)
+  return { props: { post } }
+}
+
+export default function Post ({ post }) {
+  //...
+}
+
+```
+
+Example for a `[[...name]].js` dynamic route:
+
+```js
+import fetcher from 'nextein/fetcher'
+import { inCategory } from 'nextein/filters'
+
+const { getData, getPosts, getPost } = fetcher(inCategory('guides'))
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: [{ params: { name: [] } },
+      ...data.map(({ name }) => ({ params: { name: [name] } }))
+    ],
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const posts = await getPosts()
+  const post = await getPost(params) // This can be null if not matching `...name`
+  return { props: { posts, post } }
+}
+
+export default function Guides ({ posts, post }) {
+  //...
+}
+
+```
+
+#### Caveats
+
+- Post are required to be marked with `page: false`.
+- No fast refresh for post changes.
+- The `nextein` Link won't work since page is set to false.
 
 ### `withNextein`
 
