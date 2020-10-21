@@ -24,7 +24,7 @@ export function createId (path) {
  * @param {String} rawEntry.meta.filePath absolute path to the entry.
  * @param {String} rawEntry.meta.mimeType file mimeType.
  * @param {String} rawEntry.meta.nane file name (without extension).
- * @param {String} rawEntry.meta.createdOn entry creation date
+ * @param {String} rawEntry.meta.createdOn entry creation date. Optional.
  * @param {String} rawEntry.meta.path entry path (relative to folder where it was read from). Optional.
  * @param {Object} rawEntry.meta.extra entry extra data. Usually from frontmatter content. It can override other meta options. Optional.
  * @param {String} rawEntry.raw entry raw content.
@@ -37,7 +37,7 @@ export function createEntry ({ meta, raw, content }) {
     page: 'post',
     name: meta.name,
     category: meta.path || undefined,
-    date: JSON.parse(meta.createdOn),
+    date: JSON.parse(meta.createdOn || JSON.stringify(new Date())),
     ...meta.extra
   }
 
