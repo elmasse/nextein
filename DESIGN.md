@@ -23,11 +23,18 @@ We will have these stages/plugin-types:
 
 The stages or plugin-types will be executed in the order listed here.
 
-- *config*: This stage allows plugin developers to inject configuration into the `next.config.js` module. It *MUST* return the `nextConfig` or the modified version of it.
+#### config
+
+This stage allows plugin developers to inject configuration into the `next.config.js` module. It *MUST* return the `nextConfig` or the modified version of it.
+
   - `config(options, nextConfig): {Object}`
     - options
     - nextConfig
-- *source*: This stage compiles an entries list. It should call `action.build` on any entry to be processed. The `action.build` will execute *build* plugins. 
+
+#### source
+
+This stage compiles an entries list. It should call `action.build` on any entry to be processed. The `action.build` will execute *build* plugins. 
+
   - `source(options, action: { build, remove })`. 
       - options
       - action
@@ -42,7 +49,11 @@ The stages or plugin-types will be executed in the order listed here.
         - load() {Promise} return file content
       - `removeOptions` {Object}
         -  filePath: Absolute path
-- *build*: Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
+
+#### build
+
+Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
+
   - `build(options, buildOptions, action: { create })`.
     - options
     - buildOptions
@@ -73,23 +84,42 @@ The stages or plugin-types will be executed in the order listed here.
         - {...user defined data}
       - content
       - raw
-- *transform*: This stage receive the **_entries** array as `posts`. Here we can modify one or many items.
+
+#### transform
+
+This stage receive the **_entries** array as `posts`. Here we can modify one or many items.
+
   - `transform(options, posts): {Array<Entry>}`
     - options
     - posts
-- *cleanup*: Same as *transform* stage but useful to remove / clean up data.
+
+#### cleanup
+
+Same as *transform* stage but useful to remove / clean up data.
   - `cleanup(options, posts): {Array<Entry>}`
     - options
     - posts
-- *filter*: Filter posts. Same as *transform* stage plugins but guaranteed to run after *cleanup*.
+
+#### filter
+
+Filter posts. Same as *transform* stage plugins but guaranteed to run after *cleanup*.
+
   - `filter(options, posts): {Array<Entry>}`
     - options
     - posts
-- *sort*: Sort posts. Same as *transform* stage plugins but guaranteed to run after *filter*.
+
+#### sort
+
+Sort posts. Same as *transform* stage plugins but guaranteed to run after *filter*.
+
   - `sort(options, posts): {Array<Entry>}`
     - options
     - posts
-- *render*: This stage runs inside the `Content` component.
+
+#### render
+
+This stage runs inside the `Content` component.
+
   - `render(options, post): {Component}`: **It MUST be defined as a named export in a `render.js` file on the plugin root folder.** This method should return a React Component. 
 
 ## Plugin Configuration
