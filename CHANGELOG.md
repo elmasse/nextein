@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved / Refactored `markdown` plugin.
 - New `render` Plugin for `Content`.
 - Fast refresh for posts/entries via `source` plugin.
-- New `fetcher` for loading/querying posts in dynamic routes. (*Experimental*)
+- New `fetcher` for loading/querying posts in dynamic routes. (_Experimental_)
 - Moved `inCategory` to `nextein/filters`. Still exported from `nextein/posts`.
 
 ### Fixed
