@@ -54,9 +54,9 @@
     "unist-util-select": "^3.0.0"
   },
   "peerDependencies": {
-    "next": "^9.5.0",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0"
+    "next": "^9.5.0 || ^10.0.0",
+    "react": "^16.8.0 || ^17.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
@@ -76,10 +76,10 @@
     "eslint-config-standard": "^14.0.0",
     "hastscript": "^5.1.0",
     "jest": "^24.8.0",
-    "next": "9.3.6",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "react-test-renderer": "^16.8.1",
+    "next": "^10.0.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-test-renderer": "^17.0.0",
     "standard": "^14.3.1",
     "taskr": "1.1.0",
     "taskr-standard": "^1.2.0"
