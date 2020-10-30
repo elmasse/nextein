@@ -38,7 +38,6 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
 
         return {
           ...wrapped,
-          filter,
           posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
           __pathMap: pathMap(),
           __metadata: _metadata
@@ -48,7 +47,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
       componentDidMount () {
         if (process.env.NODE_ENV === 'development') {
           this.evtSource = new EventSource(endpoints.entriesHMR())
-          const { filter, __metadata } = this.props
+          const { __metadata } = this.props
           this.evtSource.onmessage = async (event) => {
             if (event.data === '\uD83D\uDC93') {
               return
