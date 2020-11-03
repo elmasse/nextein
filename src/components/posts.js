@@ -28,10 +28,11 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
         const _metadata = await metadata()
+        const [{ query }] = args
         const ids = filter
           ? _metadata
             .map(data => ({ data }))
-            .filter(filter)
+            .filter((...filterArgs) => filter(...filterArgs, query))
             .map(({ data: { __id } }) => __id)
           : undefined
         const posts = await load(ids)
@@ -39,6 +40,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         return {
           ...wrapped,
           posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
+          __initialQuery: query,
           __pathMap: pathMap(),
           __metadata: _metadata
         }
@@ -47,7 +49,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
       componentDidMount () {
         if (process.env.NODE_ENV === 'development') {
           this.evtSource = new EventSource(endpoints.entriesHMR())
-          const { __metadata } = this.props
+          const { __metadata, __initialQuery } = this.props
           this.evtSource.onmessage = async (event) => {
             if (event.data === '\uD83D\uDC93') {
               return
@@ -55,7 +57,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
             const ids = filter
               ? __metadata
                 .map(data => ({ data }))
-                .filter(filter)
+                .filter((...filterArgs) => filter(...filterArgs, __initialQuery))
                 .map(({ data: { __id } }) => __id)
               : undefined
 
