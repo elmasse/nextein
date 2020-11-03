@@ -36,7 +36,7 @@ describe('withPosts', () => {
     load.mockReturnValueOnce(expected)
     metadata.mockReturnValueOnce(expected.map(({data}) => data))
 
-    const actual = await Component.getInitialProps()
+    const actual = await Component.getInitialProps({})
 
     expect(actual.posts).toBeDefined()
     expect(actual.posts).toEqual(expect.arrayContaining(expected))
@@ -61,7 +61,7 @@ test('withPosts composes getInitialProps non react statics', async () => {
       }
     }
   )
-  const actual = await Component.getInitialProps()
+  const actual = await Component.getInitialProps({})
 
   expect(actual.value).toBeDefined()
   expect(actual.value).toEqual(1)
@@ -102,7 +102,7 @@ describe('withPostsFilterBy', () => {
     load.mockReturnValueOnce(all)
     metadata.mockReturnValueOnce(all.map(({data}) => data))
 
-    const actual = await Component.getInitialProps()
+    const actual = await Component.getInitialProps({})
 
     expect(actual.posts).toBeDefined()
     expect(actual.posts).toEqual(expect.arrayContaining(expected))
@@ -122,7 +122,7 @@ describe('withPostsFilterBy', () => {
     load.mockReturnValue(all)
     metadata.mockReturnValue(all.map(({data}) => data))
 
-    const actual = await Component.getInitialProps()
+    const actual = await Component.getInitialProps({})
 
     expect(actual.posts).toBeDefined()
     expect(actual.posts).toEqual(expect.arrayContaining(expected))
@@ -142,7 +142,7 @@ describe('withPostsFilterBy', () => {
     load.mockReturnValue(all)
     metadata.mockReturnValue(all.map(({data}) => data))
 
-    const actual = await Component.getInitialProps()
+    const actual = await Component.getInitialProps({})
 
     expect(actual.posts).toBeDefined()
     expect(actual.posts).toEqual(expect.arrayContaining(expected))
