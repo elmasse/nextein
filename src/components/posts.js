@@ -16,14 +16,14 @@ export const sortByDate = (a, b) => {
   return bTime - aTime
 }
 
-async function filterPosts(metadata, filter, query) {
+async function filterPosts (metadata, filter, query) {
   const ids = filter
     ? metadata
       .map(data => ({ data }))
       .filter((...filterArgs) => filter(...filterArgs, query))
       .map(({ data: { __id } }) => __id)
     : undefined
-  return (filter && !ids.length) ? [] : await load(ids)
+  return (filter && !ids.length) ? [] : load(ids)
 }
 
 export const withPostsFilterBy = (filter) => (WrappedComponent) => {
@@ -38,8 +38,8 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
         const _metadata = await metadata()
-        const [{ query }] = args       
- 
+        const [{ query }] = args
+
         const posts = await filterPosts(_metadata, filter, query)
 
         return {
@@ -58,8 +58,8 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
           this.evtSource.onmessage = async (event) => {
             if (event.data === '\uD83D\uDC93') {
               return
-            }  
-      
+            }
+
             const posts = await filterPosts(__metadata, filter, __initialQuery)
 
             this.setState({ posts })
