@@ -26,7 +26,7 @@ class NexteinLink extends Component {
     if (!map) {
       map = await pathMap()
     }
-    this.setState({ mapped: true })
+    this.setState({ map })
 
     const { href } = this.state
     if (href && map) {
@@ -42,13 +42,13 @@ class NexteinLink extends Component {
   }
 
   render () {
-    let { href, as, mapped } = this.state
+    let { href, as, map } = this.state
     const { data, content, raw, ...rest } = this.props // content & raw are not used but required to remove them from rest
 
-    if (!mapped) return null
+    if (!map) return null
 
     if (data) {
-      const { page, __id, url } = data
+      const { page, url } = data
 
       if (!page) {
         console.warn(`Link Component (from nextein) is trying to render a link to a post (name: ${data.name}) with no page. Link has no effect. Review.`)
@@ -57,7 +57,9 @@ class NexteinLink extends Component {
         return (<>{this.props.children}</>)
       }
 
-      href = { pathname: `/${page}`, query: { __id } }
+      const { page: pathname, ...rest } = map[url]
+
+      href = { pathname, ...rest }
       as = url
     }
 
