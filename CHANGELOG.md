@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fast refresh for posts/entries via `source` plugin.
 - New `fetcher` for loading/querying posts in dynamic routes. (_Experimental_)
 - Moved `inCategory` to `nextein/filters`. Still exported from `nextein/posts`.
+- Added `query` object params into filter functions fo `withPostsFilterBy`.
+- Added `query` object to attached info in `nextein/link` for matching urls.
 
 ### Fixed
 - Issue with trailing slash export configuration.
