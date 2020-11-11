@@ -8,7 +8,7 @@ const PERMALINK_CATEGORIES = ':category(.*)'
 function formatUrl (data) {
   const { page, date, permalink = DEFAULT_PERMALINK } = data
   const toUrl = compile(permalink.replace(':category', PERMALINK_CATEGORIES))
-  const url = toUrl({ ...data, date: date.replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
+  const url = toUrl({ ...data, date: JSON.stringify(date).replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
 
   return page ? url : undefined
 }
@@ -31,14 +31,15 @@ export function createId (path) {
  * @param {Any} rawEntry.content entry processed content.
  */
 export function createEntry ({ meta, raw, content }) {
+  const { filePath, mimeType, name, path, createdOn, date, extra } = meta
   const data = {
-    __id: createId(meta.filePath),
-    mimeType: meta.mimeType,
+    __id: createId(filePath),
+    mimeType,
     page: 'post',
-    name: meta.name,
-    category: meta.path || undefined,
-    date: JSON.parse(meta.createdOn || JSON.stringify(new Date())),
-    ...meta.extra
+    name,
+    category: path || undefined,
+    date: date || JSON.parse(createdOn || JSON.stringify(new Date())),
+    ...extra
   }
 
   return {
