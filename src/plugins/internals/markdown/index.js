@@ -4,30 +4,26 @@ import parser from './parser'
 import removePosition from 'unist-util-remove-position'
 
 function normalizeDate (value, { path }) {
-  let date
   if (!value) return
+
   try {
-    date = new Date(value)
+    return JSON.stringify(new Date(value))
   } catch (e) {
     console.warn(`Invalid date in ${path}`)
   }
-
-  return JSON.stringify(date)
 }
 
 function createOptions (source, raw, options) {
   const { data: extra = {}, content: text } = fm(raw)
   const instance = parser(options)
   const content = instance.runSync(instance.parse(text))
-  const date = normalizeDate(extra.date, source)
+
+  if (extra.date) extra.date = normalizeDate(extra.date, source)
 
   return {
     meta: {
       ...source,
-      extra: {
-        ...extra,
-        date
-      }
+      extra
     },
     content,
     raw
