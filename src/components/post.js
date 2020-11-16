@@ -4,7 +4,8 @@ import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import getDisplayName from 'react-display-name'
 
-import { load, metadata, pathMap } from '../entries'
+import { load } from '../entries'
+import { resetFetchCache } from '../entries/cache'
 import endpoints from '../endpoints'
 
 export { default as Content } from './content'
@@ -26,9 +27,7 @@ export default (WrappedComponent) => {
         return {
           ...wrapped,
           post,
-          __id,
-          __pathMap: await pathMap(),
-          __metadata: await metadata()
+          __id
         }
       }
 
@@ -36,10 +35,12 @@ export default (WrappedComponent) => {
         if (process.env.NODE_ENV === 'development') {
           this.evtSource = new EventSource(endpoints.entriesHMR())
           const { __id } = this.props
+
           this.evtSource.onmessage = async (event) => {
             if (event.data === '\uD83D\uDC93') {
               return
             }
+            resetFetchCache()
             const [post] = __id ? await load(__id) : []
             this.setState({ post })
           }

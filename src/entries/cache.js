@@ -16,7 +16,7 @@ export default () => {
   }
 }
 
-const _fetchCache = {}
+let _fetchCache = {}
 
 export const fetchOnce = async (path) => {
   if (!_fetchCache[path]) {
@@ -24,4 +24,8 @@ export const fetchOnce = async (path) => {
   }
   const res = await _fetchCache[path]
   return res.clone()
+}
+
+export const resetFetchCache = () => {
+  _fetchCache = {}
 }

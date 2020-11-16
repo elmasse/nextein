@@ -2,7 +2,7 @@
 import path from 'path'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
-import { metadata, setNextExportPathMap } from './entries'
+import { processPathMap } from './entries'
 import { generateExportedFiles } from './export'
 import { processPlugins, getDefaultPlugins } from './plugins'
 import { compile } from './plugins/compile'
@@ -86,33 +86,12 @@ export const withNextein = (nextConfig = {}) => {
     },
 
     async exportPathMap (defaultPathMap, options) {
-      const entries = await metadata()
-      const map = entries
-        .reduce((prev, { url, page, __id }) => {
-          return page ? {
-            ...prev,
-            [url]: { page: `/${page}`, query: __id ? { __id } : undefined }
-          } : prev
-        }, {})
-
-      // Get all used pages from entries
-      const entriesPages = Array.from(new Set(entries.map(({ page }) => `/${page}`)))
-
-      let nextExportPathMap = {
-        ...(
-          // Remove from defaultPathMap pages used for entries
-          Object.keys(defaultPathMap)
-            .filter(k => k !== '/index')
-            .filter(k => !entriesPages.includes(defaultPathMap[k].page))
-            .reduce((obj, key) => ({ ...obj, [key]: defaultPathMap[key] }), {})
-        ),
-        ...map
-      }
-
+      let nextExportPathMapFn = map => map
       if (typeof nextConfig.exportPathMap === 'function') {
-        nextExportPathMap = await nextConfig.exportPathMap(nextExportPathMap, options)
+        nextExportPathMapFn = nextConfig.exportPathMap
       }
-      await setNextExportPathMap(nextExportPathMap)
+
+      const nextExportPathMap = await processPathMap(nextExportPathMapFn, defaultPathMap, options)
       await generateExportedFiles(options)
 
       return {

@@ -1,6 +1,6 @@
-jest.mock('../../src/entries')
+jest.mock('../../src/entries/metadata')
 
-import { metadata } from '../../src/entries'
+import { metadata } from '../../src/entries/metadata'
 import nexteinConfig from '../../src/config'
 
 describe('config', () => {

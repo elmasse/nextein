@@ -1,4 +1,3 @@
-/* global __NEXT_DATA__ */
 
 import React, { Component } from 'react'
 import Link from 'next/link'
@@ -20,25 +19,8 @@ class NexteinLink extends Component {
   }
 
   async componentDidMount () {
-    const { props } = __NEXT_DATA__
-    let { __pathMap: map } = (props.pageProps || props)
-
-    if (!map) {
-      map = await pathMap()
-    }
+    const map = await pathMap()
     this.setState({ map })
-
-    const { href } = this.state
-    if (href && map) {
-      const entry = map[href]
-
-      if (entry) {
-        this.setState({
-          href: { pathname: entry.page, query: entry.query },
-          as: href
-        })
-      }
-    }
   }
 
   render () {
@@ -56,17 +38,18 @@ class NexteinLink extends Component {
         // past this point, meaning a Link to be used as a NextJS Link, it will be up to them on how to handle errors.
         return (<>{this.props.children}</>)
       }
-
-      const { page: pathname, ...rest } = map[url]
-
-      href = { pathname, ...rest }
-      as = url
+      href = url
     }
 
-    href = prefixed(href)
-    as = prefixed(as)
+    const entry = map[href]
 
-    return (<Link {...{ ...rest, href, as }} />)
+    if (entry) {
+      const { page: pathname, ...rest } = entry
+      as = href
+      href = { pathname, ...rest }
+    }
+
+    return (<Link {...{ ...rest, href: prefixed(href), as: prefixed(as) }} />)
   }
 }
 
