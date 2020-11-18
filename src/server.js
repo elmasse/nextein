@@ -5,7 +5,7 @@ import { serverEndpoints } from './endpoints'
 import router, { route } from './router'
 import { createEventStream } from './event-stream'
 import { load, metadata, pathMap } from './entries'
-import { subscribe } from './plugins'
+import { subscribeEntryChange } from './plugins'
 
 export default async function start (serverOptions, port, hostname) {
   const app = next(serverOptions)
@@ -41,8 +41,8 @@ export default async function start (serverOptions, port, hostname) {
   if (serverOptions.dev) {
     const eventStream = createEventStream()
 
-    subscribe(() => {
-      eventStream.publish({ data: 'update' })
+    subscribeEntryChange((id) => {
+      eventStream.publish(id)
     })
 
     route(serverEndpoints.entriesHMR(), eventStream.handler)

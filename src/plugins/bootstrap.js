@@ -22,7 +22,18 @@ export function subscribe (fn) {
   }
 }
 
-emitter.on('entries.update', () => processEntries())
+export function subscribeEntryChange (fn) {
+  emitter.on('entry.change', fn)
+
+  return function unsubscribe () {
+    emitter.off('entry.change', fn)
+  }
+}
+
+emitter.on('entries.update', (__id) => {
+  processEntries()
+  emitter.emit('entry.change', __id)
+})
 
 async function upsertEntries () {
   const { sources = [], builders = [] } = compile()
@@ -34,7 +45,7 @@ async function upsertEntries () {
           const entry = createEntry(createOptions)
           entries.set(entry.data.__id, entry)
 
-          if (bootstraped) emitter.emit('entries.update')
+          if (bootstraped) emitter.emit('entries.update', entry.data.__id)
         }
       })
     }
@@ -44,7 +55,7 @@ async function upsertEntries () {
     const __id = createId(removeOptions.filePath)
     entries.delete(__id)
 
-    if (bootstraped) emitter.emit('entries.update')
+    if (bootstraped) emitter.emit('entries.update', __id)
   }
 
   for (const source of sources) {

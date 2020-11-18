@@ -27,6 +27,12 @@ async function filterPosts (metadata, filter, query) {
   return (filter && !ids.length) ? [] : load(ids)
 }
 
+function samePosts (posts = [], prev = []) {
+  const postsIds = posts.map(p => p.data.__id)
+  const prevIds = prev.map(p => p.data.__id)
+  return postsIds.every(id => prevIds.includes(id))
+}
+
 export const withPostsFilterBy = (filter) => (WrappedComponent) => {
   const displayName = getDisplayName(WrappedComponent)
   const postfix = filter ? 'FilterBy' : ''
@@ -43,30 +49,73 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
 
         const posts = await filterPosts(_metadata, filter, query)
 
+        const { __id } = query
+        const [post] = __id ? await load(__id) : []
+
         return {
           ...wrapped,
           posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
+          post,
+          __id,
           __initialQuery: query
         }
       }
 
-      componentDidMount () {
+      static getDerivedStateFromProps (props, state) {
+        if (!samePosts(props.posts, state.posts)) {
+          return {
+            posts: props.posts
+          }
+        }
+
+        if (props.post && (!state.post || props.post.data.__id !== state.post.data.__id)) {
+          return {
+            post: props.post
+          }
+        }
+
+        return null
+      }
+
+      state = {}
+
+      listenToEventSource () {
         if (process.env.NODE_ENV === 'development') {
+          if (this.evtSource) {
+            this.evtSource.close()
+          }
+
           this.evtSource = new EventSource(endpoints.entriesHMR())
-          const { __initialQuery } = this.props
+          const { __initialQuery, __id } = this.props
 
           this.evtSource.onmessage = async (event) => {
             if (event.data === '\uD83D\uDC93') {
               return
             }
+            const currentIds = this.props.posts.map(p => p.data.__id)
+            const updated = JSON.parse(event.data)
 
-            resetFetchCache()
-            const _metadata = await metadata()
-            const posts = await filterPosts(_metadata, filter, __initialQuery)
+            if (currentIds.includes(updated) || updated === __id) {
+              resetFetchCache()
+              const _metadata = await metadata()
+              const posts = await filterPosts(_metadata, filter, __initialQuery)
+              const [post] = __id ? await load(__id) : []
 
-            this.setState({ posts })
+              this.setState({
+                posts,
+                post
+              })
+            }
           }
         }
+      }
+
+      componentDidMount () {
+        this.listenToEventSource()
+      }
+
+      componentDidUpdate () {
+        this.listenToEventSource()
       }
 
       componentWillUnmount () {
@@ -76,7 +125,8 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
       }
 
       render () {
-        return <WrappedComponent {...this.props} {...this.state} />
+        const { posts, post } = this.state
+        return <WrappedComponent {...this.props} posts={posts} post={post} />
       }
     },
     WrappedComponent, { getInitialProps: true })

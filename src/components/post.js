@@ -31,8 +31,24 @@ export default (WrappedComponent) => {
         }
       }
 
-      componentDidMount () {
+      static getDerivedStateFromProps (props, { post }) {
+        if (!post || props.__id !== post.data.__id) {
+          return {
+            post: props.post
+          }
+        }
+
+        return null
+      }
+
+      state = {}
+
+      listenToEventSource () {
         if (process.env.NODE_ENV === 'development') {
+          if (this.evtSource) {
+            this.evtSource.close()
+          }
+
           this.evtSource = new EventSource(endpoints.entriesHMR())
           const { __id } = this.props
 
@@ -40,11 +56,26 @@ export default (WrappedComponent) => {
             if (event.data === '\uD83D\uDC93') {
               return
             }
-            resetFetchCache()
-            const [post] = __id ? await load(__id) : []
-            this.setState({ post })
+
+            const updated = JSON.parse(event.data)
+
+            if (updated === __id) {
+              resetFetchCache()
+              const [post] = __id ? await load(__id) : []
+              this.setState({
+                post
+              })
+            }
           }
         }
+      }
+
+      componentDidMount () {
+        this.listenToEventSource()
+      }
+
+      componentDidUpdate () {
+        this.listenToEventSource()
       }
 
       componentWillUnmount () {
@@ -54,7 +85,7 @@ export default (WrappedComponent) => {
       }
 
       render () {
-        return <WrappedComponent {...this.props} {...this.state} />
+        return <WrappedComponent {...this.props} post={this.state.post} />
       }
     },
     WrappedComponent, { getInitialProps: true })
