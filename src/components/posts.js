@@ -45,7 +45,7 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
         const _metadata = await metadata()
-        const [{ query }] = args
+        const [{ query = {} }] = args
 
         const posts = await filterPosts(_metadata, filter, query)
 
