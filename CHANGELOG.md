@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved `inCategory` to `nextein/filters`. Still exported from `nextein/posts`.
 - Added `query` object params into filter functions fo `withPostsFilterBy`.
 - Added `query` object to attached info in `nextein/link` for matching urls.
+- Added `post` resolved from `query.__id` in `withPosts` and `withPostsFilterBy` to avoid nesting HOCs.
 
 ### Fixed
 - Issue with trailing slash export configuration.
