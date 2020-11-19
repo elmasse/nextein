@@ -92,19 +92,17 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
             if (event.data === '\uD83D\uDC93') {
               return
             }
-            const currentIds = this.props.posts.map(p => p.data.__id)
             const updated = JSON.parse(event.data)
 
-            if (currentIds.includes(updated) || updated === __id) {
-              resetFetchCache()
-              const _metadata = await metadata()
-              const posts = await filterPosts(_metadata, filter, __initialQuery)
-              const [post] = __id ? await load(__id) : []
+            resetFetchCache()
+            const _metadata = await metadata()
+            const posts = await filterPosts(_metadata, filter, __initialQuery)
 
-              this.setState({
-                posts,
-                post
-              })
+            this.setState({ posts })
+
+            if (__id && updated === __id) {
+              const [post] = __id ? await load(__id) : []
+              this.setState({ post })
             }
           }
         }
