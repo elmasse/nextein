@@ -185,7 +185,6 @@ Use the `excerpt` property to only render the first paragraph (this is useful wh
 - `content`: `{Object}` Markdown content in HAST format to be render. This is provided by `post.content`
 - `excerpt`: `{Boolean}` true to only render the first paragraph. Optional. Default: `false`
 - `renderers`: `{Object}` A set of custom renderers for Markdown elements with the form of `[tagName]: renderer`.
-- `components`: `{Object}`. Convenient alias to `renderers`.
 - `component`: `{String|React.Component}`	The component used for the root node.
 
 
