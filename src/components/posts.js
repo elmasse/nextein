@@ -62,19 +62,21 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
       }
 
       static getDerivedStateFromProps (props, state) {
+        let value
         if (!samePosts(props.posts, state.posts)) {
-          return {
+          value = {
             posts: props.posts
           }
         }
 
-        if (props.post && (!state.post || props.post.data.__id !== state.post.data.__id)) {
-          return {
+        if ((props.post && !state.post) || (state.post && props.__id !== state.post.data.__id)) {
+          value = {
+            ...value,
             post: props.post
           }
         }
 
-        return null
+        return value || null
       }
 
       state = {}
