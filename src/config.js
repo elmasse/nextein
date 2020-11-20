@@ -1,30 +1,45 @@
+
+import path from 'path'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
-import loadEntries from './entries/load'
-import { setNextExportPathMap } from './entries/map'
-import { createJSONEntries } from './entries/create'
-import { setPlugins, getDefaultPlugins } from './plugins'
+import { processPathMap } from './entries'
+import { generateExportedFiles } from './export'
+import { processPlugins, getDefaultPlugins } from './plugins'
+import { compile } from './plugins/compile'
 
 const getDefaultConfig = () => ({
   plugins: getDefaultPlugins()
 })
 
-const processConfig = ({ nextein = getDefaultConfig() }) => {
-  const { plugins } = (typeof nextein === 'function') ? nextein(getDefaultConfig()) : nextein
-  setPlugins(plugins)
+const processConfig = ({ nextein = {} }) => {
+  const defaultConfig = getDefaultConfig()
+  const { plugins } = (typeof nextein === 'function')
+    ? nextein(defaultConfig)
+    : {
+      ...nextein,
+      ...defaultConfig,
+      plugins: [
+        ...defaultConfig.plugins,
+        ...(nextein.plugins || [])
+      ]
+    }
+
+  return {
+    plugins: processPlugins(plugins)
+  }
 }
 
 export const withNextein = (nextConfig = {}) => {
-  processConfig(nextConfig)
-  const { exportTrailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
+  const { trailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
+  const nexteinConfig = processConfig(nextConfig)
+  const { configs } = compile()
 
-  return ({
+  let config = {
     ...nextConfig,
-    exportTrailingSlash,
+    trailingSlash,
     assetPrefix,
 
     webpack (config, options) {
-      const { dev } = options
       config.node = {
         fs: 'empty'
       }
@@ -32,24 +47,12 @@ export const withNextein = (nextConfig = {}) => {
       config.plugins.push(
         new DefinePlugin({
           'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '')
-        })
+        }),
+        new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, options.dev ? './dev.js' : './exported.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]metadata[/\\]index.js/, './exported.js'),
+        new NormalModuleReplacementPlugin(/entries[/\\]pathmap[/\\]index.js/, './exported.js'),
+        new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './exported.js')
       )
-
-      if (dev) {
-        config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './client.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map[/\\]index.js/, './exported.js')
-        )
-      } else {
-        config.plugins.push(
-          new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, './exported.js'),
-          new NormalModuleReplacementPlugin(/entries[/\\]map[/\\]index.js/, './exported.js')
-        )
-      }
-
-      if (typeof nextConfig.webpack === 'function') {
-        return nextConfig.webpack(config, options)
-      }
 
       config.module = {
         ...config.module,
@@ -58,48 +61,50 @@ export const withNextein = (nextConfig = {}) => {
         exprContextCritical: false
       }
 
+      config.module.rules = [
+        {
+          test: /\.js$/,
+          include: path.dirname(require.resolve('nextein/dist/plugins/render')),
+          use: [
+            options.defaultLoaders.babel,
+            {
+              loader: 'nextein/dist/plugins/render/loader',
+              options: {
+                plugins: nexteinConfig.plugins
+              }
+            }
+          ]
+        },
+        ...config.module.rules
+      ]
+
+      if (typeof nextConfig.webpack === 'function') {
+        return nextConfig.webpack(config, options)
+      }
+
       return config
     },
 
     async exportPathMap (defaultPathMap, options) {
-      const entries = await loadEntries()
-      const map = entries
-        // .concat({ data: { url: '/', page: 'index' } })
-        .reduce((prev, { data }) => {
-          const { url, page, _entry } = data
-          const query = _entry ? { _entry } : undefined
-          return page ? {
-            ...prev,
-            [url]: { page: `/${page}`, query }
-          } : prev
-        }, {})
-
-      // Get all used pages from entries
-      const entriesPages = Array.from(new Set(entries.map(({ data: { page } }) => `/${page}`)))
-
-      let nextExportPathMap = {
-        ...(
-          // Remove from defaultPathMap pages used for entries
-          Object.keys(defaultPathMap)
-            .filter(k => k !== '/index')
-            .filter(k => !entriesPages.includes(defaultPathMap[k].page))
-            .reduce((obj, key) => ({ ...obj, [key]: defaultPathMap[key] }), {})
-        ),
-        ...map
-      }
-
+      let nextExportPathMapFn = map => map
       if (typeof nextConfig.exportPathMap === 'function') {
-        nextExportPathMap = await nextConfig.exportPathMap(nextExportPathMap, options)
+        nextExportPathMapFn = nextConfig.exportPathMap
       }
 
-      await setNextExportPathMap(nextExportPathMap)
-      await createJSONEntries(entries, options)
+      const nextExportPathMap = await processPathMap(nextExportPathMapFn, defaultPathMap, options)
+      await generateExportedFiles(options)
 
       return {
         ...nextExportPathMap
       }
     }
-  })
+  }
+
+  for (const configPlugin of configs) {
+    config = configPlugin(config)
+  }
+
+  return config
 }
 
 export default withNextein

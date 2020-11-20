@@ -1,24 +1,36 @@
 
+/* global EventSource */
+
 import React, { Component } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import getDisplayName from 'react-display-name'
 
-import loadEntries, { byEntriesList } from '../entries/load'
-import entriesMap from '../entries/map'
-export const entries = loadEntries
+import { load, metadata } from '../entries'
+import { resetFetchCache } from '../entries/cache'
+import endpoints from '../endpoints'
 
-export const inCategory = (category, { includeSubCategories = false } = {}) => (post) => {
-  const { data } = post
-  const { category: postCategory = '' } = data
-  const result = includeSubCategories ? postCategory.startsWith(category) : postCategory === category
-
-  return result
-}
+export { inCategory } from '../entries/filters'
 
 export const sortByDate = (a, b) => {
   const aTime = new Date(a.data.date).getTime()
   const bTime = new Date(b.data.date).getTime()
   return bTime - aTime
+}
+
+async function filterPosts (metadata, filter, query) {
+  const ids = filter
+    ? metadata
+      .map(data => ({ data }))
+      .filter((...filterArgs) => filter(...filterArgs, query))
+      .map(({ data: { __id } }) => __id)
+    : undefined
+  return (filter && !ids.length) ? [] : load(ids)
+}
+
+function samePosts (posts = [], prev = []) {
+  const postsIds = posts.map(p => p.data.__id)
+  const prevIds = prev.map(p => p.data.__id)
+  return postsIds.every(id => prevIds.includes(id))
 }
 
 export const withPostsFilterBy = (filter) => (WrappedComponent) => {
@@ -32,18 +44,89 @@ export const withPostsFilterBy = (filter) => (WrappedComponent) => {
       static async getInitialProps (...args) {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-        const _entries = await loadEntries()
-        const posts = await byEntriesList(filter ? _entries.filter(filter) : _entries)
+        const _metadata = await metadata()
+        const [{ query = {} }] = args
+
+        const posts = await filterPosts(_metadata, filter, query)
+
+        const { __id } = query
+        const [post] = __id ? await load(__id) : []
 
         return {
           ...wrapped,
           posts: Array.from(new Set([...posts, ...(wrapped.posts || [])].filter(Boolean))),
-          _entriesMap: await entriesMap(_entries)
+          post,
+          __id,
+          __initialQuery: query
+        }
+      }
+
+      static getDerivedStateFromProps (props, state) {
+        let value
+        if (!samePosts(props.posts, state.posts)) {
+          value = {
+            posts: props.posts
+          }
+        }
+
+        if ((props.post && !state.post) || (state.post && props.__id !== state.post.data.__id)) {
+          value = {
+            ...value,
+            post: props.post
+          }
+        }
+
+        return value || null
+      }
+
+      state = {}
+
+      listenToEventSource () {
+        if (process.env.NODE_ENV === 'development') {
+          if (this.evtSource) {
+            this.evtSource.close()
+          }
+
+          this.evtSource = new EventSource(endpoints.entriesHMR())
+          const { __initialQuery, __id } = this.props
+
+          this.evtSource.onmessage = async (event) => {
+            if (event.data === '\uD83D\uDC93') {
+              return
+            }
+            const updated = JSON.parse(event.data)
+
+            resetFetchCache()
+            const _metadata = await metadata()
+            const posts = await filterPosts(_metadata, filter, __initialQuery)
+
+            this.setState({ posts })
+
+            if (__id && updated === __id) {
+              const [post] = __id ? await load(__id) : []
+              this.setState({ post })
+            }
+          }
+        }
+      }
+
+      componentDidMount () {
+        this.listenToEventSource()
+      }
+
+      componentDidUpdate () {
+        this.listenToEventSource()
+      }
+
+      componentWillUnmount () {
+        if (this.evtSource) {
+          this.evtSource.close()
         }
       }
 
       render () {
-        return <WrappedComponent {...this.props} />
+        const { posts, post } = this.state
+        return <WrappedComponent {...this.props} posts={posts} post={post} />
       }
     },
     WrappedComponent, { getInitialProps: true })

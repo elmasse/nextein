@@ -1,19 +1,20 @@
 {
   "name": "nextein",
-  "version": "2.7.3",
+  "version": "3.0.0-beta.30",
   "description": "A static site and blog generator based on Next.js",
   "repository": "https://github.com/elmasse/nextein",
   "bugs": "https://github.com/elmasse/nextein/issues",
   "homepage": "https://nextein.elmasse.io",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "build": "taskr",
+    "build": "taskr build",
+    "build:watch": "taskr watch",
+    "lint": "taskr lint",
+    "postinstall": "opencollective-postinstall || true",
+    "prepublishOnly": "npm run release",
     "release": "taskr release",
-    "prepublish": "npm run release",
-    "lint": "standard 'bin/*' 'src/**/*.js'",
-    "version": "chan release ${npm_package_version} && git add .",
-    "postinstall": "opencollective-postinstall || true"
+    "test": "jest",
+    "version": "chan release ${npm_package_version} && git add ."
   },
   "bin": {
     "nextein": "./dist/bin/nextein"
@@ -22,16 +23,18 @@
     "dist",
     "config.js",
     "content.js",
+    "fetcher.js",
+    "filters.js",
     "link.js",
     "posts.js",
     "post.js"
   ],
   "dependencies": {
-    "chokidar": "3.4.0",
+    "chokidar": "^3.4.2",
     "cross-spawn": "^7.0.0",
     "frontmatter": "^0.0.3",
-    "glob": "^7.1.2",
     "hoist-non-react-statics": "3.3.2",
+    "mime": "^2.4.6",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
     "opencollective-postinstall": "2.0.3",
@@ -51,9 +54,9 @@
     "unist-util-select": "^3.0.0"
   },
   "peerDependencies": {
-    "next": "^8.0.0 || ^9.0.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "next": "^9.5.0 || ^10.0.0",
+    "react": "^16.8.0 || ^17.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
@@ -73,10 +76,10 @@
     "eslint-config-standard": "^14.0.0",
     "hastscript": "^5.1.0",
     "jest": "^24.8.0",
-    "next": "9.3.6",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "react-test-renderer": "^16.8.1",
+    "next": "^10.0.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-test-renderer": "^17.0.0",
     "standard": "^14.3.1",
     "taskr": "1.1.0",
     "taskr-standard": "^1.2.0"

@@ -1,25 +1,9 @@
-jest.mock('../../../src/entries/load')
-jest.mock('unified', () => {
-  function mockedUnified () { return new impl() }
-  mockedUnified.stringify = jest.fn()
-  mockedUnified.runSync = jest.fn()
-  mockedUnified.use = jest.fn(function () { return this })
-  class impl {
-    use = mockedUnified.use
-    stringify = mockedUnified.stringify
-    runSync = mockedUnified.runSync
-  }
-
-  return mockedUnified
-})
+jest.mock('../../../src/entries')
 
 import React from 'react'
-import renderer from 'react-test-renderer'
-import h from 'hastscript'
 
-import unified from 'unified'
-import loadEntries, { byFileName } from '../../../src/entries/load'
-import withPost, { Content } from '../../../src/components/post'
+import { load } from '../../../src/entries'
+import withPost from '../../../src/components/post'
 
 describe('withPost', () => {
   test('exports HOC withPost as default', () => {
@@ -48,26 +32,23 @@ describe('withPost', () => {
 
   test('withPosts should add `post` property to getInitialProps', async () => {
     const expected = { data: {}, content: `` }
-    const expectedFileName = 'fake'
+    const id = 'fake'
     const Component = withPost(({ post }) => (<div>Test</div>))
 
-    loadEntries.mockReturnValueOnce([expected])
-    byFileName.mockReturnValueOnce(expected)
-    const actual = await Component.getInitialProps({query: {_entry: expectedFileName}})
+    load.mockReturnValueOnce([expected])
+    const actual = await Component.getInitialProps({query: {__id: id}})
 
     expect(actual.post).toBeDefined()
     expect(actual.post).toEqual(expect.objectContaining(expected))
-    expect(byFileName).toHaveBeenCalledWith(expectedFileName)
   })
 
   test('withPosts composes getInitialProps non react statics', async () => {
     const wrappedProps = { value: 1 }
     const getInitialProps = jest.fn().mockReturnValueOnce(wrappedProps)
-    const expected = { data: {}, content: `` }
-    const expectedFileName = 'fake'
+    const id = 'fake'
+    const expected = { data: { __id: id }, content: `` }
     
-    loadEntries.mockReturnValueOnce([expected])
-    byFileName.mockReturnValueOnce(expected)
+    load.mockReturnValueOnce([expected])
 
     const Component = withPost(
       class Wrapped extends React.Component {
@@ -79,33 +60,32 @@ describe('withPost', () => {
       }
     )
       
-    const actual = await Component.getInitialProps({query: {_entry: expectedFileName}})
+    const actual = await Component.getInitialProps({query: { __id: id}})
 
     expect(actual.value).toBeDefined()
     expect(actual.value).toEqual(1)
 
     expect(actual.post).toBeDefined()
     expect(actual.post).toEqual(expect.objectContaining(expected))
-    expect(byFileName).toHaveBeenCalledWith(expectedFileName)
   })  
 })
 
-describe('Content', () => {
-  test('exports Content', () => {
-    expect(Content).toBeDefined()
-  })
+// describe('Content', () => {
+//   test('exports Content', () => {
+//     expect(Content).toBeDefined()
+//   })
 
-  test('Content component should render post content', () => {
-    const expectedText = `lorem ipsum`
-    const expectedContent = h('root', [ h('p', expectedText) ])
+//   test('Content component should render post content', () => {
+//     const expectedText = `lorem ipsum`
+//     const expectedContent = h('root', [ h('p', expectedText) ])
 
-    unified.stringify.mockReturnValueOnce(<p>{expectedText}</p>)
+//     unified.stringify.mockReturnValueOnce(<p>{expectedText}</p>)
 
-    const comp = renderer.create(<Content content={expectedContent} />)
+//     const comp = renderer.create(<Content content={expectedContent} />)
 
-    expect(unified.runSync).toHaveBeenCalledWith(expectedContent)
-    expect(unified.stringify).toHaveBeenCalled()
+//     expect(unified.runSync).toHaveBeenCalledWith(expectedContent)
+//     expect(unified.stringify).toHaveBeenCalled()
 
-    expect(comp.toJSON()).toMatchSnapshot()
-  })
-})
+//     expect(comp.toJSON()).toMatchSnapshot()
+//   })
+// })

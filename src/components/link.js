@@ -1,11 +1,9 @@
-/* global __NEXT_DATA__ */
 
 import React, { Component } from 'react'
 import Link from 'next/link'
 
-import loadEntries from '../entries/load'
-import entriesMap from '../entries/map'
-import { prefixed } from '../entries/prefixed'
+import { pathMap } from '../entries'
+import { prefixed } from '../endpoints'
 
 class NexteinLink extends Component {
   static getDerivedStateFromProps (state, { href, as }) {
@@ -21,42 +19,37 @@ class NexteinLink extends Component {
   }
 
   async componentDidMount () {
-    const { props } = __NEXT_DATA__
-    let { _entriesMap: map } = (props.pageProps || props)
-
-    if (!map) {
-      const all = await loadEntries()
-      map = await entriesMap(all)
-    }
-    this.setState({ mapped: true })
-
-    const { href } = this.state
-    if (href && map) {
-      const entry = map[href]
-
-      if (entry) {
-        this.setState({
-          href: { pathname: entry.pathname, query: entry.query },
-          as: href
-        })
-      }
-    }
+    const map = await pathMap()
+    this.setState({ map })
   }
 
   render () {
-    let { href, as, mapped } = this.state
+    let { href, as, map } = this.state
     const { data, content, raw, ...rest } = this.props // content & raw are not used but required to remove them from rest
 
+    if (!map) return null
+
     if (data) {
-      const { page = 'post', _entry, url } = data
-      href = { pathname: `/${page}`, query: { _entry } }
-      as = url
+      const { page, url } = data
+
+      if (!page) {
+        console.warn(`Link Component (from nextein) is trying to render a link to a post (name: ${data.name}) with no page. Link has no effect. Review.`)
+        // Do not fail, like an anchor without props, still renders its own children.
+        // past this point, meaning a Link to be used as a NextJS Link, it will be up to them on how to handle errors.
+        return (<>{this.props.children}</>)
+      }
+      href = url
     }
 
-    href = prefixed(href)
-    as = prefixed(as)
+    const entry = map[href]
 
-    return (mapped ? <Link {...{ ...rest, href, as }} /> : null)
+    if (entry) {
+      const { page: pathname, ...rest } = entry
+      as = href
+      href = { pathname, ...rest }
+    }
+
+    return (<Link {...{ ...rest, href: prefixed(href), as: prefixed(as) }} />)
   }
 }
 

@@ -1,5 +1,6 @@
-jest.mock('../../src/entries/load')
-import loadEntries from '../../src/entries/load'
+jest.mock('../../src/entries/metadata')
+
+import { metadata } from '../../src/entries/metadata'
 import nexteinConfig from '../../src/config'
 
 describe('config', () => {
@@ -11,55 +12,50 @@ describe('config', () => {
 describe('exportPathMap', () => {
   const defaultPathMap = { '/': { page: '/' } }
   const { exportPathMap } = nexteinConfig()
+
   test('generates index by default ', async () => {
-    loadEntries.mockReturnValueOnce([])
+    metadata.mockReturnValueOnce([])
 
     expect(exportPathMap).toBeDefined()
     const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
-    expect(loadEntries).toBeCalled()
+    expect(metadata).toBeCalled()
     expect(result).toHaveProperty('/')
   })
 
   test('generates post entry with default page', async () => {
-    loadEntries.mockReturnValueOnce([
-      { data: { url: '/test', page: 'post' } }
-    ])
+    metadata.mockReturnValueOnce([{ url: '/test', page: 'post' }])
 
     expect(exportPathMap).toBeDefined()
     const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
-    expect(loadEntries).toBeCalled()
+    expect(metadata).toBeCalled()
     expect(result).toHaveProperty('/')
     expect(result).toHaveProperty('/test', { page: '/post' })
   })
 
   test('generates post entry with given page', async () => {
-    loadEntries.mockReturnValueOnce([
-      { data: { url: '/test', page: 'test' } }
-    ])
+    metadata.mockReturnValueOnce([{ url: '/test', page: 'test' }])
 
     expect(exportPathMap).toBeDefined()
     const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
-    expect(loadEntries).toBeCalled()
+    expect(metadata).toBeCalled()
     expect(result).toHaveProperty('/')
     expect(result).toHaveProperty('/test', { page: '/test' })
   })
 
   test('does not generates post entry if page is false', async () => {
-    loadEntries.mockReturnValueOnce([
-      { data: { url: '/test', page: false } }
-    ])
+    metadata.mockReturnValueOnce([{ url: '/test', page: false }])
 
     expect(exportPathMap).toBeDefined()
     const result = await exportPathMap(defaultPathMap, { dev: true })
 
     expect(result).toBeDefined()
-    expect(loadEntries).toBeCalled()
+    expect(metadata).toBeCalled()
     expect(result).toHaveProperty('/')
     expect(result).not.toHaveProperty('/test', { page: '/test' })
   })

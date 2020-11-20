@@ -2,19 +2,18 @@
 
 A static site generator based in Next.js
 
-[![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_5.svg)](https://cafecito.app/elmasse)  
-[![Financial Contributors on Open Collective](https://opencollective.com/nextein/all/badge.svg?label=financial+contributors)](https://opencollective.com/nextein)  
 [![Build Status](https://travis-ci.org/elmasse/nextein.svg?branch=master)](https://travis-ci.org/elmasse/nextein) 
+[![npm](https://img.shields.io/npm/v/nextein)](https://www.npmjs.com/package/nextein)
 [![ProductHunt](https://img.shields.io/badge/producthunt-vote-orange.svg)](https://www.producthunt.com/posts/nextein) 
 [![Gitter](https://badges.gitter.im/elmasse/nextein.svg)](https://gitter.im/nextein/Lobby)
 
-## [Site](https://nextein.elmasse.io/) | [Documentation](https://nextein.elmasse.io/docs) | [Guides](https://nextein.elmasse.io/guides)
+#### [Site](https://nextein.elmasse.io/) | [Documentation](https://nextein.elmasse.io/docs) | [Guides](https://nextein.elmasse.io/guides)
 
 ## What is it?
 `nextein` is  a wrapper around `next.js` that allows you to write static sites using `markdown` and `react`. 
 
 ### Requirements
-*NodeJS* __v8.x__+ is required to run `nextein` commands.
+*NodeJS* __v10.x__+ is required to run `nextein` commands.
 
 ## Starter Kit
 If you want to jump into a starter project check [nextein-starter](https://github.com/elmasse/nextein-starter)
@@ -44,7 +43,7 @@ There are a few steps you have to follow to get your site up and running with `n
     import React from 'react'
 
     import withPosts from 'nextein/posts'
-    import { Content } from 'nextein/post'
+    import Content from 'nextein/content'
 
     export default withPosts( ({ posts }) => {
       return (
@@ -89,9 +88,6 @@ There are a few steps you have to follow to get your site up and running with `n
     }
     ```
 
-### Example
-See [nextein-example](https://github.com/elmasse/nextein-example) for a working example
-
 ## Documentation
 
 ### `withPosts`
@@ -116,7 +112,8 @@ Filter function to be applied to posts to retrieve posts in a given category.
 Categories are resolved by the folder structure by default. This means that a post located at `posts/categoryA/subOne` will have a category `categoryA/subOne` unless you specify the category name in frontmatter. 
 
 ```js
-import withPosts, { inCategory } from 'nextein/posts'
+import withPosts from 'nextein/posts'
+import { inCategory } from 'nextein/filters'
 
 export default withPosts( ({ posts }) => { 
   const homePosts = posts.filter(inCategory('home'))
@@ -128,7 +125,8 @@ export default withPosts( ({ posts }) => {
 If you want to retrieve all posts under a certain category, let's say `categoryA` which will include all those under `subOne`, use the options `includeSubCategories: true`. 
 
 ```js
-import withPosts, { inCategory } from 'nextein/posts'
+import withPosts from 'nextein/posts'
+import { inCategory } from 'nextein/filters'
 
 export default withPosts( ({ posts }) => { 
   const categoryAPosts = posts
@@ -143,7 +141,8 @@ export default withPosts( ({ posts }) => {
 Returns an HOC that gets all posts filtered out by the given filter function. This can be used in conjunction with `inCategory` to get only the desired posts in a certain category.
 
  ```js
-import { withPostsFilterBy, inCategory } from 'nextein/posts'
+import { withPostsFilterBy } from 'nextein/posts'
+import { inCategory } from 'nextein/filters'
 
 const withCategoryAPosts = withPostsFilterBy(inCategory('categoryA'))
 
@@ -155,7 +154,7 @@ export default withCategoryAPosts(({ posts }) => {
 
 ### `sortByDate`
 
-Sort function to be applied to posts to sort by date (newest on top). This requires the post contains a `date` in `frontmatter` or in the file name (ala jekyll)
+Sort function to be applied to posts to sort by date (newest on top). This requires that the post contains a `date` in `frontmatter` or in the file name (ala jekyll)
 
 ```js
 import withPosts, { sortByDate } from 'nextein/posts'
@@ -186,12 +185,12 @@ Use the `excerpt` property to only render the first paragraph (this is useful wh
 - `content`: `{Object}` Markdown content in HAST format to be render. This is provided by `post.content`
 - `excerpt`: `{Boolean}` true to only render the first paragraph. Optional. Default: `false`
 - `renderers`: `{Object}` A set of custom renderers for Markdown elements with the form of `[tagName]: renderer`.
-- `prefix`: `{String}` Prefix to use for the generated React elements. Optional. Default: `'entry-'`
-- `component`: `{String|React.Component}`	The component used for the root node. Either a string to use or a React Component.
+- `component`: `{String|React.Component}`	The component used for the root node.
 
 
 ```js
-import withPost, { Content } from 'nextein/post'
+import withPost from 'nextein/post'
+import Content from 'nextein/content'
 
 export default withPost( ({ post }) => { return (<Content {...post} />) } )
 
@@ -200,9 +199,10 @@ export default withPost( ({ post }) => { return (<Content {...post} />) } )
 Using the `excerpt` property
 
 ```js
-import withPosts, {inCategory} from 'nextein/posts'
+import withPosts, { inCategory } from 'nextein/posts'
+import Content from 'nextein/content'
 
-export default withPosts( ({ posts }) => { 
+export default withPosts(({ posts }) => { 
   const homePosts = posts.filter(inCategory('home'))
   return (
     <section>
@@ -211,14 +211,19 @@ export default withPosts( ({ posts }) => {
     }
     </section>
   )
-} )
+})
 
 ```
 
 Using `renderers` to change/style the `<p>` tag
 
 ```js
-export default withPost( ({ post }) => { 
+import withPost from 'nextein/post'
+import Content from 'nextein/content'
+
+const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'}}> { children } </p> )
+
+export default withPost(({ post }) => { 
   return (
     <Content {...post} 
       renderers={{
@@ -226,17 +231,14 @@ export default withPost( ({ post }) => {
       }}
     />
   ) 
-} )
-
-const Paragraph = ({ children }) => (<p style={{padding:10, background: 'silver'}}> { children } </p> )
+})
 
 ```
 
 
 ### `Link`
 
-You can use `nextein/link` instead with the exact same parameters as `next/link`. This component wraps the `next/link` one to simplify creating a _Link_ for a given post object. `next/link` will work out of the box.
- When passing a `post.data.url` to `href` it will generate the underlying `next/link` with the `post` information.
+You can use `nextein/link` with the exact same parameters as `next/link`. This component wraps the `next/link` to simplify creating a _Link_ for a given `post` object. When passing a `post.data.url` to `href` it will generate the underlying `next/link` with the `post` information.
 
 
 - `data`: `{Object}` Post frontmatter object. This is provided by `post.data`
@@ -271,12 +273,11 @@ export default withPosts( ({ posts }) => (
     - `data.url` is the generated url for the post
     - `data.category` is the post's category. When not specified, if the post is inside a folder, the directory structure under `posts` will be used. 
     - `data.date`: JSON date from frontmatter's date or date in file name or file creation date
-- `raw` is markdown content of the post
-- `content` is a HAST representation of post content 
+- `content` is representation of post content (generally in HAST format) created by the build plugin for a given mimeType.
 
 ```js
 
-{ data, raw } = post
+{ data, content } = post
 
 ```
 
@@ -304,6 +305,75 @@ Post Content...
 - `name`: **Read Only** The post file name. Date is removed from name if present.
 - `url`: **Read Only** The post url.
 
+### `fetcher` 
+
+Status: **Experimental**
+
+Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths) can be used with this new experimental feature.
+
+**NOTE**: For now, all posts rendered in a dynamic route require to have `page: false`. 
+
+Example for a `[name].js` dynamic route
+
+```js
+import fetcher from 'nextein/fetcher'
+
+const { getData, getPost } = fetcher(/* filter */)
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: data.map(({ name }) => ({ params: { name } })),
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const post = await getPost(params)
+  return { props: { post } }
+}
+
+export default function Post ({ post }) {
+  //...
+}
+
+```
+
+Example for a `[[...name]].js` dynamic route:
+
+```js
+import fetcher from 'nextein/fetcher'
+import { inCategory } from 'nextein/filters'
+
+const { getData, getPosts, getPost } = fetcher(inCategory('guides'))
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: [{ params: { name: [] } },
+      ...data.map(({ name }) => ({ params: { name: [name] } }))
+    ],
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const posts = await getPosts()
+  const post = await getPost(params) // This can be null if not matching `...name`
+  return { props: { posts, post } }
+}
+
+export default function Guides ({ posts, post }) {
+  //...
+}
+
+```
+
+#### Caveats
+
+- Post are required to be marked with `page: false`.
+- No fast refresh for post changes.
+- The `nextein` Link won't work since page is set to false.
 
 ### `withNextein`
 
@@ -312,7 +382,6 @@ A wrapper configuration function to be applied into the `next.config.js`. It pro
 > next.config.js
 
 ```js
-
 const { withNextein } = require('nextein/config')
 
 module.exports = withNextein({
@@ -324,13 +393,11 @@ module.exports = withNextein({
 You can also define nextein plugins using the `withNextein` configuration:
 
 ```js
-
 const { withNextein } = require('nextein/config')
 
 module.exports = withNextein({
   nextein: {
     plugins: [
-      ['nextein-plugin-markdown', { entriesDir: ['_posts'] }]
       //your nextein plugins here
     ]
   }
@@ -346,50 +413,62 @@ The `nextein.plugins` configuration accepts an array of plugins with the followi
 
 The plugin name should be a pre-installed plugin (`nextein-plugin-markdown`) , or a local file (`./myplugins/my-awesome-plugin`)
 
-### Default Plugin (nextein-plugin-markdown)
+### Default Plugins
 
-The default plugin will source the posts using a configurable set of options:
+The default configuration includes:
 
-- `extension`: Default to `md`
-- `entriesDir`: Default to `['posts']`
+```js
+plugins: [
+  ['nextein-plugin-source-fs', { path: 'posts' }],
+  'nextein-plugin-markdown',
+  'nextein-plugin-filter-unpublished'
+]
+
+```
+
+#### nextein-plugin-source-fs
+
+Read files from file system.
+
+Options:
+
+- `path`: Path to read files from.
+- `includes`: Default to `**/*.*`. 
+- `ignore`: A set of ignored files. The default list includes:
+  ```js
+  '**/.DS_Store',
+  '**/.gitignore',
+  '**/.npmignore',
+  '**/.babelrc',
+  '**/node_modules',
+  '**/yarn.lock',
+  '**/package-lock.json'
+  ```
+
+#### nextein-plugin-markdown
+
+Render markdown files.
+
+Options:
+
 - `raw`: Default to `true`. Make this `false` to not add the `raw` content in the post object.
 - `position`: Default to `false`. Make this `true` to add the position info to post content HAST.
 - `rehype`: Default to `[]`. Add a set of plugins for `rehype`
 - `remark`: Default to `[]`. Add a set of plugins for `remark`
 
+#### nextein-plugin-filter-unpublished
+
+Filter posts by using a property to prevent draft / unpublished entries to be displayed.
+
+Options:
+
+- `field`: Default to`'published'`. Will check if a `field` is present in post `data` and filter if set to `false`.
+
 ## Plugins
 
 You can write your own plugins. There are basically 2 different types (source and transforms). Source plugins will be called to generate the posts entries and then the transform plugins will receive those entries and can modify, filter, append, or transform in anyway the posts list.
 
-Both types are just async functions. You have to export a `source` and/or `transform` method from you plugin main module:
-
-```js
-// file: ./plugins/my-plugin
-
-/* source plugin  (options) => post[]  */
-module.exports.source = async (options) => { /* return your posts */ }
-
-/* transform plugin (options, post[]) =>  post[] */
-module.export.transform = async (options, posts) => { /* return your posts */ }
-
-```
-
-Then in the `next.config.js` file you can define your plugin with options as follows. The same `options` object will be passed to both `source` and `transform` methods.
-
-```js
-
-const { withNextein } = require('nextein/config')
-
-module.exports = withNextein({
-  nextein: {
-    plugins: [
-      ['./plugins/my-plugin', { awesome: true }]
-    ]
-  }
-  // Your own next.js config here
-})
-
-```
+See [plugins & lifecyle design document](./DESIGN.md).
 
 ## Contributors
 

@@ -3,7 +3,7 @@ import markdown from 'remark-parse'
 import remark2rehype from 'remark-rehype'
 import raw from 'rehype-raw'
 
-export default ({ remark, rehype }) => unified()
+export default ({ remark = [], rehype = [] }) => unified()
   .use(markdown)
   .use(remark.map(mapPlugin))
   .use(remark2rehype, { allowDangerousHtml: true })

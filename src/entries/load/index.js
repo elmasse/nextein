@@ -1,51 +1,28 @@
-import plugins from '../../plugins'
+import { run, subscribe } from '../../plugins'
 import createCache from '../cache'
 
 const cache = createCache()
 
 const loadCache = async () => {
-  const { sources, transforms = [] } = plugins()
-  let posts = []
-
-  for (const source of sources) {
-    posts.push(...await source())
-  }
-
-  for (const transform of transforms) {
-    posts = await transform(posts)
-  }
-
-  cache.set(posts)
+  subscribe(posts => cache.set(posts))
+  cache.set(await run())
 }
 
-const loadEntries = async () => {
-  if (cache.isValid()) {
-    return cache.get()
+/**
+ * Return all entries. If ids is provided return all entries matching __id.
+ * @param {String | Array<String>} ids Optional.
+ */
+export async function load (ids) {
+  if (!cache.isValid()) {
+    await loadCache()
   }
-
-  await loadCache()
-
-  return cache.get().map(e => ({ data: e.data }))
-}
-
-export default loadEntries
-
-export const byEntriesList = async list => {
-  if (!cache.isValid()) await loadCache()
 
   const entries = cache.get()
+  const entriesIds = [].concat(ids).filter(Boolean)
 
-  if (!list) return entries
+  if (entriesIds.length) {
+    return entries.filter(({ data: { __id } }) => entriesIds.includes(__id))
+  }
 
-  const req = list.map(p => p.data._entry)
-
-  return entries.filter(e => req.includes(e.data._entry))
+  return entries
 }
-
-export const byFileName = async (path) => {
-  if (!cache.isValid()) await loadCache()
-
-  return cache.get().find(post => post.data._entry === path)
-}
-
-export const invalidateCache = () => cache.invalidate()

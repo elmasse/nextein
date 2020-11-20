@@ -5,6 +5,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- New Plugin System. Evolved into stages.
+- New File System Plugin for `source`.
+- Improved / Refactored `markdown` plugin.
+- New `render` Plugin for `Content`.
+- Fast refresh for posts/entries via `source` plugin.
+- New `fetcher` for loading/querying posts in dynamic routes. (_Experimental_)
+- Moved `inCategory` to `nextein/filters`. Still exported from `nextein/posts`.
+- Added `query` object params into filter functions fo `withPostsFilterBy`.
+- Added `query` object to attached info in `nextein/link` for matching urls.
+- Added `post` resolved from `query.__id` in `withPosts` and `withPostsFilterBy` to avoid nesting HOCs.
+
+### Fixed
+- Issue with trailing slash export configuration.
+- Issue with `nextein/link` not compliant with latest changes from Next.
+- Issue with `nextein/link` rendering posts with no `page` or `page` set to `false`.
+
+### Removed
+- Support for Next lower than v9.5.
+- Support for Node lower than v10
 
 ## [2.7.3] - 2020-08-15
 ### Fixed
