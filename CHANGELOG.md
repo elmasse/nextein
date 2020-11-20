@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.0] - 2020-11-20
 ### Added
 - New Plugin System. Evolved into stages.
 - New File System Plugin for `source`.
@@ -136,7 +138,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v2.7.3...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/elmasse/nextein/compare/v2.7.3...v3.0.0
 [2.7.3]: https://github.com/elmasse/nextein/compare/v2.7.1...v2.7.3
 [2.7.1]: https://github.com/elmasse/nextein/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/elmasse/nextein/compare/v2.6.0...v2.7.0
