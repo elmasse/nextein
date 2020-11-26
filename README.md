@@ -2,7 +2,7 @@
 
 A static site generator based in Next.js
 
-[![Build Status](https://travis-ci.org/elmasse/nextein.svg?branch=master)](https://travis-ci.org/elmasse/nextein) 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/elmasse/nextein/node-ci)
 [![npm](https://img.shields.io/npm/v/nextein)](https://www.npmjs.com/package/nextein)
 [![ProductHunt](https://img.shields.io/badge/producthunt-vote-orange.svg)](https://www.producthunt.com/posts/nextein) 
 [![Gitter](https://badges.gitter.im/elmasse/nextein.svg)](https://gitter.im/nextein/Lobby)
