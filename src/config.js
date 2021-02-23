@@ -40,8 +40,11 @@ export const withNextein = (nextConfig = {}) => {
     assetPrefix,
 
     webpack (config, options) {
-      config.node = {
-        fs: 'empty'
+      if (!(nextConfig.future && nextConfig.future.webpack5)) {
+        // webpack4 only
+        config.node = {
+          fs: 'empty'
+        }
       }
 
       config.plugins.push(
