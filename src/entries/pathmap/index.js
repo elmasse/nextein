@@ -15,10 +15,12 @@ export async function processPathMap (exportPathMapFn, defaultPathMap, options) 
   const entries = await metadata()
   const map = entries
     .reduce((prev, { url, page, __id }) => {
-      return page ? {
-        ...prev,
-        [url]: { page: `/${page}`, query: __id ? { __id } : undefined }
-      } : prev
+      return page
+        ? {
+            ...prev,
+            [url]: { page: `/${page}`, query: __id ? { __id } : undefined }
+          }
+        : prev
     }, {})
 
   // Get all used pages from entries
