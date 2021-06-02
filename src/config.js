@@ -16,13 +16,13 @@ const processConfig = ({ nextein = {} }) => {
   const { plugins } = (typeof nextein === 'function')
     ? nextein(defaultConfig)
     : {
-      ...nextein,
-      ...defaultConfig,
-      plugins: [
-        ...defaultConfig.plugins,
-        ...(nextein.plugins || [])
-      ]
-    }
+        ...nextein,
+        ...defaultConfig,
+        plugins: [
+          ...defaultConfig.plugins,
+          ...(nextein.plugins || [])
+        ]
+      }
 
   return {
     plugins: processPlugins(plugins)

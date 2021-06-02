@@ -20,9 +20,9 @@ export const sortByDate = (a, b) => {
 async function filterPosts (metadata, filter, query) {
   const ids = filter
     ? metadata
-      .map(data => ({ data }))
-      .filter((...filterArgs) => filter(...filterArgs, query))
-      .map(({ data: { __id } }) => __id)
+        .map(data => ({ data }))
+        .filter((...filterArgs) => filter(...filterArgs, query))
+        .map(({ data: { __id } }) => __id)
     : undefined
   return (filter && !ids.length) ? [] : load(ids)
 }
