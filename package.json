@@ -10,7 +10,6 @@
     "build": "taskr build",
     "build:watch": "taskr watch",
     "lint": "taskr lint",
-    "postinstall": "opencollective-postinstall || true",
     "prepublishOnly": "npm run release",
     "release": "taskr release",
     "test": "jest",
@@ -37,7 +36,6 @@
     "mime": "^2.4.6",
     "minimist": "^1.2.0",
     "object.assign": "^4.0.4",
-    "opencollective-postinstall": "2.0.3",
     "path-match": "^1.2.4",
     "path-to-regexp": "^6.0.0",
     "pkg-up": "^3.0.0",
@@ -112,9 +110,5 @@
     "name": "Maximiliano Fierro",
     "email": "elmasse@gmail.com"
   },
-  "license": "ISC",
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/nextein"
-  }
+  "license": "ISC"
 }
