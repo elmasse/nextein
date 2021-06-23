@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## 3.1.0 - 2021-06-23
 ### Fixed
 - Issue with next v11 webpack5 check
 - issue with webpack configuration.
@@ -26,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved / Refactored `markdown` plugin.
 - New `render` Plugin for `Content`.
 - Fast refresh for posts/entries via `source` plugin.
-- New `fetcher` for loading/querying posts in dynamic routes. (_Experimental_)
+- New `fetcher` for loading/querying posts in dynamic routes. (*Experimental*)
 - Moved `inCategory` to `nextein/filters`. Still exported from `nextein/posts`.
 - Added `query` object params into filter functions fo `withPostsFilterBy`.
 - Added `query` object to attached info in `nextein/link` for matching urls.
@@ -87,12 +89,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.4] - 2020-04-06
 ### Fixed
-- Warning on mdast. Use standard `allowDangerousHtml`. 
+- Warning on mdast. Use standard `allowDangerousHtml`.
 - Updated dependencies.
 
 ## [2.3.3] - 2019-12-27
 ### Fixed
-- Issue with `path-to-regexp@6.1.0` import. 
+- Issue with `path-to-regexp@6.1.0` import.
 
 ## [2.3.2] - 2019-12-23
 ### Fixed
