@@ -16,6 +16,7 @@ function normalizeDate (value, { path }) {
 function createOptions (source, raw, options) {
   const { data: extra = {}, content: text } = fm(raw)
   const instance = parser(options)
+
   const content = instance.runSync(instance.parse(text))
 
   if (extra.date) extra.date = normalizeDate(extra.date, source)
