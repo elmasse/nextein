@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## 3.1.0 - 2021-06-23
+## [3.1.0] - 2021-06-23
 ### Fixed
 - Issue with next v11 webpack5 check
 - issue with webpack configuration.
@@ -153,7 +153,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v3.0.2...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/elmasse/nextein/compare/v3.0.2...v3.1.0
 [3.0.2]: https://github.com/elmasse/nextein/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/elmasse/nextein/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/elmasse/nextein/compare/v2.7.3...v3.0.0
