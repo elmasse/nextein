@@ -16,7 +16,7 @@ function normalizeDate (value, { path }) {
 function createOptions (source, raw, options) {
   const { data: extra = {}, content: text } = fm(raw)
   const instance = parser(options)
-  
+
   // second text argument avoids positoin information being removed in rehype-raw
   const content = instance.runSync(instance.parse(text), text)
 
