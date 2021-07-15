@@ -8,7 +8,6 @@
   "main": "index.js",
   "scripts": {
     "build": "taskr build",
-    "build:watch": "taskr watch",
     "lint": "taskr lint",
     "prepublishOnly": "npm run release",
     "release": "taskr release",
@@ -68,7 +67,6 @@
     "@taskr/babel": "1.1.0-next.2",
     "@taskr/clear": "^1.1.0",
     "@taskr/esnext": "^1.1.0",
-    "@taskr/watch": "^1.1.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^27.0.0",
     "eslint-config-standard": "^16.0.0",

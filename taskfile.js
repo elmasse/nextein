@@ -16,12 +16,6 @@ export async function lint (task) {
   await task.source('src/**/*.js').standard()
 }
 
-export async function watch (task) {
-  await task.start('build')
-  await task.watch('src/**/*.js', ['lint', 'compile'])
-  await task.watch('bin/**/*', ['lint', 'bin'])
-}
-
 export async function release (task) {
   await task.clear('dist').start('build')
 }
