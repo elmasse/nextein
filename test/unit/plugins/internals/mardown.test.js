@@ -1,6 +1,4 @@
 
-import { resolve } from 'path'
-
 import { build } from  '../../../../src//plugins/internals/markdown'
 
 async function load () {

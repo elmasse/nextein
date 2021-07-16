@@ -46,6 +46,7 @@ This stage compiles an entries list. It should call `action.build` on any entry 
         - name: e.g.`'firts-post.md'`
         - mimeType: e.g.`'text/markdown'`
         - createdOn {Date}
+        - extra {Object} default data to be passed for each entry metadata
         - load() {Promise} return file content
       - `removeOptions` {Object}
         -  filePath: Absolute path
@@ -73,7 +74,7 @@ Create an entry. It should call `action.create` to generate an `Entry` in the **
       - data
         - __id: MD5(meta.filePath)
         - mimeType: meta.mimeType,
-        - page: meta.extra.page || `'post'`
+        - page: meta.extra.page
         - name: meta.name
         - category: meta.extra.category || meta.path
         - date: meta.extra.date || meta.created
