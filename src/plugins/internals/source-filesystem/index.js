@@ -1,4 +1,5 @@
 
+import assert from 'assert'
 import chokidar from 'chokidar'
 import { promisify } from 'util'
 import { readFile, statSync } from 'fs'
@@ -27,8 +28,9 @@ const NAME_MATCH_INDEX = 2
  * Create a buildOptions
  * @param {*} filePath
  * @param {*} basePath
+ * @param {Object} data
  */
-function buildOptions (filePath, basePath) {
+function buildOptions (filePath, basePath, data) {
   const fileName = basename(filePath, extname(filePath))
   const match = fileName.match(DATE_IN_FILE_REGEX)
   const { birthtime } = statSync(filePath)
@@ -43,6 +45,7 @@ function buildOptions (filePath, basePath) {
     name,
     mimeType: mime.getType(filePath),
     createdOn,
+    extra: { ...data },
     async load () {
       return asyncReadFile(filePath, { encoding: 'utf-8' })
     }
@@ -52,13 +55,16 @@ function buildOptions (filePath, basePath) {
 /**
  * Source Plugin to read files from File System
  * @param {Object} options
- * @param {String} options.path
+ * @param {String} options.path path where entries will be loaded.
  * @param {String} options.includes
  * @param {Array<String>} options.ignore
+ * @param {Object} data default data added to extra field for each entry.
  * @param {Object} action
  * @param {function(buildOptions)} action.build
+ * @param {function({ filePath })} action.remove
  */
-export async function source ({ path: pathOptions, ignore, includes = '**/*.*' } = {}, { build, remove }) {
+export async function source ({ path: pathOptions, ignore, includes = '**/*.*', data = {} } = {}, { build, remove }) {
+  assert(pathOptions, 'The path is required in source-filesystem plugin configuration.')
   // Make sure path is absolute.
   const path = !isAbsolute(pathOptions) ? resolve(process.cwd(), pathOptions) : pathOptions
   // Use path with includes to create a glob
@@ -75,11 +81,11 @@ export async function source ({ path: pathOptions, ignore, includes = '**/*.*' }
 
   // add file
   watcher.on('add', async filePath => {
-    batch ? queue.push(filePath) : await build(buildOptions(filePath, path))
+    batch ? queue.push(filePath) : await build(buildOptions(filePath, path, data))
   })
   // modify file
   watcher.on('change', async filePath => {
-    await build(buildOptions(filePath, path))
+    await build(buildOptions(filePath, path, data))
   })
   // remove file
   watcher.on('unlink', async filePath => {
@@ -91,7 +97,7 @@ export async function source ({ path: pathOptions, ignore, includes = '**/*.*' }
   return new Promise((resolve) => {
     watcher.on('ready', async () => {
       for (const filePath of queue) {
-        await build(buildOptions(filePath, path))
+        await build(buildOptions(filePath, path, data))
       }
       batch = false
       resolve()
