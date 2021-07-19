@@ -419,7 +419,7 @@ The default configuration includes:
 
 ```js
 plugins: [
-  ['nextein-plugin-source-fs', { path: 'posts' }],
+  ['nextein-plugin-source-fs', { path: 'posts', data: { page: 'post' } }],
   'nextein-plugin-markdown',
   'nextein-plugin-filter-unpublished'
 ]
@@ -433,6 +433,7 @@ Read files from file system.
 Options:
 
 - `path`: Path to read files from.
+- `data`: Default data to be passed as extra for each entry. Default to `{}`
 - `includes`: Default to `**/*.*`. 
 - `ignore`: A set of ignored files. The default list includes:
   ```js
