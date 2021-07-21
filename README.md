@@ -390,6 +390,8 @@ module.exports = withNextein({
 
 ```
 
+## Plugins
+
 You can also define nextein plugins using the `withNextein` configuration:
 
 ```js
@@ -408,10 +410,11 @@ module.exports = withNextein({
 
 The `nextein.plugins` configuration accepts an array of plugins with the following formats:
 
-- ` ['plugin-name'] `: Just a string to define the plugin.
-- ` ['plugin-name', {  }] `: A string to define the plugin and a plugins options object.
+- ` [name] `: Just a string to define the plugin.
+- ` [name, options] `: A string to define the plugin and a plugins options object.
+- ` { name, id, options } `: A plugin object. The `name` field is required. All previous definitoins are transformed into this format. The `id` is optional, when provided allows multiple instances of the same plugin.
 
-The plugin name should be a pre-installed plugin (`nextein-plugin-markdown`) , or a local file (`./myplugins/my-awesome-plugin`)
+The plugin `name` should be a pre-installed plugin (`nextein-plugin-markdown`) , or a local file (`./myplugins/my-awesome-plugin`)
 
 ### Default Plugins
 
@@ -465,7 +468,7 @@ Options:
 
 - `field`: Default to`'published'`. Will check if a `field` is present in post `data` and filter if set to `false`.
 
-## Plugins
+### Writing Plugins
 
 You can write your own plugins. There are basically 2 different types (source and transforms). Source plugins will be called to generate the posts entries and then the transform plugins will receive those entries and can modify, filter, append, or transform in anyway the posts list.
 
