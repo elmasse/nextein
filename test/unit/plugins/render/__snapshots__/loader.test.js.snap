@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render webpack loader Win32 FS export plugins 1`] = `
+"module.exports = {
+    \\"__PLUGINS__\\": [{\\"name\\":\\"pluginA\\",\\"resolved\\":\\"C:\\\\\\\\test\\\\\\\\pluginA\\"}],
+    
+  }"
+`;
+
+exports[`render webpack loader Win32 FS export plugins with renderer  1`] = `
+"module.exports = {
+    \\"__PLUGINS__\\": [{\\"name\\":\\"pluginA\\",\\"resolved\\":\\"C:\\\\\\\\test\\\\\\\\pluginA\\"},{\\"name\\":\\"pluginB\\",\\"resolved\\":\\"C:\\\\\\\\test\\\\\\\\pluginB\\",\\"renderer\\":true}],
+    \\"pluginB\\": require(\\"C:\\\\\\\\test\\\\\\\\pluginB\\\\\\\\render\\").render
+  }"
+`;
+
+exports[`render webpack loader Win32 FS export with no plugins 1`] = `
+"module.exports = {
+    \\"__PLUGINS__\\": [],
+    
+  }"
+`;
+
+exports[`render webpack loader export plugins 1`] = `
+"module.exports = {
+    \\"__PLUGINS__\\": [{\\"name\\":\\"pluginA\\",\\"resolved\\":\\"/test/pluginA\\"}],
+    
+  }"
+`;
+
+exports[`render webpack loader export plugins with renderer  1`] = `
+"module.exports = {
+    \\"__PLUGINS__\\": [{\\"name\\":\\"pluginA\\",\\"resolved\\":\\"/test/pluginA\\"},{\\"name\\":\\"pluginB\\",\\"resolved\\":\\"/test/pluginB\\",\\"renderer\\":true}],
+    \\"pluginB\\": require(\\"/test/pluginB/render\\").render
+  }"
+`;
+
+exports[`render webpack loader export with no plugins 1`] = `
+"module.exports = {
+    \\"__PLUGINS__\\": [],
+    
+  }"
+`;
