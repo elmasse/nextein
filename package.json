@@ -63,7 +63,7 @@
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-react": "^7.9.1",
     "@babel/runtime": "^7.9.0",
-    "@geut/chan": "^3.0.0",
+    "@geut/chan": "3.1.0",
     "@taskr/babel": "1.1.0-next.2",
     "@taskr/clear": "^1.1.0",
     "@taskr/esnext": "^1.1.0",
