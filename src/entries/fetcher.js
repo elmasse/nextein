@@ -26,8 +26,8 @@ export async function getData () {
 
 export async function getPostsFilterBy (filter) {
   const _filtered = await dataFilterBy(filter)
-
-  return load(_filtered.map(data => data.__id))
+  const ids = _filtered.map(data => data.__id)
+  return (filter && !ids.length) ? [] : load(ids)
 }
 
 export async function getPosts () {
