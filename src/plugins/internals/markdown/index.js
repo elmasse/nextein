@@ -26,8 +26,8 @@ function createOptions (source, raw, options) {
     meta: {
       ...source,
       extra: {
-        ...extra,
-        ...source.extra
+        ...source.extra,
+        ...extra
       }
     },
     content,
