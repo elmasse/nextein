@@ -20,9 +20,28 @@ export default (WrappedComponent) => {
       static async getInitialProps (...args) {
         const wrappedInitial = WrappedComponent.getInitialProps
         const wrapped = wrappedInitial ? await wrappedInitial(...args) : {}
-        const [{ query = {} }] = args
+        const [{ query = {}, asPath }] = args
         const { __id } = query
-        const [post] = __id ? await load(__id) : []
+        let post
+
+        if (__id) {
+          try {
+            ([post] = await load(__id))
+          } catch (err) {
+            // When a new BUILD is pushed to production, josn file names change so we might be pointing to the wrong file.
+            // To avoid the missing file, we just reload the current page on the next tick and return a dummy post.
+            if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
+              console.log(`[reloading] Server build might has been changed. Using ${asPath} to reload.`)
+
+              post = { data: { __id, date: Date.now() } }
+
+              process.nextTick(() => {
+                window.location = asPath
+                window.location.reload()
+              })
+            }
+          }
+        }
 
         return {
           ...wrapped,
