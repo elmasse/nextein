@@ -1,7 +1,6 @@
 
 import React from 'react'
 import unified from 'unified'
-import rehype from 'rehype-parse'
 import stringify from 'rehype-stringify'
 import reactRenderer from 'rehype-react'
 import { select } from 'unist-util-select'
@@ -30,7 +29,7 @@ export function render (options, { data, content, excerpt, renderers, components
   if (data.mimeType === 'text/markdown') {
     const hast = JSON.parse(JSON.stringify(content))
     const p = unified()
-      .use(rehype)
+      // .use(rehype)
       .use(extractExcerpt(options)(excerpt))
       .use(stringify)
       .use(reactRenderer, {

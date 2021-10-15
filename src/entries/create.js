@@ -5,12 +5,10 @@ import { compile } from 'path-to-regexp'
 const DEFAULT_PERMALINK = '/:category?/:name'
 const PERMALINK_CATEGORIES = ':category(.*)'
 
-function formatUrl (data) {
-  const { page, date, permalink = DEFAULT_PERMALINK } = data
+export function formatUrl (data) {
+  const { date, permalink = DEFAULT_PERMALINK } = data
   const toUrl = compile(permalink.replace(':category', PERMALINK_CATEGORIES))
-  const url = toUrl({ ...data, date: JSON.stringify(date).replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
-
-  return page ? url : undefined
+  return toUrl({ ...data, date: JSON.stringify(date).replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })
 }
 
 export function createId (path) {
@@ -48,7 +46,7 @@ export function createEntry ({ meta, raw, content }) {
       year: String(new Date(data.date).getFullYear()),
       month: String(new Date(data.date).getMonth() + 1).padStart(2, '0'),
       day: String(new Date(data.date).getDate()).padStart(2, '0'),
-      url: formatUrl(data)
+      url: data.page ? formatUrl(data) : undefined
     },
     content,
     raw

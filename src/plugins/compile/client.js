@@ -1,5 +1,5 @@
 /**
- * THIS FILE IS LOADED BY WEBPACK TO REPLACE config/index.js in dev and exported client
+ * THIS FILE IS LOADED BY WEBPACK TO REPLACE compile/index.js in client
  */
 
 export function compile () {
