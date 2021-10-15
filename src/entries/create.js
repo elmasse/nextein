@@ -5,7 +5,7 @@ import { compile } from 'path-to-regexp'
 const DEFAULT_PERMALINK = '/:category?/:name'
 const PERMALINK_CATEGORIES = ':category(.*)'
 
-function formatUrl (data) {
+export function formatUrl (data) {
   const { date, permalink = DEFAULT_PERMALINK } = data
   const toUrl = compile(permalink.replace(':category', PERMALINK_CATEGORIES))
   return toUrl({ ...data, date: JSON.stringify(date).replace(/T.*Z/, '') }, { encode: v => encodeURI(v) })

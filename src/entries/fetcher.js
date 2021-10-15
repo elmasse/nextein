@@ -2,6 +2,8 @@
 import { metadata } from './metadata'
 import { load } from './load'
 
+export { formatUrl } from './create'
+
 export default function fetcher (filter) {
   return {
     getData: async () => getDataFilterBy(filter),

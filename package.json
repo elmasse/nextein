@@ -1,11 +1,10 @@
 {
   "name": "nextein",
-  "version": "3.2.5",
+  "version": "4.0.0-beta.0",
   "description": "A static site and blog generator based on Next.js",
   "repository": "https://github.com/elmasse/nextein",
   "bugs": "https://github.com/elmasse/nextein/issues",
   "homepage": "https://nextein.elmasse.io",
-  "main": "index.js",
   "scripts": {
     "build": "taskr build",
     "lint": "taskr lint",
@@ -14,18 +13,12 @@
     "test": "jest",
     "version": "chan release ${npm_package_version} && git add ."
   },
-  "bin": {
-    "nextein": "./dist/bin/nextein"
-  },
   "files": [
     "dist",
     "config.js",
     "content.js",
     "fetcher.js",
-    "filters.js",
-    "link.js",
-    "posts.js",
-    "post.js"
+    "filters.js"
   ],
   "dependencies": {
     "chokidar": "^3.4.2",
@@ -62,7 +55,7 @@
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-react": "^7.9.1",
     "@babel/runtime": "^7.9.0",
-    "@geut/chan": "3.1.0",
+    "@geut/chan": "^3.2.2",
     "@taskr/babel": "1.1.0-next.2",
     "@taskr/clear": "^1.1.0",
     "@taskr/esnext": "^1.1.0",

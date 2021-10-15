@@ -1,6 +1,16 @@
-# Nextein v3
+# Nextein v4
 
-Major update goal is to improve plugins & life cycle.
+Major update goal is to reduce foot-print and remove HOCs in favor of `getStatic*` functions.
+
+- Remove HOCs `withPosts*`, `withPost`.
+- Support `[entry]` routing.
+- Support `[...entry]` routing.
+- Support `[[...entry]]` routing.
+- No bin required. Use `next`
+- Remove generated .json files in static export.
+
+
+
 
 ## Plugins
 
