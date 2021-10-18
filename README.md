@@ -42,10 +42,18 @@ There are a few steps you have to follow to get your site up and running with `n
     ```js
     import React from 'react'
 
-    import withPosts from 'nextein/posts'
+    import { getPosts } from 'nextein/fetcher'
     import Content from 'nextein/content'
 
-    export default withPosts( ({ posts }) => {
+    export async function getStaticProps () {
+      return {
+        props: {
+          posts: await getPosts()
+        }
+      }
+    }
+
+    export default function Index ({ posts }) {
       return (
         <section>
         {
@@ -73,31 +81,81 @@ There are a few steps you have to follow to get your site up and running with `n
 
     ```json
     "scripts": {
-      "dev": "nextein"
+      "dev": "next"
     }
     ```
 - Run the development server
     - `npm run dev`
     - open http://localhost:3000
+
 - Add another npm script to your `package.json` to export the site
 
     ```json
     "scripts": {
-      "dev": "nextein",
-      "export": "nextein build && nextein export"
+      "dev": "next",
+      "export": "next build && next export"
     }
     ```
 
 ## Documentation
 
-### `withPosts`
+### `fetcher` 
 
-HOC for `/pages` components that renders a list of posts. It makes the post list available thru the `posts` property.
+Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths).
+
+Example for a `[name].js` dynamic route
 
 ```js
-import withPosts from 'nextein/posts'
+import fetcher from 'nextein/fetcher'
 
-export default withPosts( ({ posts }) => { /* render your posts here */ } )
+const { getData, getPost } = fetcher(/* filter */)
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: data.map(({ name }) => ({ params: { name } })),
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const post = await getPost(params)
+  return { props: { post } }
+}
+
+export default function Post ({ post }) {
+  //...
+}
+
+```
+
+Example for a `[[...name]].js` dynamic route:
+
+```js
+import fetcher from 'nextein/fetcher'
+import { inCategory } from 'nextein/filters'
+
+const { getData, getPosts, getPost } = fetcher(inCategory('guides'))
+
+export async function getStaticPaths () {
+  const data = await getData()
+  return {
+    paths: [{ params: { name: [] } },
+      ...data.map(({ name }) => ({ params: { name: [name] } }))
+    ],
+    fallback: false
+  }
+}
+
+export async function getStaticProps ({ params }) {
+  const posts = await getPosts()
+  const post = await getPost(params) // This can be null if not matching `...name`
+  return { props: { posts, post } }
+}
+
+export default function Guides ({ posts, post }) {
+  //...
+}
 
 ```
 
@@ -136,22 +194,6 @@ export default withPosts( ({ posts }) => {
 
 ```
 
-### `withPostsFilterBy(filter)`
-
-Returns an HOC that gets all posts filtered out by the given filter function. This can be used in conjunction with `inCategory` to get only the desired posts in a certain category.
-
- ```js
-import { withPostsFilterBy } from 'nextein/posts'
-import { inCategory } from 'nextein/filters'
-
-const withCategoryAPosts = withPostsFilterBy(inCategory('categoryA'))
-
-export default withCategoryAPosts(({ posts }) => { 
-  /* render your posts here */ 
-})
-
-```
-
 ### `sortByDate`
 
 Sort function to be applied to posts to sort by date (newest on top). This requires that the post contains a `date` in `frontmatter` or in the file name (ala jekyll)
@@ -163,17 +205,6 @@ export default withPosts( ({ posts }) => {
   posts.sort(sortByDate)
   /* render your posts here */ 
 } )
-
-```
-
-### `withPost`
-
-HOC for `/pages` components that renders a single post. It makes the post available thru the `post` property.
-
-```js
-import withPost from 'nextein/post'
-
-export default withPost( ({ post }) => { /* render your post here */ } )
 
 ```
 
@@ -236,37 +267,6 @@ export default withPost(({ post }) => {
 ```
 
 
-### `Link`
-
-You can use `nextein/link` with the exact same parameters as `next/link`. This component wraps the `next/link` to simplify creating a _Link_ for a given `post` object. When passing a `post.data.url` to `href` it will generate the underlying `next/link` with the `post` information.
-
-
-- `data`: `{Object}` Post frontmatter object. This is provided by `post.data`
-
-
-```js
-import withPosts from 'nextein/posts'
-import Link from 'nextein/link'
-
-export default withPosts( ({ posts }) => (
-  <section>
-  {
-    posts.map( (post, idx) => {
-      return (
-        <div>
-          <h1>{post.data.title}</h1>
-          <Content key={idx} {...post} excerpt/>
-          <Link {...post}><a>Read More...</a></Link>
-      </div>
-      )
-    })    
-  }
-  </section>
-))
-
-
-```
-
 ### `post`
 
 - `data` is the frontmatter object containig the post meta information (title, page, category, etc)
@@ -304,76 +304,6 @@ Post Content...
 - `permalink`: Set the url using any parameter in the frontmatter object. Default value `/:category?/:name`. The `?` means the parameter will be optional.
 - `name`: **Read Only** The post file name. Date is removed from name if present.
 - `url`: **Read Only** The post url.
-
-### `fetcher` 
-
-Status: **Experimental**
-
-Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths) can be used with this new experimental feature.
-
-**NOTE**: For now, all posts rendered in a dynamic route require to have `page: false`. 
-
-Example for a `[name].js` dynamic route
-
-```js
-import fetcher from 'nextein/fetcher'
-
-const { getData, getPost } = fetcher(/* filter */)
-
-export async function getStaticPaths () {
-  const data = await getData()
-  return {
-    paths: data.map(({ name }) => ({ params: { name } })),
-    fallback: false
-  }
-}
-
-export async function getStaticProps ({ params }) {
-  const post = await getPost(params)
-  return { props: { post } }
-}
-
-export default function Post ({ post }) {
-  //...
-}
-
-```
-
-Example for a `[[...name]].js` dynamic route:
-
-```js
-import fetcher from 'nextein/fetcher'
-import { inCategory } from 'nextein/filters'
-
-const { getData, getPosts, getPost } = fetcher(inCategory('guides'))
-
-export async function getStaticPaths () {
-  const data = await getData()
-  return {
-    paths: [{ params: { name: [] } },
-      ...data.map(({ name }) => ({ params: { name: [name] } }))
-    ],
-    fallback: false
-  }
-}
-
-export async function getStaticProps ({ params }) {
-  const posts = await getPosts()
-  const post = await getPost(params) // This can be null if not matching `...name`
-  return { props: { posts, post } }
-}
-
-export default function Guides ({ posts, post }) {
-  //...
-}
-
-```
-
-#### Caveats
-
-- Post are required to be marked with `page: false`.
-- No fast refresh for post changes.
-- The `nextein` Link won't work since page is set to false.
 
 ### `withNextein`
 
