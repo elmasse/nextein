@@ -2,14 +2,13 @@
 
 Major update goal is to reduce foot-print and remove HOCs in favor of `getStatic*` functions.
 
-- Remove HOCs `withPosts*`, `withPost`.
-- Support `[entry]` routing.
-- Support `[...entry]` routing.
-- Support `[[...entry]]` routing.
-- No bin required. Use `next`
-- Remove generated .json files in static export.
-
-
+- [x] Remove HOCs `withPosts*`, `withPost`.
+- [x] Support `[slug]` routing.
+- [ ] Support `[...entry]` routing.
+- [ ] Support `[[...entry]]` routing.
+- [x] No bin required. Use `next`
+- [x] Remove generated .json files in static export.
+- [ ] Update README.md
 
 
 ## Plugins
