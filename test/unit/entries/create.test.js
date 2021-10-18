@@ -18,7 +18,8 @@ describe('createEntry', () => {
     __id: createId(filePath),
     mimeType: meta.mimeType,
     page: 'post',
-    name: meta.name,      
+    name: meta.name,
+    slug: meta.name,
     date: JSON.parse(meta.createdOn),
     day: '02',
     month: '02',
@@ -62,5 +63,45 @@ describe('createEntry', () => {
     const result = createEntry(evaluated)
 
     expect(result).toEqual({ data: expectedData, content, raw })
-  })  
+  })
+
+  test('create with slug in extra', () => {
+    const slug = 'file-name-slug'
+    const evaluated = { meta: { ...meta, extra: { ...defaultExtra, slug } }, content, raw }
+    const expectedData = {
+      ...expectedDataDefault,
+      slug,
+      url: '/file-name-slug'
+    }
+    const result = createEntry(evaluated)
+
+    expect(result).toEqual({ data: expectedData, content, raw })
+  })
+
+  test('create with name containing spaces', () => {
+    const name = 'file name'
+    const evaluated = { meta: { ...meta, name, extra: { ...defaultExtra } }, content, raw }
+    const expectedData = {
+      ...expectedDataDefault,
+      name,
+      slug: 'file-name',
+      url: '/file-name'
+    }
+    const result = createEntry(evaluated)
+
+    expect(result).toEqual({ data: expectedData, content, raw })
+  })
+
+  test('create with permalink in extra', () => {
+    const permalink= 'my-post-permalink'
+    const evaluated = { meta: { ...meta, extra: { ...defaultExtra, permalink } }, content, raw }
+    const expectedData = {
+      ...expectedDataDefault,
+      permalink,
+      url: 'my-post-permalink'
+    }
+    const result = createEntry(evaluated)
+
+    expect(result).toEqual({ data: expectedData, content, raw })
+  })
 })
