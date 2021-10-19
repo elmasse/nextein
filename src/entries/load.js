@@ -1,5 +1,5 @@
-import { run, subscribe } from '../../plugins'
-import createCache from '../cache'
+import { run, subscribe } from '../plugins'
+import createCache from './cache'
 
 const cache = createCache()
 

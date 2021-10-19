@@ -2,6 +2,7 @@
 import path from 'path'
 import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
 
+import { processPathMap } from './entries'
 import { processPlugins, getDefaultPlugins } from './plugins'
 import { compile } from './plugins/compile'
 
@@ -74,6 +75,19 @@ export const withNextein = (nextConfig = {}) => {
       }
 
       return config
+    },
+
+    async exportPathMap (defaultPathMap, options) {
+      let nextExportPathMapFn = map => map
+      if (typeof nextConfig.exportPathMap === 'function') {
+        nextExportPathMapFn = nextConfig.exportPathMap
+      }
+
+      const nextExportPathMap = await processPathMap(nextExportPathMapFn, defaultPathMap, options)
+
+      return {
+        ...nextExportPathMap
+      }
     }
   }
 
