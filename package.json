@@ -1,6 +1,6 @@
 {
   "name": "nextein",
-  "version": "4.0.0-beta.3",
+  "version": "4.0.0-beta.4",
   "description": "A static site and blog generator based on Next.js",
   "repository": "https://github.com/elmasse/nextein",
   "bugs": "https://github.com/elmasse/nextein/issues",
