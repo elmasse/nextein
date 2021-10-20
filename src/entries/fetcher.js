@@ -41,9 +41,9 @@ export async function getPost (params) {
 
   const entry = params && _meta.find(data => {
     for (const [k, v] of Object.entries(params)) {
-      if (data[k] && (Array.isArray(v) ? v.includes(data[k]) : data[k] === v)) return true
+      if (!data[k] || (Array.isArray(v) ? !v.includes(data[k]) : data[k] !== v)) return false
     }
-    return false
+    return true
   })
 
   const [found] = entry ? await load(entry.__id) : [null]
