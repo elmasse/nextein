@@ -46,8 +46,7 @@ export function createEntry ({ meta, raw, content }) {
       ...data,
       year: String(new Date(data.date).getFullYear()),
       month: String(new Date(data.date).getMonth() + 1).padStart(2, '0'),
-      day: String(new Date(data.date).getDate()).padStart(2, '0'),
-      url: data.page ? formatUrl(data) : undefined
+      day: String(new Date(data.date).getDate()).padStart(2, '0')
     },
     content,
     raw

@@ -24,7 +24,6 @@
     "chokidar": "^3.4.2",
     "frontmatter": "^0.0.3",
     "mime": "^2.4.6",
-    "path-match": "^1.2.4",
     "path-to-regexp": "^6.0.0",
     "rehype-raw": "^5.0.0",
     "rehype-react": "^6.0.0",

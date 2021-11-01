@@ -86,14 +86,12 @@ Create an entry. It should call `action.create` to generate an `Entry` in the **
       - data
         - __id: MD5(meta.filePath)
         - mimeType: meta.mimeType,
-        - page: meta.extra.page
         - name: meta.name
         - category: meta.extra.category || meta.path
         - date: meta.extra.date || meta.created
         - day: {String} 2 digit padded day from date
         - month: {String} 2 digit padded month from date
         - year: {String} 4 digit year from date
-        - url: formatted(meta.extra.url || `/:category?/:name`)
         - {...user defined data}
       - content
       - raw
@@ -207,27 +205,26 @@ This allows to generate multiple instances of the same plugin if an`id` is provi
   - filter
 
 
-## Watching Sources
+ ## Watching Sources
 
+ TBD.
+<!--
 For *source* plugins there is way to setup file watchers for dev mode. Once the watcher activates, it triggers the action of re-sourcing. This implies:
 
 - *source* calls `action.build` with the file that changed or `action.remove` if file is removed.
 - *source*'s `action.build` executes *build*'s `action.create`.
 - *source*'s `action.remove` executes a remove of entry from current entry set.
 
-Once this stage is completed, the entry set is cloned and all plugins from `transform` stage are run against the new set.
+Once this stage is completed, the entry set is cloned and all plugins from `transform` stage are run against the new set. 
+-->
 
 ## Rendering with `Content`
 
 The `Content` component will run the appropriate render based on the `post` data.
 
-## New `fetcher` for Dynamic Routes
-
-> Status: **Experimental**
+## `fetcher`
 
 Dynamic Routes and *static generator functions* (getStaticProps and getStaticPaths) can be used with this new experimental feature.
-
-> **NOTE**: For now, all posts rendered in a dynamic route require to have `page: false`. 
 
 Example for a `[name].js` dynamic route
 
@@ -284,9 +281,3 @@ export default function Guides ({ posts, post }) {
 }
 
 ```
-
-### Caveats
-
-- Post are required to be marked with `page: false`.
-- No fast refresh for post changes.
-- The `nextein` Link won't work since page is set to false.

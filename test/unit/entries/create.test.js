@@ -24,8 +24,7 @@ describe('createEntry', () => {
     day: '02',
     month: '02',
     year: '2020',
-    category: undefined,
-    url: `/${meta.name}`
+    category: undefined
   }
 
   test('create default', () => {
@@ -70,8 +69,7 @@ describe('createEntry', () => {
     const evaluated = { meta: { ...meta, extra: { ...defaultExtra, slug } }, content, raw }
     const expectedData = {
       ...expectedDataDefault,
-      slug,
-      url: '/file-name-slug'
+      slug
     }
     const result = createEntry(evaluated)
 
@@ -84,24 +82,11 @@ describe('createEntry', () => {
     const expectedData = {
       ...expectedDataDefault,
       name,
-      slug: 'file-name',
-      url: '/file-name'
+      slug: 'file-name'
     }
     const result = createEntry(evaluated)
 
     expect(result).toEqual({ data: expectedData, content, raw })
   })
 
-  test('create with permalink in extra', () => {
-    const permalink= 'my-post-permalink'
-    const evaluated = { meta: { ...meta, extra: { ...defaultExtra, permalink } }, content, raw }
-    const expectedData = {
-      ...expectedDataDefault,
-      permalink,
-      url: 'my-post-permalink'
-    }
-    const result = createEntry(evaluated)
-
-    expect(result).toEqual({ data: expectedData, content, raw })
-  })
 })
