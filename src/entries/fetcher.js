@@ -40,8 +40,15 @@ export async function getPost (params) {
   const _meta = await metadata()
 
   const entry = params && _meta.find(data => {
+    // first check by __id
+    if (params.__id && params.__id === data.__id) return true
+    
     for (const [k, v] of Object.entries(params)) {
-      if (!data[k] || (Array.isArray(v) ? !v.includes(data[k]) : data[k] !== v)) return false
+      if (!data[k] || (
+        Array.isArray(v) ?
+          (!Array.isArray(data[k]) ? !v.includes(data[k]) : v.some(value => !data[k].includes(value)))
+        : data[k] !== v))
+        return false
     }
     return true
   })

@@ -139,4 +139,17 @@ describe('getPost', () => {
     expect(actual).toEqual(expected)
   })
 
+
+  test('getPost() should return the same post if params are from getData', async () => {
+    const slug = 'same'
+    const data= { __id: 1, slug, category: expectedCategory, tags: ['a', 'b'] }
+    const expected = { data, content: ''}
+    const all = [expected, { data: { __id: 2, slug, category: 'another' }, content: ''}]
+
+    metadata.mockReturnValueOnce(all.map(({ data }) => data))
+    load.mockReturnValueOnce([expected])
+
+    const actual = await getPost(data)
+    expect(actual).toEqual(expected)
+  })
 })
