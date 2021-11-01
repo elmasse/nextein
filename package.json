@@ -18,7 +18,8 @@
     "config.js",
     "content.js",
     "fetcher.js",
-    "filters.js"
+    "filters.js",
+    "sorters.js"
   ],
   "dependencies": {
     "chokidar": "^3.4.2",
