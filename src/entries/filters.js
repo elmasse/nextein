@@ -3,7 +3,7 @@ export const inCategory = (category, { includeSubCategories = false } = {}) => p
   const { data } = post
   const { category: postCategory = '' } = data
   const shouldIncludeSub = includeSubCategories || category.endsWith('/*')
-  const result =  shouldIncludeSub ? postCategory.startsWith(category.replace('/*', '')) : postCategory === category
+  const result = shouldIncludeSub ? postCategory.startsWith(category.replace('/*', '')) : postCategory === category
 
   return result
 }
