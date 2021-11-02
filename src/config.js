@@ -1,6 +1,6 @@
 
 import path from 'path'
-import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
+import { NormalModuleReplacementPlugin, DefinePlugin, IgnorePlugin } from 'webpack'
 
 import { processPlugins, getDefaultPlugins } from './plugins'
 import { compile } from './plugins/compile'
@@ -42,7 +42,11 @@ export const withNextein = (nextConfig = {}) => {
         new DefinePlugin({
           'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '')
         }),
-        new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './client.js')
+        new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './client.js'),
+        new IgnorePlugin({
+          resourceRegExp: /^\.\/load$/,
+          contextRegExp: /entries$/
+        })
       )
 
       config.module = {
