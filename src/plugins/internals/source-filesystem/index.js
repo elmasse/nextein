@@ -25,12 +25,12 @@ const DATE_MATCH_INDEX = 1
 const NAME_MATCH_INDEX = 2
 
 /**
- * Create a buildOptions
+ * Create a addOptions
  * @param {*} filePath
  * @param {*} basePath
  * @param {Object} data
  */
-function buildOptions (filePath, basePath, data) {
+function addOptions (filePath, basePath, data) {
   const fileName = basename(filePath, extname(filePath))
   const match = fileName.match(DATE_IN_FILE_REGEX)
   const { birthtime } = statSync(filePath)
@@ -60,10 +60,10 @@ function buildOptions (filePath, basePath, data) {
  * @param {Array<String>} options.ignore
  * @param {Object} data default data added to extra field for each entry.
  * @param {Object} action
- * @param {function(buildOptions)} action.build
+ * @param {function(addOptions)} action.add
  * @param {function({ filePath })} action.remove
  */
-export async function source ({ path: pathOptions, ignore, includes = '**/*.*', data = {} } = {}, { build, remove }) {
+export async function source ({ path: pathOptions, ignore, includes = '**/*.*', data = {} } = {}, { add, remove }) {
   assert(pathOptions, 'The path is required in source-filesystem plugin configuration.')
   // Make sure path is absolute.
   const path = !isAbsolute(pathOptions) ? resolve(process.cwd(), pathOptions) : pathOptions
@@ -81,11 +81,11 @@ export async function source ({ path: pathOptions, ignore, includes = '**/*.*', 
 
   // add file
   watcher.on('add', async filePath => {
-    batch ? queue.push(filePath) : await build(buildOptions(filePath, path, data))
+    batch ? queue.push(filePath) : await add(addOptions(filePath, path, data))
   })
   // modify file
   watcher.on('change', async filePath => {
-    await build(buildOptions(filePath, path, data))
+    await add(addOptions(filePath, path, data))
   })
   // remove file
   watcher.on('unlink', async filePath => {
@@ -97,7 +97,7 @@ export async function source ({ path: pathOptions, ignore, includes = '**/*.*', 
   return new Promise((resolve) => {
     watcher.on('ready', async () => {
       for (const filePath of queue) {
-        await build(buildOptions(filePath, path, data))
+        await add(addOptions(filePath, path, data))
       }
       batch = false
       resolve()

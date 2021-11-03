@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mardown::build default options 1`] = `
+Array [
+  Object {
+    "content": Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "position": Object {
+                "end": Object {
+                  "column": 6,
+                  "line": 2,
+                  "offset": 6,
+                },
+                "start": Object {
+                  "column": 1,
+                  "line": 2,
+                  "offset": 1,
+                },
+              },
+              "type": "text",
+              "value": "Text.",
+            },
+          ],
+          "position": Object {
+            "end": Object {
+              "column": 6,
+              "line": 2,
+              "offset": 6,
+            },
+            "start": Object {
+              "column": 1,
+              "line": 2,
+              "offset": 1,
+            },
+          },
+          "properties": Object {},
+          "tagName": "p",
+          "type": "element",
+        },
+      ],
+      "data": Object {
+        "quirksMode": false,
+      },
+      "position": Object {
+        "end": Object {
+          "column": 6,
+          "line": 2,
+          "offset": 6,
+        },
+        "start": Object {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "root",
+    },
+    "data": Object {
+      "mimeType": "text/markdown",
+    },
+    "raw": "---
+page: PAGE
+title: TITLE
+---
+
+Text.",
+  },
+]
+`;
