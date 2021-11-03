@@ -26,6 +26,7 @@ We will have these stages/plugin-types:
 
 - config
 - source
+- indexer
 - build
 - transform
 - cleanup
@@ -45,14 +46,14 @@ This stage allows plugin developers to inject configuration into the `next.confi
 
 #### source
 
-This stage compiles an entries list. It should call `action.build` on any entry to be processed. The `action.build` will execute *build* plugins. 
+This stage compiles an entries list. It should call `action.add` on any entry to be processed. The `action.add` will execute *indexer* plugins. 
 
   - `source(options, action: { build, remove })`. 
       - options
       - action
-        - build(buildOptions)
+        - add(addOptions)
         - remove(removeOptions)
-      - `buildOptions` {Object}
+      - `addOptions` {Object}
         - filePath: Absolute path
         - path: Relative to `options.path`. e.g.`'/blog/first-post.md'`
         - name: e.g.`'firts-post.md'`
@@ -63,9 +64,41 @@ This stage compiles an entries list. It should call `action.build` on any entry 
       - `removeOptions` {Object}
         -  filePath: Absolute path
 
+
+#### indexer
+
+Creates an entry. It should call `action.create` to generate an `EntryIndex` in the **_entries** array. 
+
+- `indexer(options, indexOptions, action: { create })`.
+    - options
+    - indexOptions
+    - action
+      - create(createOptions): {EntryIndex}
+    - `createOptions` {Object}
+      - meta
+        - filePath
+        - path
+        - name
+        - mimeType
+        - createdOn
+        - raw
+        - extra: (any user defined data e.g. in frontmatter)
+      - content
+    - `EntryIndex` {Object}
+        - __id: MD5(meta.filePath)
+        - mimeType: meta.mimeType,
+        - name: meta.name
+        - category: meta.extra.category || meta.path
+        - date: meta.extra.date || meta.created
+        - day: {String} 2 digit padded day from date
+        - month: {String} 2 digit padded month from date
+        - year: {String} 4 digit year from date
+        - {...user defined data}
+
+
 #### build
 
-Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
+Builds an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
 
   - `build(options, buildOptions, action: { create })`.
     - options

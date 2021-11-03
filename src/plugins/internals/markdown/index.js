@@ -13,13 +13,14 @@ function normalizeDate (value, { path }) {
   }
 }
 
-function createOptions (source, raw, options) {
-  const { data: extra = {}, content: text } = fm(raw)
+function parseContent (text, options) {
   const instance = parser(options)
-
   // second text argument avoids positoin information being removed in rehype-raw
-  const content = instance.runSync(instance.parse(text), text)
+  return instance.runSync(instance.parse(text), text)
+}
 
+function createOptions (source, raw) {
+  const { data: extra = {}, content: text } = fm(raw)
   if (extra.date) extra.date = normalizeDate(extra.date, source)
 
   return {
@@ -30,8 +31,24 @@ function createOptions (source, raw, options) {
         ...extra
       }
     },
-    content,
+    content: text,
     raw
+  }
+}
+
+/**
+ * indexer
+ * @param {Object} options
+ * @param {Array} options.remark plugins for remark
+ * @param {Array} options.rehype plugins for rehype
+ * @param {Object} buildOptions
+ * @param {Object} action
+ * @param {Function} action.create
+ */
+export async function indexer (options, { load, ...source }, { create }) {
+  if (source.mimeType === 'text/markdown') {
+    const raw = await load()
+    create(createOptions(source, raw, options))
   }
 }
 
@@ -40,15 +57,14 @@ function createOptions (source, raw, options) {
  * @param {Object} options
  * @param {Array} options.remark plugins for remark
  * @param {Array} options.rehype plugins for rehype
- * @param {Object} buildOptions
- * @param {Object} action
- * @param {Function} action.create
  */
-export async function build (options, { load, ...source }, { create }) {
-  if (source.mimeType === 'text/markdown') {
-    const raw = await load()
-    create(createOptions(source, raw, options))
-  }
+export function build (options, posts) {
+  return posts.map(post => {
+    if (post.data.mimeType === 'text/markdown') {
+      post.content = parseContent(post.content, options)
+    }
+    return post
+  })
 }
 
 /**
