@@ -35,15 +35,12 @@ emitter.on('entries.update', (__id) => {
   emitter.emit('entry.change', __id)
 })
 
-let indexed = false
+async function upsertEntries () {
+  const { sources = [], builders = [] } = compile()
 
-async function indexEntries () {
-  if (indexed) return
-  const { sources = [], indexers = [], prefilters = [] } = compile()
-
-  async function add (options) {
-    for (const indexer of indexers) {
-      await indexer(options, {
+  async function build (buildOptions) {
+    for (const build of builders) {
+      await build(buildOptions, {
         create: createOptions => {
           const entry = createEntry(createOptions)
           entries.set(entry.data.__id, entry)
@@ -62,28 +59,14 @@ async function indexEntries () {
   }
 
   for (const source of sources) {
-    await source({ add, remove })
-  }
-
-  posts = JSON.parse(JSON.stringify(Array.from(entries.values()))) // deep clone
-
-  for (const prefilter of prefilters) {
-    posts = prefilter(posts)
-  }
-
-  indexed = true
-}
-
-async function buildEntries () {
-  const { builders = [] } = compile()
-
-  for (const build of builders) {
-    posts = await build(posts)
+    await source({ build, remove })
   }
 }
 
 async function processEntries () {
   const { transformers = [], cleaners = [], filters = [], sorters = [] } = compile()
+
+  posts = JSON.parse(JSON.stringify(Array.from(entries.values()))) // deep clone
 
   for (const transform of transformers) {
     posts = await transform(posts)
@@ -108,16 +91,10 @@ async function processEntries () {
  *
  */
 export async function run () {
-  await indexEntries()
-  await buildEntries()
+  await upsertEntries()
   await processEntries()
 
   bootstraped = true
 
-  return posts
-}
-
-export async function runIndexer () {
-  await indexEntries()
   return posts
 }

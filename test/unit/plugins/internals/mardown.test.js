@@ -1,25 +1,18 @@
 
-import { indexer, build } from  '../../../../src//plugins/internals/markdown'
-
-const content = [
-  '',
-  'Text.'    
-].join('\n')
-
-const raw = [
-  '---',
-  'page: PAGE',
-  'title: TITLE',
-  '---',
-  '',
-  'Text.'    
-].join('\n')
+import { build } from  '../../../../src//plugins/internals/markdown'
 
 async function load () {
-  return raw
+  return [
+    '---',
+    'page: PAGE',
+    'title: TITLE',
+    '---',
+    '',
+    'Text.'    
+  ].join('\n')
 }
 
-describe('mardown::indexer', () => {
+describe('mardown::build', () => {
 
   test('default options', async () => {
     const options = {}
@@ -27,30 +20,15 @@ describe('mardown::indexer', () => {
       mimeType: 'text/markdown'
     }
 
-    expect.assertions(3);
+    expect.assertions(4);
 
-    await indexer(options, { load, ...source }, { 
+    await build(options, { load, ...source }, { 
       create: function (entry) {
         expect(entry).toHaveProperty('meta')
         expect(entry).toHaveProperty('content')
+        expect(entry).toHaveProperty('content.position')
         expect(entry).toHaveProperty('raw')
       }
     })
-  })
-})
-
-
-describe('mardown::build', () => {
-
-  test('default options', async () => {
-    const options = {}
-    const post = {
-      data: { mimeType: 'text/markdown' },
-      content,
-      raw
-    }
-
-    const result = await build(options, [post])
-    expect(result).toMatchSnapshot()
   })
 })

@@ -9,10 +9,9 @@ Major update goal is to reduce foot-print and remove HOCs in favor of `getStatic
 - [x] No bin required. Use `next`
 - [x] Remove generated .json files in static export.
 - [ ] Update README.md
-- [x] Remove `page` and default page from plugin config.
-- [x] Remove `url` generation and permalink props. Update tests.
-- [x] Add common sorters (?)
-- [ ] Research on revalidate/reload post data in development.
+- [ ] Remove `page` and default page from plugin config.
+- [ ] Remove `url` generation and permalink props. Update tests.
+- [ ] Add common sorters (?)
 
 
 ## Plugins
@@ -27,8 +26,6 @@ We will have these stages/plugin-types:
 
 - config
 - source
-- indexer
-- prefilter
 - build
 - transform
 - cleanup
@@ -48,14 +45,14 @@ This stage allows plugin developers to inject configuration into the `next.confi
 
 #### source
 
-This stage compiles an entries list. It should call `action.add` on any entry to be processed. The `action.add` will execute *indexer* plugins. 
+This stage compiles an entries list. It should call `action.build` on any entry to be processed. The `action.build` will execute *build* plugins. 
 
   - `source(options, action: { build, remove })`. 
       - options
       - action
-        - add(addOptions)
+        - build(buildOptions)
         - remove(removeOptions)
-      - `addOptions` {Object}
+      - `buildOptions` {Object}
         - filePath: Absolute path
         - path: Relative to `options.path`. e.g.`'/blog/first-post.md'`
         - name: e.g.`'firts-post.md'`
@@ -66,14 +63,13 @@ This stage compiles an entries list. It should call `action.add` on any entry to
       - `removeOptions` {Object}
         -  filePath: Absolute path
 
+#### build
 
-#### indexer
+Create an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
 
-Creates an entry. It should call `action.create` to generate an `EntryIndex` in the **_entries** array. 
-
-- `indexer(options, indexOptions, action: { create })`.
+  - `build(options, buildOptions, action: { create })`.
     - options
-    - indexOptions
+    - buildOptions
     - action
       - create(createOptions): {Entry}
     - `createOptions` {Object}
@@ -87,6 +83,7 @@ Creates an entry. It should call `action.create` to generate an `EntryIndex` in 
         - extra: (any user defined data e.g. in frontmatter)
       - content
     - `Entry` {Object}
+      - data
         - __id: MD5(meta.filePath)
         - mimeType: meta.mimeType,
         - name: meta.name
@@ -96,23 +93,8 @@ Creates an entry. It should call `action.create` to generate an `EntryIndex` in 
         - month: {String} 2 digit padded month from date
         - year: {String} 4 digit year from date
         - {...user defined data}
-
-### prefilter
-
-Run a filter based in the indexed data. Guaranteed to run before `build`.
-
-  - `build(options, entries): {Array<Entry>}`.
-    - options
-    - entries
-
-#### build
-
-Parses the content and returns the built post.
-
-  - `build(options, posts): {Array<Entry>}`.
-    - options
-    - posts
-
+      - content
+      - raw
 
 #### transform
 
