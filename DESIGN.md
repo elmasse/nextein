@@ -9,9 +9,10 @@ Major update goal is to reduce foot-print and remove HOCs in favor of `getStatic
 - [x] No bin required. Use `next`
 - [x] Remove generated .json files in static export.
 - [ ] Update README.md
-- [ ] Remove `page` and default page from plugin config.
-- [ ] Remove `url` generation and permalink props. Update tests.
-- [ ] Add common sorters (?)
+- [x] Remove `page` and default page from plugin config.
+- [x] Remove `url` generation and permalink props. Update tests.
+- [x] Add common sorters (?)
+- [ ] Research on revalidate/reload post data in development.
 
 
 ## Plugins
@@ -27,6 +28,7 @@ We will have these stages/plugin-types:
 - config
 - source
 - indexer
+- prefilter
 - build
 - transform
 - cleanup
@@ -73,37 +75,6 @@ Creates an entry. It should call `action.create` to generate an `EntryIndex` in 
     - options
     - indexOptions
     - action
-      - create(createOptions): {EntryIndex}
-    - `createOptions` {Object}
-      - meta
-        - filePath
-        - path
-        - name
-        - mimeType
-        - createdOn
-        - raw
-        - extra: (any user defined data e.g. in frontmatter)
-      - content
-    - `EntryIndex` {Object}
-        - __id: MD5(meta.filePath)
-        - mimeType: meta.mimeType,
-        - name: meta.name
-        - category: meta.extra.category || meta.path
-        - date: meta.extra.date || meta.created
-        - day: {String} 2 digit padded day from date
-        - month: {String} 2 digit padded month from date
-        - year: {String} 4 digit year from date
-        - {...user defined data}
-
-
-#### build
-
-Builds an entry. It should call `action.create` to generate an `Entry` in the **_entries** array. 
-
-  - `build(options, buildOptions, action: { create })`.
-    - options
-    - buildOptions
-    - action
       - create(createOptions): {Entry}
     - `createOptions` {Object}
       - meta
@@ -116,7 +87,6 @@ Builds an entry. It should call `action.create` to generate an `Entry` in the **
         - extra: (any user defined data e.g. in frontmatter)
       - content
     - `Entry` {Object}
-      - data
         - __id: MD5(meta.filePath)
         - mimeType: meta.mimeType,
         - name: meta.name
@@ -126,8 +96,23 @@ Builds an entry. It should call `action.create` to generate an `Entry` in the **
         - month: {String} 2 digit padded month from date
         - year: {String} 4 digit year from date
         - {...user defined data}
-      - content
-      - raw
+
+### prefilter
+
+Run a filter based in the indexed data. Guaranteed to run before `build`.
+
+  - `build(options, entries): {Array<Entry>}`.
+    - options
+    - entries
+
+#### build
+
+Parses the content and returns the built post.
+
+  - `build(options, posts): {Array<Entry>}`.
+    - options
+    - posts
+
 
 #### transform
 
