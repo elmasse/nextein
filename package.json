@@ -93,5 +93,6 @@
     "name": "Maximiliano Fierro",
     "email": "elmasse@gmail.com"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "browserslist": "> 2%, not dead" 
 }
