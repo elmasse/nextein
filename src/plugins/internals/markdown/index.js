@@ -13,14 +13,13 @@ function normalizeDate (value, { path }) {
   }
 }
 
-function parseContent (text, options) {
-  const instance = parser(options)
-  // second text argument avoids positoin information being removed in rehype-raw
-  return instance.runSync(instance.parse(text), text)
-}
-
-function createOptions (source, raw) {
+function createOptions (source, raw, options) {
   const { data: extra = {}, content: text } = fm(raw)
+  const instance = parser(options)
+
+  // second text argument avoids positoin information being removed in rehype-raw
+  const content = instance.runSync(instance.parse(text), text)
+
   if (extra.date) extra.date = normalizeDate(extra.date, source)
 
   return {
@@ -31,24 +30,8 @@ function createOptions (source, raw) {
         ...extra
       }
     },
-    content: text,
+    content,
     raw
-  }
-}
-
-/**
- * indexer
- * @param {Object} options
- * @param {Array} options.remark plugins for remark
- * @param {Array} options.rehype plugins for rehype
- * @param {Object} buildOptions
- * @param {Object} action
- * @param {Function} action.create
- */
-export async function indexer (options, { load, ...source }, { create }) {
-  if (source.mimeType === 'text/markdown') {
-    const raw = await load()
-    create(createOptions(source, raw, options))
   }
 }
 
@@ -57,14 +40,15 @@ export async function indexer (options, { load, ...source }, { create }) {
  * @param {Object} options
  * @param {Array} options.remark plugins for remark
  * @param {Array} options.rehype plugins for rehype
+ * @param {Object} buildOptions
+ * @param {Object} action
+ * @param {Function} action.create
  */
-export function build (options, posts) {
-  return posts.map(post => {
-    if (post.data.mimeType === 'text/markdown') {
-      post.content = parseContent(post.content, options)
-    }
-    return post
-  })
+export async function build (options, { load, ...source }, { create }) {
+  if (source.mimeType === 'text/markdown') {
+    const raw = await load()
+    create(createOptions(source, raw, options))
+  }
 }
 
 /**

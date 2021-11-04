@@ -28,7 +28,7 @@ describe('source-filesystem::source', () => {
     
     expect.assertions(8)
 
-    await source({ path }, { add: options => {
+    await source({ path }, { build: options => {
       expect(options).toHaveProperty('filePath')
       expect(options).toHaveProperty('path')
       expect(options).toHaveProperty('name')
@@ -62,7 +62,7 @@ describe('source-filesystem::source', () => {
     
     expect.assertions(8)
 
-    await source({ path, data }, { add: options => {
+    await source({ path, data }, { build: options => {
       expect(options).toHaveProperty('filePath')
       expect(options).toHaveProperty('path')
       expect(options).toHaveProperty('name')
