@@ -1,7 +1,7 @@
 import React from 'react'
 import { compile } from '../plugins/compile'
 
-export default React.forwardRef(function Content (fwdProps, ref) {
+export const Content = React.forwardRef(function Content (fwdProps, ref) {
   const { content, excerpt, renderers, data, prefix, raw, component, ...componentProps } = fwdProps
   const { renders: renderPlugins } = compile()
 
@@ -16,3 +16,5 @@ export default React.forwardRef(function Content (fwdProps, ref) {
   // TODO: if not resolved component should throw an error?
   return resolvedComponent ? <Component ref={ref} {...props} {...componentProps} /> : null
 })
+
+export default Content
