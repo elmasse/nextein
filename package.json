@@ -15,10 +15,12 @@
   },
   "files": [
     "dist",
+    "create.js",
     "config.js",
     "content.js",
     "fetcher.js",
     "filters.js",
+    "index.js",
     "sorters.js"
   ],
   "dependencies": {
