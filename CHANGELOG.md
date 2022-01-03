@@ -6,12 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2022-01-03
 ### Added
 - Support for Next.js dynamic routes.
 - Support for Next.js `getStaticProps` and `getStaticPaths` using fetcher methods.
 
 ### Fixed
-- Issues with `fetcher` not working properly. 
+- Issues with `fetcher` not working properly.
 - Documentation.
 - Issues with generated files sizes.
 
@@ -211,7 +212,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v3.2.5...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/elmasse/nextein/compare/v3.2.5...v4.0.0
 [3.2.5]: https://github.com/elmasse/nextein/compare/v3.2.4...v3.2.5
 [3.2.4]: https://github.com/elmasse/nextein/compare/v3.2.3...v3.2.4
 [3.2.3]: https://github.com/elmasse/nextein/compare/v3.2.2...v3.2.3
