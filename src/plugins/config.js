@@ -83,7 +83,8 @@ export function plugins () {
 
 // TODO
 export const getDefaultPlugins = () => [
-  ['nextein-plugin-source-fs', { path: 'posts', data: { page: 'post' } }],
+  ['nextein-plugin-source-fs', { path: 'posts' }],
   'nextein-plugin-markdown',
-  'nextein-plugin-filter-unpublished'
+  'nextein-plugin-filter-unpublished',
+  'nextein-plugin-sort-by-date'
 ]

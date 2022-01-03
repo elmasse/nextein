@@ -3,6 +3,7 @@ jest.mock('../../../src/entries/load')
 jest.mock('../../../src/entries/metadata')
 
 import { expect, test } from '@jest/globals'
+import { describe } from 'jest-circus'
 import fetcher from '../../../src/entries/fetcher'
 import { inCategory } from '../../../src/entries/filters'
 
@@ -107,6 +108,48 @@ describe('fetcher(filter)', () => {
     expect(load).not.toBeCalled()
 
     const actual = await getPosts()
+    expect(actual).toEqual(expected)
+  })
+})
+
+describe('getPost', () => {
+  const expectedCategory = 'test'
+  const { getPost } = fetcher()
+
+  test('getPost() should return null if no params', async () => {
+    const slug = 'same'
+    const expected = null
+    const all = [{ data: { __id: 2, slug, category: 'another' }, content: ''}]
+
+    metadata.mockReturnValueOnce(all.map(({ data }) => data))
+
+    const actual = await getPost()
+    expect(actual).toEqual(expected)
+  })
+
+  test('getPost() should return only entry by the given params', async () => {
+    const slug = 'same'
+    const expected = { data: { __id: 1, slug, category: expectedCategory }, content: ''}
+    const all = [expected, { data: { __id: 2, slug, category: 'another' }, content: ''}]
+
+    metadata.mockReturnValueOnce(all.map(({ data }) => data))
+    load.mockReturnValueOnce([expected])
+
+    const actual = await getPost({ slug, category: expectedCategory })
+    expect(actual).toEqual(expected)
+  })
+
+
+  test('getPost() should return the same post if params are from getData', async () => {
+    const slug = 'same'
+    const data= { __id: 1, slug, category: expectedCategory, tags: ['a', 'b'] }
+    const expected = { data, content: ''}
+    const all = [expected, { data: { __id: 2, slug, category: 'another' }, content: ''}]
+
+    metadata.mockReturnValueOnce(all.map(({ data }) => data))
+    load.mockReturnValueOnce([expected])
+
+    const actual = await getPost(data)
     expect(actual).toEqual(expected)
   })
 })

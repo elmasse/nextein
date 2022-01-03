@@ -18,13 +18,13 @@ describe('createEntry', () => {
     __id: createId(filePath),
     mimeType: meta.mimeType,
     page: 'post',
-    name: meta.name,      
+    name: meta.name,
+    slug: meta.name,
     date: JSON.parse(meta.createdOn),
     day: '02',
     month: '02',
     year: '2020',
-    category: undefined,
-    url: `/${meta.name}`
+    category: undefined
   }
 
   test('create default', () => {
@@ -62,5 +62,31 @@ describe('createEntry', () => {
     const result = createEntry(evaluated)
 
     expect(result).toEqual({ data: expectedData, content, raw })
-  })  
+  })
+
+  test('create with slug in extra', () => {
+    const slug = 'file-name-slug'
+    const evaluated = { meta: { ...meta, extra: { ...defaultExtra, slug } }, content, raw }
+    const expectedData = {
+      ...expectedDataDefault,
+      slug
+    }
+    const result = createEntry(evaluated)
+
+    expect(result).toEqual({ data: expectedData, content, raw })
+  })
+
+  test('create with name containing spaces', () => {
+    const name = 'file name'
+    const evaluated = { meta: { ...meta, name, extra: { ...defaultExtra } }, content, raw }
+    const expectedData = {
+      ...expectedDataDefault,
+      name,
+      slug: 'file-name'
+    }
+    const result = createEntry(evaluated)
+
+    expect(result).toEqual({ data: expectedData, content, raw })
+  })
+
 })

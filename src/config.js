@@ -1,9 +1,7 @@
 
 import path from 'path'
-import { NormalModuleReplacementPlugin, DefinePlugin } from 'webpack'
+import { NormalModuleReplacementPlugin, DefinePlugin, IgnorePlugin } from 'webpack'
 
-import { processPathMap } from './entries'
-import { generateExportedFiles } from './export'
 import { processPlugins, getDefaultPlugins } from './plugins'
 import { compile } from './plugins/compile'
 
@@ -40,21 +38,15 @@ export const withNextein = (nextConfig = {}) => {
     assetPrefix,
 
     webpack (config, options) {
-      if (!nextConfig.webpack5 && !(nextConfig.future && nextConfig.future.webpack5)) {
-        // webpack4 only
-        config.node = {
-          fs: 'empty'
-        }
-      }
-
       config.plugins.push(
         new DefinePlugin({
           'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL || '')
         }),
-        new NormalModuleReplacementPlugin(/entries[/\\]load[/\\]index.js/, options.dev ? './dev.js' : './exported.js'),
-        new NormalModuleReplacementPlugin(/entries[/\\]metadata[/\\]index.js/, './exported.js'),
-        new NormalModuleReplacementPlugin(/entries[/\\]pathmap[/\\]index.js/, './exported.js'),
-        new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './exported.js')
+        new NormalModuleReplacementPlugin(/plugins[/\\]compile[/\\]index.js/, './client.js'),
+        new IgnorePlugin({
+          resourceRegExp: /^\.\/load$/,
+          contextRegExp: /entries$/
+        })
       )
 
       config.module = {
@@ -86,20 +78,6 @@ export const withNextein = (nextConfig = {}) => {
       }
 
       return config
-    },
-
-    async exportPathMap (defaultPathMap, options) {
-      let nextExportPathMapFn = map => map
-      if (typeof nextConfig.exportPathMap === 'function') {
-        nextExportPathMapFn = nextConfig.exportPathMap
-      }
-
-      const nextExportPathMap = await processPathMap(nextExportPathMapFn, defaultPathMap, options)
-      await generateExportedFiles(options)
-
-      return {
-        ...nextExportPathMap
-      }
     }
   }
 
