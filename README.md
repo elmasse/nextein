@@ -4,8 +4,6 @@ A static site generator based in Next.js
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/elmasse/nextein/node-ci)
 [![npm](https://img.shields.io/npm/v/nextein)](https://www.npmjs.com/package/nextein)
-[![ProductHunt](https://img.shields.io/badge/producthunt-vote-orange.svg)](https://www.producthunt.com/posts/nextein) 
-[![Gitter](https://badges.gitter.im/elmasse/nextein.svg)](https://gitter.im/nextein/Lobby)
 
 #### [Site](https://nextein.elmasse.io/) | [Documentation](https://nextein.elmasse.io/docs) | [Guides](https://nextein.elmasse.io/guides)
 
@@ -403,33 +401,3 @@ Options:
 You can write your own plugins. There are basically 2 different types (source and transforms). Source plugins will be called to generate the posts entries and then the transform plugins will receive those entries and can modify, filter, append, or transform in anyway the posts list.
 
 See [plugins & lifecyle design document](./DESIGN.md).
-
-## Contributors
-
-### Code Contributors
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/elmasse/nextein/graphs/contributors"><img src="https://opencollective.com/nextein/contributors.svg?width=890&button=false" /></a>
-
-### Financial Contributors
-
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/nextein/contribute)]
-
-#### Individuals
-
-<a href="https://opencollective.com/nextein"><img src="https://opencollective.com/nextein/individuals.svg?width=890"></a>
-
-#### Organizations
-
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/nextein/contribute)]
-
-<a href="https://opencollective.com/nextein/organization/0/website"><img src="https://opencollective.com/nextein/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/1/website"><img src="https://opencollective.com/nextein/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/2/website"><img src="https://opencollective.com/nextein/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/3/website"><img src="https://opencollective.com/nextein/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/4/website"><img src="https://opencollective.com/nextein/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/5/website"><img src="https://opencollective.com/nextein/organization/5/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/6/website"><img src="https://opencollective.com/nextein/organization/6/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/7/website"><img src="https://opencollective.com/nextein/organization/7/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/8/website"><img src="https://opencollective.com/nextein/organization/8/avatar.svg"></a>
-<a href="https://opencollective.com/nextein/organization/9/website"><img src="https://opencollective.com/nextein/organization/9/avatar.svg"></a>
