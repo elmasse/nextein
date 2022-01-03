@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Support for Next.js dynamic routes.
+- Support for Next.js `getStaticProps` and `getStaticPaths` using fetcher methods.
+
+### Fixed
+- Issues with `fetcher` not working properly. 
+- Documentation.
+- Issues with generated files sizes.
+
+### Removed
+- HOCs `withPost`, `withPosts` and all filtered variants.
+- `nextein` binary.
+- `Link` component.
+- `url` and `permalink` from generted data in post.
+- Generated json files from the export process.
+
 ## [3.2.5] - 2021-11-04
 ### Fixed
 - Adde next v12 to peerDependencies.
