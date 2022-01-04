@@ -1,9 +1,12 @@
-import { writeFile } from 'fs/promises'
+import { writeFile as writeFileFS } from 'fs'
+import { promisify } from 'util'
 
 import { Worker, isMainThread, parentPort } from 'worker_threads'
 
 import { CACHE_FILE_PATH } from '../entries/cache'
 import { run, subscribe } from './bootstrap'
+
+const writeFile = promisify(writeFileFS)
 
 function updateTmpFile (data) {
   writeFile(CACHE_FILE_PATH, JSON.stringify(data))

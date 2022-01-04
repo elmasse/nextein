@@ -1,7 +1,10 @@
 
 import chokidar from 'chokidar'
-import { readFile } from 'fs/promises'
+import { readFile as readFileFS } from 'fs'
+import { promisify } from 'util'
 import { resolve } from 'path'
+
+const readFile = promisify(readFileFS)
 
 // We use a CACHE FILE since getStaticPaths runs either in a Worker or a ChildProcess.
 // A memoru cache is completely useless in those cases and I honestly ran out of ideas on how to solve this.
