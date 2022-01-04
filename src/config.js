@@ -4,6 +4,7 @@ import { NormalModuleReplacementPlugin, DefinePlugin, IgnorePlugin } from 'webpa
 
 import { processPlugins, getDefaultPlugins } from './plugins'
 import { compile } from './plugins/compile'
+import { runProcessWorker } from './plugins/worker'
 
 const getDefaultConfig = () => ({
   plugins: getDefaultPlugins()
@@ -84,6 +85,8 @@ export const withNextein = (nextConfig = {}) => {
   for (const configPlugin of configs) {
     config = configPlugin(config)
   }
+
+  runProcessWorker()
 
   return config
 }

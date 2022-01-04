@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Performance issue caused by getStaticPaths running in either a child process or a Worker. Reimplemented Cache.
+
 ## [4.0.0] - 2022-01-03
 ### Added
 - Support for Next.js dynamic routes.

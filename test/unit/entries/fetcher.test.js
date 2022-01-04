@@ -1,4 +1,5 @@
 
+jest.mock('../../../src/entries/cache')
 jest.mock('../../../src/entries/load')
 jest.mock('../../../src/entries/metadata')
 
@@ -7,8 +8,11 @@ import { describe } from 'jest-circus'
 import fetcher from '../../../src/entries/fetcher'
 import { inCategory } from '../../../src/entries/filters'
 
+import createCache from '../../../src/entries/cache'
 import { load } from '../../../src/entries/load'
 import { metadata } from '../../../src/entries/metadata'
+
+createCache.mockReturnValue(() => {})
 
 describe('fetcher', () => {
   test('exports fetcher as default', () => {

@@ -1,12 +1,7 @@
-import { run, subscribe } from '../plugins'
+
 import createCache from './cache'
 
 const cache = createCache()
-
-const loadCache = async () => {
-  subscribe(posts => cache.set(posts))
-  cache.set(await run())
-}
 
 /**
  * Return all entries. If ids is provided return all entries matching __id.
@@ -14,7 +9,7 @@ const loadCache = async () => {
  */
 export async function load (ids) {
   if (!cache.isValid()) {
-    await loadCache()
+    await cache.load()
   }
 
   const entries = cache.get()
