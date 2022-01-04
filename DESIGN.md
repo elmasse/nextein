@@ -8,9 +8,9 @@ Major update goal is to reduce foot-print and remove HOCs in favor of `getStatic
 - [x] Support `[[...entry]]` routing.
 - [x] No bin required. Use `next`
 - [x] Remove generated .json files in static export.
-- [ ] Update README.md
-- [ ] Remove `page` and default page from plugin config.
-- [ ] Remove `url` generation and permalink props. Update tests.
+- [x] Update README.md
+- [x] Remove `page` and default page from plugin config.
+- [x] Remove `url` generation and permalink props. Update tests.
 - [ ] Add common sorters (?)
 
 
