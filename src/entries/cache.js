@@ -8,7 +8,7 @@ const readFile = promisify(readFileFS)
 
 // We use a CACHE FILE since getStaticPaths runs either in a Worker or a ChildProcess.
 // A memoru cache is completely useless in those cases and I honestly ran out of ideas on how to solve this.
-export const CACHE_FILE_PATH = resolve(process.cwd(), '.next', '__temp')
+export const CACHE_FILE_PATH = resolve(process.cwd(), '.next', 'nextein_ipc.cache')
 
 export default () => {
   const watcher = chokidar.watch([CACHE_FILE_PATH])
