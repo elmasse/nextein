@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.1] - 2022-01-05
 ### Fixed
 - Performance issue caused by getStaticPaths running in either a child process or a Worker. Reimplemented Cache.
 
@@ -215,7 +216,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/elmasse/nextein/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/elmasse/nextein/compare/v3.2.5...v4.0.0
 [3.2.5]: https://github.com/elmasse/nextein/compare/v3.2.4...v3.2.5
 [3.2.4]: https://github.com/elmasse/nextein/compare/v3.2.3...v3.2.4
