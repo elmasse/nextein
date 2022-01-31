@@ -16,8 +16,9 @@ export default () => {
   let isValid
 
   async function build (path = CACHE_FILE_PATH) {
-    const raw = await readFile(path, { encoding: 'utf-8' })
+    let raw
     try {
+      raw = await readFile(path, { encoding: 'utf-8' })
       cache = JSON.parse(raw)
       isValid = true
     } catch (error) {
