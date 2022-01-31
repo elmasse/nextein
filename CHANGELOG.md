@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.0.2] - 2022-01-31
 ### Fixed
 - Issue with using an old transitive dependency in render loader.
 - Upgrade to work with next v12.0.9
@@ -220,7 +222,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.1...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.2...HEAD
+[4.0.2]: https://github.com/elmasse/nextein/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/elmasse/nextein/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/elmasse/nextein/compare/v3.2.5...v4.0.0
 [3.2.5]: https://github.com/elmasse/nextein/compare/v3.2.4...v3.2.5
