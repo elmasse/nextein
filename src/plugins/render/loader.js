@@ -1,4 +1,4 @@
-const loaderUtils = require('loader-utils')
+
 const { resolve } = require('path')
 /**
  * loads a generated file that allows us to require all render plugin in react.
@@ -13,7 +13,7 @@ const { resolve } = require('path')
  * ```
  */
 module.exports = function () {
-  const { plugins = [] } = loaderUtils.getOptions(this)
+  const { plugins = [] } = this.getOptions()
 
   return `module.exports = {
     "__PLUGINS__": ${JSON.stringify(plugins)},

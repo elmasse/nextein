@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Issue with using an old transitive dependency in render loader.
+- Upgrade to work with next v12.0.9
+- Test fixed for render plugin loader.
 
 ## [4.0.1] - 2022-01-05
 ### Fixed

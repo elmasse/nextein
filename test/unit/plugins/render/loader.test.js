@@ -1,15 +1,11 @@
-jest.mock('loader-utils')
 jest.mock('path')
-
-import loaderUtils from 'loader-utils'
 import { resolve } from 'path'
 
 //SUT
-import loader from '../../../../src/plugins/render/loader'
+import loaderPlugin from '../../../../src/plugins/render/loader'
 
 
 describe('render webpack loader', () => {
-  
   const pluginA = { name: 'pluginA', resolved: '/test/pluginA'  }
   const withRenderer = { name: 'pluginB', resolved: '/test/pluginB', renderer: true  }
 
@@ -25,7 +21,9 @@ describe('render webpack loader', () => {
   })
 
   test('export with no plugins', () => {
-    loaderUtils.getOptions.mockReturnValue({ plugins: [] })
+    const loader = loaderPlugin.bind({
+      getOptions: jest.fn().mockReturnValue({ plugins: [] })
+    })
     
     const result = loader()
     
@@ -33,8 +31,10 @@ describe('render webpack loader', () => {
   })
 
   test('export plugins', () => {
-    loaderUtils.getOptions.mockReturnValue({ plugins: [pluginA] })
-    
+    const loader = loaderPlugin.bind({
+      getOptions: jest.fn().mockReturnValue({ plugins: [pluginA] })
+    })
+
     const result = loader()
     
     expect(result).toMatchSnapshot()
@@ -42,7 +42,9 @@ describe('render webpack loader', () => {
   })
 
   test('export plugins with renderer ', () => {
-    loaderUtils.getOptions.mockReturnValue({ plugins: [pluginA, withRenderer] })
+    const loader = loaderPlugin.bind({
+      getOptions: jest.fn().mockReturnValue({ plugins: [pluginA, withRenderer] })
+    })
 
     const result = loader()
     
@@ -68,7 +70,9 @@ describe('render webpack loader Win32 FS', () => {
   })
 
   test('export with no plugins', () => {
-    loaderUtils.getOptions.mockReturnValue({ plugins: [] })
+    const loader = loaderPlugin.bind({
+      getOptions: jest.fn().mockReturnValue({ plugins: [] })
+    })
     
     const result = loader()
     
@@ -76,8 +80,10 @@ describe('render webpack loader Win32 FS', () => {
   })
 
   test('export plugins', () => {
-    loaderUtils.getOptions.mockReturnValue({ plugins: [pluginA] })
-    
+    const loader = loaderPlugin.bind({
+      getOptions: jest.fn().mockReturnValue({ plugins: [pluginA] })
+    })
+
     const result = loader()
     
     expect(result).toMatchSnapshot()
@@ -85,7 +91,9 @@ describe('render webpack loader Win32 FS', () => {
   })
 
   test('export plugins with renderer ', () => {
-    loaderUtils.getOptions.mockReturnValue({ plugins: [pluginA, withRenderer] })
+    const loader = loaderPlugin.bind({
+      getOptions: jest.fn().mockReturnValue({ plugins: [pluginA, withRenderer] })
+    })
 
     const result = loader()
 
