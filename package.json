@@ -24,6 +24,7 @@
     "sorters.js"
   ],
   "dependencies": {
+    "@babel/runtime": "7.16.7",
     "chokidar": "^3.4.2",
     "frontmatter": "^0.0.3",
     "mime": "^2.4.6",
@@ -43,13 +44,13 @@
     "react-dom": "^16.8.0 || ^17.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
-    "@babel/plugin-transform-runtime": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "@babel/preset-react": "^7.9.1",
-    "@babel/runtime": "^7.9.0",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.16.1",
+    "@babel/runtime": "^7.16.0",
     "@geut/chan": "^3.2.2",
     "@taskr/babel": "1.1.0-next.2",
     "@taskr/clear": "^1.1.0",
@@ -60,7 +61,6 @@
     "eslint-config-standard": "^16.0.0",
     "hastscript": "^7.0.0",
     "jest": "^27.0.0",
-    "loader-utils": "^3.2.0",
     "next": "^12.0.9",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
