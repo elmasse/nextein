@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.0.4] - 2022-02-12
 ### Fixed
 - Moved cache out of .next directory. [#346](https://github.com/elmasse/nextein/issues/346)
 
@@ -230,7 +232,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.3...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.4...HEAD
+[4.0.4]: https://github.com/elmasse/nextein/compare/v4.0.3...v4.0.4
 [4.0.3]: https://github.com/elmasse/nextein/compare/v4.0.2...v4.0.3
 [4.0.2]: https://github.com/elmasse/nextein/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/elmasse/nextein/compare/v4.0.0...v4.0.1
