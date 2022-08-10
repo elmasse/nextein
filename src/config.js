@@ -10,7 +10,7 @@ const getDefaultConfig = () => ({
   plugins: getDefaultPlugins()
 })
 
-const processConfig = ({ nextein = {} }) => {
+const processConfig = (nextein = {}) => {
   const defaultConfig = getDefaultConfig()
   const { plugins } = (typeof nextein === 'function')
     ? nextein(defaultConfig)
@@ -28,9 +28,9 @@ const processConfig = ({ nextein = {} }) => {
   }
 }
 
-export const withNextein = (nextConfig = {}) => {
-  const { trailingSlash = true, assetPrefix = process.env.PUBLIC_URL || undefined } = nextConfig
-  const nexteinConfig = processConfig(nextConfig)
+export const withNextein = (userConfig = {}) => {
+  const { trailingSlash = true, assetPrefix = process.env.PUBLIC_URL || undefined, nextein, ...nextConfig } = userConfig
+  const nexteinConfig = processConfig(nextein)
   const { configs } = compile()
 
   let config = {
