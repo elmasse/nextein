@@ -29,7 +29,7 @@ const processConfig = ({ nextein = {} }) => {
 }
 
 export const withNextein = (nextConfig = {}) => {
-  const { trailingSlash = true, assetPrefix = process.env.PUBLIC_URL || '' } = nextConfig
+  const { trailingSlash = true, assetPrefix = process.env.PUBLIC_URL || undefined } = nextConfig
   const nexteinConfig = processConfig(nextConfig)
   const { configs } = compile()
 
