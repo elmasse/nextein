@@ -6,10 +6,12 @@
   "bugs": "https://github.com/elmasse/nextein/issues",
   "homepage": "https://nextein.elmasse.io",
   "scripts": {
-    "build": "taskr build",
-    "lint": "taskr lint",
+    "clean": "rimraf -rf ./dist",
+    "compile": "babel ./src -d dist",
+    "build": "npm run lint & npm run compile",
+    "lint": "standard",
     "prepublishOnly": "npm run release",
-    "release": "taskr release",
+    "release": "npm run clear && npm run build",
     "test": "jest",
     "version": "chan release ${npm_package_version} && git add ."
   },
@@ -44,7 +46,9 @@
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@babel/cli": "7.18.10",
     "@babel/core": "^7.18.0",
+    "@babel/eslint-parser": "7.18.9",
     "@babel/plugin-proposal-class-properties": "^7.18.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.18.0",
     "@babel/plugin-transform-runtime": "^7.18.0",
@@ -52,10 +56,6 @@
     "@babel/preset-react": "^7.18.0",
     "@babel/runtime": "^7.18.0",
     "@geut/chan": "^3.2.9",
-    "@taskr/babel": "1.1.0-next.2",
-    "@taskr/clear": "^1.1.0",
-    "@taskr/esnext": "^1.1.0",
-    "babel-eslint": "^10.0.1",
     "babel-jest": "^28.1.0",
     "eslint": "^8.21.0",
     "eslint-config-standard": "^17.0.0",
@@ -65,14 +65,14 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
+    "rimraf": "3.0.2",
     "standard": "^17.0.0",
-    "taskr": "1.1.0",
-    "taskr-standard": "^1.2.4",
     "webpack": "^5.74.0"
   },
   "standard": {
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
     "ignore": [
+      "test/**",
       "**/node_modules/**"
     ]
   },
