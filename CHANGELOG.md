@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.1.1] - 2022-08-10
 ### Fixed
 - Fixed warn with nextein property in next config.
 
@@ -250,7 +252,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v4.1.0...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v4.1.1...HEAD
+[4.1.1]: https://github.com/elmasse/nextein/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/elmasse/nextein/compare/v4.0.5...v4.1.0
 [4.0.5]: https://github.com/elmasse/nextein/compare/v4.0.4...v4.0.5
 [4.0.4]: https://github.com/elmasse/nextein/compare/v4.0.3...v4.0.4
