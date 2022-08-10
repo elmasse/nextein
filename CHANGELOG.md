@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.1.0] - 2022-08-10
 ### Added
 - Include node v18 in CI test environments.
 
@@ -14,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed node v12 fro CI test environments.
-- Removed `taskr`. 
+- Removed `taskr`.
 
 ## [4.0.5] - 2022-04-01
 ### Fixed
@@ -246,7 +248,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Entries from `__NEXT_DATA__`.
 
-[Unreleased]: https://github.com/elmasse/nextein/compare/v4.0.5...HEAD
+[Unreleased]: https://github.com/elmasse/nextein/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/elmasse/nextein/compare/v4.0.5...v4.1.0
 [4.0.5]: https://github.com/elmasse/nextein/compare/v4.0.4...v4.0.5
 [4.0.4]: https://github.com/elmasse/nextein/compare/v4.0.3...v4.0.4
 [4.0.3]: https://github.com/elmasse/nextein/compare/v4.0.2...v4.0.3
