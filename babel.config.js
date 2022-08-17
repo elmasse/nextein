@@ -1,4 +1,4 @@
-{
+module.exports = {
   "presets": [
     "@babel/react",
     "@babel/env"
@@ -8,5 +8,10 @@
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-object-rest-spread"
   ],
-  "sourceMaps": true
+  "sourceMaps": true,
+  "env": {
+    "test": {
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
+    }
+  }
 }

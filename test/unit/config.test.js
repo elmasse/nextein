@@ -1,5 +1,6 @@
 
 jest.mock('../../src/plugins/worker')
+
 import nexteinConfig from '../../src/config'
 
 describe('config', () => {

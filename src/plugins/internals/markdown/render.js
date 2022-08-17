@@ -1,6 +1,6 @@
 
 import React from 'react'
-import unified from 'unified'
+import { unified } from 'unified'
 import stringify from 'rehype-stringify'
 import reactRenderer from 'rehype-react'
 import { select } from 'unist-util-select'
