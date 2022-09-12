@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.0] - 2022-09-12
+### Fixed
+- Major issue with next 12.3.0. Worker not reading plugin config thru env vars.
+
 ## [4.1.1] - 2022-08-10
 ### Fixed
 - Fixed warn with nextein property in next config.
