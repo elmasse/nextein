@@ -1,5 +1,6 @@
 
 import { resolvePlugin, hasRenderer } from './resolver'
+import { setEnvironmentData, getEnvironmentData, isMainThread } from 'worker_threads'
 
 function normalizeString (config) {
   return typeof config === 'string' ? { name: config, options: {} } : config
@@ -72,13 +73,19 @@ export function processPlugins (nexteinPlugins = []) {
     .map(createPlugin)
     .reduce(processDuplicates, [])
 
-  process.env.__NEXTEIN_PLUGIN_CFG = JSON.stringify(config)
+  const serialized = JSON.stringify(config)
+
+  process.env.__NEXTEIN_PLUGIN_CFG = serialized
+  setEnvironmentData('__NEXTEIN_PLUGIN_CFG', serialized)
 
   return config
 }
 
 export function plugins () {
-  return JSON.parse(process.env.__NEXTEIN_PLUGIN_CFG || '{}')
+  if (!isMainThread) {
+    return JSON.parse(getEnvironmentData('__NEXTEIN_PLUGIN_CFG'))
+  }
+  return JSON.parse(process.env.__NEXTEIN_PLUGIN_CFG || '[]')
 }
 
 // TODO

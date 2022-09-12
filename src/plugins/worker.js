@@ -25,6 +25,12 @@ if (isMainThread) {
   module.exports.runProcessWorker = function () {
     worker = new Worker(__filename)
     worker.on('message', updateTmpFile)
+    worker.on('error', console.log)
+    worker.on('exit', (code) => {
+      if (code !== 0) {
+        console.log(`Worker stopped with exit code ${code}`)
+      }
+    })
   }
 } else {
   // run code
