@@ -1,6 +1,6 @@
 {
   "name": "nextein",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "A static site and blog generator based on Next.js",
   "repository": "https://github.com/elmasse/nextein",
   "bugs": "https://github.com/elmasse/nextein/issues",
@@ -13,7 +13,7 @@
     "prepublishOnly": "npm run release",
     "release": "npm run clean && npm run build",
     "test": "jest",
-    "version": "chan release ${npm_package_version} && git add ."
+    "__version": "chan release ${npm_package_version} && git add ."
   },
   "files": [
     "dist",
