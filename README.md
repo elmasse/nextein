@@ -2,7 +2,7 @@
 
 A static site generator based in Next.js
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/elmasse/nextein/node-ci)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/elmasse/nextein/node-ci.yml?branch=main)
 [![npm](https://img.shields.io/npm/v/nextein)](https://www.npmjs.com/package/nextein)
 
 #### [Site](https://nextein.elmasse.io/) | [Documentation](https://nextein.elmasse.io/docs) | [Guides](https://nextein.elmasse.io/guides)
